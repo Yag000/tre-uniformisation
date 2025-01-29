@@ -1,0 +1,86 @@
+%% Color
+
+\usepackage{color}
+\usepackage{xcolor}
+
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{violet}{rgb}{0.4,0,0.8}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\darkgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\violet}[1]{\textcolor{violet}{#1}}
+
+
+\hypersetup{
+	colorlinks,
+	linkcolor={red!50!black},
+	citecolor={blue!50!black},
+	urlcolor={blue!80!black}
+}
+
+%% Basic algebra
+
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Zn}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rn}{\R^n}
+
+\newcommand{\C}{\mathbb{C}}
+
+\newcommand{\K}{\mathbb{K}}
+
+\newcommand{\id}{\text{id}}
+
+
+%% Vector spaces
+
+\newcommand{\sprod}[2]{\left\langle #1, #2 \right\rangle}
+
+\newcommand{\abs}[1]{\left|#1\right|}
+
+
+%% Functions
+
+\newcommand{\restr}[2]{#1_{\restriction #2}}
+
+%% Logic
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\setdef}[2]{\set{#1 \mid #2}}
+\newcommand{\parts}[1]{\mathcal{P}\left(#1\right)}
+
+
+\newcommand{\contradict}{\lightning}
+
+
+%% Environments
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{coro}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{prop}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{example}{Example}[subsection]
+\newtheorem{exercice}{Exercice}[subsection]
+
+\theoremstyle{plain}
+\newtheorem{remark}{Remark}[subsection]
+
+
+
+\newcommand{\interpret}[1]{\kl[interpretation]{[|} #1 \kl[interpretation]{|]}}
+\newcommand{\tree}{\text{\kl[tree]{Tree}}}

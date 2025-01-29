@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{amsthm}  
+\usepackage{dsfont}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+
+\usepackage{tikz-cd}
+\usepackage{geometry}
+\usepackage{hyperref}        
+
+\usepackage[shortlabels]{enumitem}
+
+\usepackage{fancyhdr}
+
+\usepackage[hyperref,paper]{knowledge}
+
+\usepackage{tre-uniformisation}
+
+\knowledgeconfigure{label scope=false, notion, quotation, protect quotation={tikzcd, automata}}
+
+
+\knowledge{tree}{notion}
+\knowledge{Deterministic Bottom-Up tree automaton}[DFTA]{notion}
+\knowledge{interpretation}{notion}
+
+
+\begin{document}
+
+\title{Uniformisation de MSO sur les arbres}
+
+\maketitle
+
+\section{Definitions}
+
+
+\begin{definition}[Tree]
+	A ""tree"" over an alphabet $\Sigma$ can be recursively defined as :
+	\begin{itemize}
+		\item $a$, $a \in \Sigma$.
+		\item $a(t,'t')$, $a \in \Sigma$, $t,t'$ trees.
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[""Deterministic Bottom-Up tree automaton""]
+	We define a Deterministic Bottom-Up tree automaton (DFTA) as a tuple :
+	$$ (\Sigma, Q, \text{init}, \delta, F) $$
+	Where :
+	\begin{itemize}
+		\item $\Sigma$ is an alphabet
+		\item $Q$ a finite set of states
+		\item $\text{init} : \Sigma \to  Q$ a function that initializes the states of the leaves.
+		\item $\delta: \Sigma \times Q \times Q$ is the transition function.
+		\item $F \subset Q$ are the final states.
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[Interpretation of an automaton]
+	We define the ""interpretation"" of an automaton $A$ over an alphabet $\Sigma$ as :
+	\begin{eqnarray*}
+		\interpret A : \tree_{\Sigma} &\to& Q \\
+		\interpret A (a) &=& \text{init}_a \\
+		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t') )
+	\end{eqnarray*}
+\end{definition}
+
+\begin{definition}[Langage of an automaton]
+	Let $A$ be a "DFTA", we define it's associated language as :
+	$$L_A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}$$
+
+\end{definition}
+
+\bibliographystyle{alpha}
+\bibliography{tre-uniformisation}
+
+\end{document}
