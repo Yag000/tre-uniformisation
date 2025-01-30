@@ -48,15 +48,21 @@
 
 \begin{definition}[""Deterministic Bottom-Up Tree Automaton""]
 	A Deterministic Bottom-Up Tree Automaton (DFTA) is defined as a tuple:
-	$$ (\Sigma, Q, \text{init}, \delta, F) $$
+	$$ (\Sigma, Q, \text{init} : \Sigma \to Q, \delta : \Sigma \times Q \times Q \to Q, F) $$
 	where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of states.
-		\item $\text{init} : \Sigma \to Q$ is a function that initializes the states of the leaves.
-		\item $\delta: \Sigma \times Q \times Q \to Q$ is the transition function.
-		\item $F \subset Q$ is the set of final states.
+		\item $\text{init}$ is a function that initializes the states of the leaves.
+		\item $\delta$ is the transition function.
+		\item $F$ is the set of final states.
 	\end{itemize}
+\end{definition}
+
+
+\begin{definition}[""Non-Deterministic Bottom-Up Tree Automaton""]
+	A Non-Deterministic Bottom-Up Tree Automaton (NFTA) is defined as a tuple:
+	$$ (\Sigma, Q, I \subseteq \Sigma \times Q, \Delta \subseteq Q \times Q \times \Sigma \times Q, F) $$
 \end{definition}
 
 \begin{definition}[Interpretation of an Automaton]
