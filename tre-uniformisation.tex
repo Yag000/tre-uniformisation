@@ -25,7 +25,7 @@
 
 
 \knowledge{tree}{notion}
-\knowledge{Deterministic Bottom-Up tree automaton}[DFTA]{notion}
+\knowledge{Deterministic Bottom-Up Tree Automaton}[DFTA]{notion}
 \knowledge{interpretation}{notion}
 
 
@@ -39,39 +39,38 @@
 
 
 \begin{definition}[Tree]
-	A ""tree"" over an alphabet $\Sigma$ can be recursively defined as :
+	A ""tree"" over an alphabet $\Sigma$ is recursively defined as follows:
 	\begin{itemize}
-		\item $a$, $a \in \Sigma$.
-		\item $a(t,'t')$, $a \in \Sigma$, $t,t'$ trees.
+		\item $a$, where $a \in \Sigma$.
+		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are trees.
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[""Deterministic Bottom-Up tree automaton""]
-	We define a Deterministic Bottom-Up tree automaton (DFTA) as a tuple :
+\begin{definition}[""Deterministic Bottom-Up Tree Automaton""]
+	A Deterministic Bottom-Up Tree Automaton (DFTA) is defined as a tuple:
 	$$ (\Sigma, Q, \text{init}, \delta, F) $$
-	Where :
+	where:
 	\begin{itemize}
-		\item $\Sigma$ is an alphabet
-		\item $Q$ a finite set of states
-		\item $\text{init} : \Sigma \to  Q$ a function that initializes the states of the leaves.
-		\item $\delta: \Sigma \times Q \times Q$ is the transition function.
-		\item $F \subset Q$ are the final states.
+		\item $\Sigma$ is an alphabet.
+		\item $Q$ is a finite set of states.
+		\item $\text{init} : \Sigma \to Q$ is a function that initializes the states of the leaves.
+		\item $\delta: \Sigma \times Q \times Q \to Q$ is the transition function.
+		\item $F \subset Q$ is the set of final states.
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[Interpretation of an automaton]
-	We define the ""interpretation"" of an automaton $A$ over an alphabet $\Sigma$ as :
+\begin{definition}[Interpretation of an Automaton]
+	The ""interpretation"" of an automaton $A$ over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\interpret A : \tree_{\Sigma} &\to& Q \\
 		\interpret A (a) &=& \text{init}_a \\
-		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t') )
+		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t'))
 	\end{eqnarray*}
 \end{definition}
 
-\begin{definition}[Langage of an automaton]
-	Let $A$ be a "DFTA", we define it's associated language as :
+\begin{definition}[Language of an Automaton]
+	Let $A$ be a "DFTA". Its associated language is defined as:
 	$$L_A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}$$
-
 \end{definition}
 
 \bibliographystyle{alpha}
