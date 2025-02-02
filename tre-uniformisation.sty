@@ -77,6 +77,7 @@
 \newtheorem{example}{Example}[subsection]
 \newtheorem{exercice}{Exercice}[subsection]
 
+
 \theoremstyle{plain}
 \newtheorem{remark}{Remark}[subsection]
 
@@ -84,4 +85,44 @@
 
 \newcommand{\interpret}[1]{\kl[interpretation]{[|} #1 \kl[interpretation]{|]}}
 \newcommand{\tree}{\text{\kl[tree]{Tree}}}
+
+\newcommand{\nodes}[1]{\kl[nodes]{\text{Nodes}} \left( #1 \right)}
+\newcommand{\leaves}[1]{\kl[leaves]{\text{Leaves}} \left( #1 \right)}
+\newcommand{\tlabel}[2]{\kl[label]{#1} \left( #2 \right)}
+
+
+\newcommand{\exec}[1]{ \kl[exec]{\rho_{#1}} }
+
+\newcommand{\init}{\kl[init]{\text{init}}}
+
+\newcommand{\La}{\mathcal{L}}
+\newcommand{\lang}[1]{\kl[lang]{\La}\left(#1\right)}
+
+
+\newcommand{\decomp}[2] {
+	#1_1 #1_2 \ldots #1_{#2}
+}
+
+\newcommand{\motDecomp}[2] {
+	#1 = \decomp{#1}{#2}
+}
+\newcommand{\reason}[1]{\quad\left(\textit{#1}\right)}
+
+\newcommand{\bimpRL}{\fbox{$\Leftarrow$}}
+\newcommand{\bimpLR}{\fbox{$\Rightarrow$}}
+
 \newcommand{\ra}{\rightarrow}
+
+\newenvironment{proofI}[1][\proofname]{%
+	\begin{proof}[#1]$ $\par\nobreak\ignorespaces
+		}{%
+	\end{proof}
+}
+
+
+\newcommand{\ancestor}[2]{#1  \kl[ancestor]{\sqsubseteq} #2}
+
+\newcommand{\todo}[1]{\red{TODO: #1}}
+
+\newcommand{\quotes}[1] {"#1"}
+

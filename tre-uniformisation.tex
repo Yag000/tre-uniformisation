@@ -25,8 +25,17 @@
 
 
 \knowledge{tree}{notion}
-\knowledge{Deterministic Bottom-Up Tree Automaton}[DFTA]{notion}
+\knowledge{Deterministic Bottom-Up Tree automaton}[DFTA]{notion}
+\knowledge{Non-Deterministic Bottom-Up Tree automaton}[NFTA]{notion}
 \knowledge{interpretation}{notion}
+\knowledge{associated language}[lang]{notion}
+\knowledge{nodes}{notion}
+\knowledge{leaves}{notion}
+\knowledge{label}{notion}
+\knowledge{ancestor}{notion}
+\knowledge{execution}[exec]{notion}
+\knowledge{init}{notion}
+\knowledge{order-invertible}{notion}
 
 
 \begin{document}
@@ -46,38 +55,164 @@
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[""Deterministic Bottom-Up Tree Automaton""]
-	A Deterministic Bottom-Up Tree Automaton (DFTA) is defined as a tuple:
+\begin{definition}[Nodes]
+	The ""nodes"" of a $\tree$ are defined as follows:
+	$$
+		\nodes t = \left\{  \begin{array}{cc}
+			\epsilon                                & \text{ si } t = a         \\
+			\epsilon \cup \setdef {0u} {u \in \nodes {t'}}
+			\cup \setdef {0u} {u \in \nodes {t''} } & \text{ si } t = a(t',t'')
+		\end{array}
+		\right.
+	$$
+\end{definition}
+
+
+\begin{definition}[Leaves]
+	The ""leaves"" of a $\tree$ are defined as follows:
+	$$
+		\leaves t = \left\{  \begin{array}{cc}
+			\epsilon                                 & \text{ si } t = a         \\
+			\setdef {0u} {u \in \leaves {t'}}
+			\cup \setdef {0u} {u \in \leaves {t''} } & \text{ si } t = a(t',t'')
+		\end{array}
+		\right.
+	$$
+\end{definition}
+
+
+\begin{notation}
+	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$.
+\end{notation}
+
+\begin{definition}
+	Let $t$ be a $\tree$ and $x, y \in \nodes t$, we define the ""ancestor"" relation as
+	$$ \ancestor x y \iff \exists z \in \nodes t, y = xz$$
+\end{definition}
+
+\begin{definition}[""Deterministic Bottom-Up Tree automaton""]
+	A Deterministic Bottom-Up Tree automaton (DFTA) is defined as a tuple:
 	$$ (\Sigma, Q, \text{init} : \Sigma \to Q, \delta : \Sigma \times Q \times Q \to Q, F) $$
 	where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of states.
-		\item $\text{init}$ is a function that initializes the states of the leaves.
+		\item ""init"" is a function that initializes the states of the leaves.
 		\item $\delta$ is the transition function.
 		\item $F$ is the set of final states.
 	\end{itemize}
 \end{definition}
 
-
-\begin{definition}[""Non-Deterministic Bottom-Up Tree Automaton""]
-	A Non-Deterministic Bottom-Up Tree Automaton (NFTA) is defined as a tuple:
+\begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
+	A Non-Deterministic Bottom-Up Tree automaton (NFTA) is defined as a tuple:
 	$$ (\Sigma, Q, I \subseteq \Sigma \times Q, \Delta \subseteq Q \times Q \times \Sigma \times Q, F) $$
 \end{definition}
 
-\begin{definition}[Interpretation of an Automaton]
+\begin{definition}[Interpretation of an automaton]
 	The ""interpretation"" of an automaton $A$ over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\interpret A : \tree_{\Sigma} &\to& Q \\
 		\interpret A (a) &=& \text{init}_a \\
 		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t'))
 	\end{eqnarray*}
+    \todo{extend definition to NFTA ?}
 \end{definition}
 
-\begin{definition}[Language of an Automaton]
-	Let $A$ be a "DFTA". Its associated language is defined as:
-	$$L_A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}$$
+\begin{definition}[Language of an automaton]
+	Let $A$ be a "DFTA". Its ""associated language"" is defined as:
+	$$\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}$$
 \end{definition}
+
+
+\begin{definition}[Execution of an automaton]
+	The ""execution"" of an automaton $A$ over a $\tree$ $t$ is :
+
+	\begin{eqnarray*}
+		\exec A : \nodes t &\to & Q \\
+		\exec A (n)  &=& \init_{\tlabel t n} \text{ si } n \in \leaves t \\
+		\exec A (n)  &=& \delta_{\tlabel t n}(\exec A (n0), \exec A (n1)) \text{ si } n \in \nodes t \cap \leaves t
+	\end{eqnarray*}
+
+	We say that $\exec A$ is acceptant if $\exec A (\epsilon) \in F$.
+    \todo{extend definition to NFTA}
+\end{definition}
+
+\begin{remark}
+	Let $A$ be a "DFTA",
+	$$ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec A (\epsilon) \in F} $$
+\end{remark}
+
+\begin{proof}
+	We will proof that for any $\tree \ t$, $\interpret A (\tlabel t {\epsilon}) = \exec A (\epsilon)$.
+	The proof procedes by induction on the structure of trees.
+	\begin{itemize}
+		\item $t = a$. Then
+		      $\interpret A (\tlabel t {\epsilon}) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec A (\epsilon)$
+		\item $t = a(t',t'')$. Then
+		      \begin{eqnarray*}
+			      \exec A (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec A (0), \exec A (1)) \\
+			      &=& \delta_a (\exec A (0), \exec A (1)) \\
+			      &=& \delta_a (\exec A (\epsilon_{t'}), \exec A (\epsilon_{t''})) \\
+			      &=& \delta_a (\interpret A (t'), \interpret A (t'')) \\
+			      &=& \interpret A (t)
+		      \end{eqnarray*}
+	\end{itemize}
+	\todo{reread this proof carefully and discuss it with Thomas.}
+\end{proof}
+
+\begin{theorem}
+	Let $N$ be a "NFTA", there exists a "DFTA", $D$, such that
+	$$\lang N = \lang D$$
+\end{theorem}
+
+\begin{proof}
+	We consider the automaton
+	$$ D = (\Sigma, \parts Q, \text{init} : \Sigma \to \parts Q, \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, F' \subseteq \parts Q) $$
+	where
+	\begin{itemize}
+		\item $\init (a) = \setdef {q \in Q} {(a,q) \in I}$
+		\item $\delta (a, X, Y) = \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}$
+		\item $F' = \setdef {X \in \parts Q} {X \cap F \neq \emptyset}$
+	\end{itemize}
+	\todo{Finish proof}
+\end{proof}
+
+
+\begin{definition}
+	We say that an automaton is ""order-invertible"" if
+	$$ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) $$ et
+	and for the non deterministic ones
+	$$ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta $$
+
+    \todo{discuss this name with Thomas}
+\end{definition}
+
+
+\begin{lemma}
+	If $N$ a "NFTA" is "order-invertible", then it's corresponding deterministic automaton is also "order-invertible".
+\end{lemma}
+
+\begin{proof}
+	Let $D$ be the deterministic automaton corresponding to $N$.
+	\begin{eqnarray*}
+		\delta_a (X,Y) &=& \setdef {q \in Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y} \\
+		&=& \setdef {q \in Q} {(y,x,a,q) \in \Delta, x \in X, y \in Y}  \reason {$N$ is "order-invertible"} \\
+		&=& \delta_a (Y,X)
+	\end{eqnarray*}
+\end{proof}
+
+\begin{theorem}
+	If $A$ is a "order-invertible" "NFTA"  then there exists an MSO formula $\phi$ such that for all $\tree_{\Sigma} \ t$,
+	$$ M(t) \models \phi \iff t \in \lang A$$
+	\todo{Write up all of the missing definitions}
+\end{theorem}
+
+\begin{proof}
+	\todo {}
+
+\end{proof}
+
+
 
 \bibliographystyle{alpha}
 \bibliography{tre-uniformisation}
