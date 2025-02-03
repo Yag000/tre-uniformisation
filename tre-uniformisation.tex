@@ -36,6 +36,7 @@
 \knowledge{execution}[exec]{notion}
 \knowledge{init}{notion}
 \knowledge{order-invertible}{notion}
+\knowledge{acceptant}{notion}
 
 
 \begin{document}
@@ -80,6 +81,10 @@
 	$$
 \end{definition}
 
+\begin{remark}
+	$\leaves t \subseteq \nodes t$
+\end{remark}
+
 
 \begin{notation}
 	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$ :
@@ -114,7 +119,7 @@
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
 	A Non-Deterministic Bottom-Up Tree automaton (NFTA) is defined as a tuple:
-	$$ (\Sigma, Q, I \subseteq \Sigma \times Q, \Delta \subseteq Q \times Q \times \Sigma \times Q, F) $$
+	$$ (\Sigma, Q, I \subseteq \Sigma \times Q, \Delta \subseteq Q \times Q \times \Sigma \times Q, F \subseteq Q) $$
 \end{definition}
 
 \begin{definition}[Interpretation of an automaton]
@@ -134,17 +139,35 @@
 
 
 \begin{definition}[Execution of an automaton]
-	The ""execution"" of an automaton $A$ over a $\tree$ $t$ is :
+	The ""execution"" of a "DFTA" $A$ over a $\tree$ $t$ is :
 
 	\begin{eqnarray*}
 		\exec A : \nodes t &\to & Q \\
 		\exec A (n)  &=& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
-		\exec A (n)  &=& \delta_{\tlabel t n}(\exec A (n0), \exec A (n1)) \text{ if } n \in \nodes t \cap \leaves t
+		\exec A (n)  &=& \delta_{\tlabel t n}(\exec A (n0), \exec A (n1)) \text{ if } n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec A$ is acceptant if $\exec A (\epsilon) \in F$.
-	\todo{extend definition to NFTA}
+	We say that $\exec A$ is ""acceptant"" if $\exec A (\epsilon) \in F$.
+
+	In the case of a "NFTA" :
+
+	\begin{eqnarray*}
+		\exec A : \nodes t &\to& \parts Q \\
+		(\tlabel t b,  \exec A (n)) \in I &\text{ if }& n \in \leaves t \\
+		(\exec A (n0), \exec A (n1), \tlabel t n, \exec A (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
+	\end{eqnarray*}
+
+	We say that $\exec A$ is "acceptant" if $\exists f \in F, f \in \exec A (\epsilon)$.
+
+	\todo{Improve the NFTA definition}
 \end{definition}
+
+\begin{lemma}
+	For a "NFTA", $N$, for any tree $t = a(t',t'')$,
+	$\exec N (0) = \exec N (\epsilon_{t'})$
+	and
+	$\exec N (1) = \exec N (\epsilon_{t''})$.
+\end{lemma}
 
 \begin{remark}
 	Let $A$ be a "DFTA",
@@ -183,7 +206,44 @@
 		\item $\delta (a, X, Y) = \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}$
 		\item $F' = \setdef {X \in \parts Q} {X \cap F \neq \emptyset}$
 	\end{itemize}
-	\todo{Finish proof}
+
+	We will show that for any tree $t$,
+	$$ \exec D (\epsilon)  = \exec N (\epsilon)$$
+	The proof proceeds by induction on the structure of trees.
+	\begin{itemize}
+		\item $(t = a)$\\
+		      In this case, $\exec D (\epsilon) = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
+		      exactly with $\exec N (\epsilon)$.
+
+		\item $(t = a(t',t''))$\\
+		      By induction we know that
+		      $\exec D (\epsilon_{t'}) = \exec N ({\epsilon_{t'}})$
+		      and
+		      $\exec D (\epsilon_{t''}) =  \exec N ({\epsilon_{t''}})$
+
+		      \begin{eqnarray*}
+			      \exec D (\epsilon) &=& \delta_a(\exec D (0), \exec D (1)) \\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D (0), y \in \exec D (1)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N ({\epsilon_{t'}}), y \in \exec N ({\epsilon_{t''}})}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N (0), y \in \exec N (1)}\\
+			      &=& \exec N (\epsilon)
+		      \end{eqnarray*}
+	\end{itemize}
+	Then $ \exec D (\epsilon)  = \exec N (\epsilon)$.
+
+
+	We must now show that $D$ is "acceptant" iff $N$ is "acceptant".
+
+	\begin{eqnarray*}
+		N \text{ is "acceptant" } &\iff& F \cap \exec N (\epsilon) \neq \emptyset \\
+		&\iff& F \cap \exec D (\epsilon) \neq \emptyset \\
+		&\iff& \exec D (\epsilon) \in F' \\
+		&\iff& D \text{ is "acceptant" }
+	\end{eqnarray*}
+
+	and so $\lang N = \lang D$.
+
+	\todo{Discuss proof}
 \end{proof}
 
 
@@ -218,6 +278,19 @@
 
 \begin{proof}
 	\todo {}
+
+	Let $A$ be a "NFTA", and $k = \abs Q$.
+	$$\text{leaf} (x) = \forall y, \ancestor y x$$
+	$$\text{top} (x) = \forall y, \ancestor x y$$
+	$$F_i = \setdef {a \in \Sigma} {(i0,i1,a,i) \in \Delta, i \in F}$$
+
+
+	\begin{eqnarray*}
+		\phi = \exists X_0,\ldots, \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \\
+		&\land& \forall x \left( \text{leaf} (x) \ra \bigvee_{(a,i)\in I}  X_i(x)   \right) \\
+		&\land& \forall x \left(\lnot \text{leaf}(x) \ra \bigvee_{(i,j,a,k)\in \Delta}  \left(X_i(x0) \land X_j(x1) \land a(x) \land X_k(x)\right)\right) \\
+		&\land& \forall x \left(\text{top}(x) \ra \bigwedge_{i= 0}^k \left( X_i(x) \ra \bigvee_{a \in F_i} a(x) \right)\right)
+	\end{eqnarray*}
 
 \end{proof}
 
