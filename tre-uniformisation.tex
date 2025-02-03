@@ -59,9 +59,9 @@
 	The ""nodes"" of a $\tree$ are defined as follows:
 	$$
 		\nodes t = \left\{  \begin{array}{cc}
-			\epsilon                                & \text{ si } t = a         \\
+			\epsilon                                & \text{ if } t = a         \\
 			\epsilon \cup \setdef {0u} {u \in \nodes {t'}}
-			\cup \setdef {0u} {u \in \nodes {t''} } & \text{ si } t = a(t',t'')
+			\cup \setdef {1u} {u \in \nodes {t''} } & \text{ if } t = a(t',t'')
 		\end{array}
 		\right.
 	$$
@@ -72,9 +72,9 @@
 	The ""leaves"" of a $\tree$ are defined as follows:
 	$$
 		\leaves t = \left\{  \begin{array}{cc}
-			\epsilon                                 & \text{ si } t = a         \\
+			\epsilon                                 & \text{ if } t = a         \\
 			\setdef {0u} {u \in \leaves {t'}}
-			\cup \setdef {0u} {u \in \leaves {t''} } & \text{ si } t = a(t',t'')
+			\cup \setdef {1u} {u \in \leaves {t''} } & \text{ if } t = a(t',t'')
 		\end{array}
 		\right.
 	$$
@@ -82,7 +82,16 @@
 
 
 \begin{notation}
-	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$.
+	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$ :
+	$$
+		\tlabel t n = \left\{  \begin{array}{cc}
+			a               & \text{ if } t = a \text{ and } n = \epsilon         \\
+			a               & \text{ if } t = a(t',t'') \text{ and } n = \epsilon \\
+			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m       \\
+			\tlabel {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
+		\end{array}
+		\right.
+	$$
 \end{notation}
 
 \begin{definition}
@@ -115,7 +124,7 @@
 		\interpret A (a) &=& \text{init}_a \\
 		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t'))
 	\end{eqnarray*}
-    \todo{extend definition to NFTA ?}
+	\todo{extend definition to NFTA ?}
 \end{definition}
 
 \begin{definition}[Language of an automaton]
@@ -129,12 +138,12 @@
 
 	\begin{eqnarray*}
 		\exec A : \nodes t &\to & Q \\
-		\exec A (n)  &=& \init_{\tlabel t n} \text{ si } n \in \leaves t \\
-		\exec A (n)  &=& \delta_{\tlabel t n}(\exec A (n0), \exec A (n1)) \text{ si } n \in \nodes t \cap \leaves t
+		\exec A (n)  &=& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
+		\exec A (n)  &=& \delta_{\tlabel t n}(\exec A (n0), \exec A (n1)) \text{ if } n \in \nodes t \cap \leaves t
 	\end{eqnarray*}
 
 	We say that $\exec A$ is acceptant if $\exec A (\epsilon) \in F$.
-    \todo{extend definition to NFTA}
+	\todo{extend definition to NFTA}
 \end{definition}
 
 \begin{remark}
@@ -184,7 +193,7 @@
 	and for the non deterministic ones
 	$$ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta $$
 
-    \todo{discuss this name with Thomas}
+	\todo{discuss this name with Thomas}
 \end{definition}
 
 
