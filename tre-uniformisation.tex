@@ -35,7 +35,7 @@
 \knowledge{ancestor}{notion}
 \knowledge{execution}[exec]{notion}
 \knowledge{init}{notion}
-\knowledge{order-invertible}{notion}
+\knowledge{order-insensitive}{notion}
 \knowledge{acceptant}{notion}
 
 
@@ -58,93 +58,96 @@
 
 \begin{definition}[Nodes]
 	The ""nodes"" of a $\tree$ are defined as follows:
-	$$
-		\nodes t = \left\{  \begin{array}{cc}
+	\[
+		\nodes t = \begin{cases}
 			\epsilon                                & \text{ if } t = a         \\
 			\epsilon \cup \setdef {0u} {u \in \nodes {t'}}
 			\cup \setdef {1u} {u \in \nodes {t''} } & \text{ if } t = a(t',t'')
-		\end{array}
-		\right.
-	$$
+		\end{cases}
+	\]
 \end{definition}
 
 
 \begin{definition}[Leaves]
 	The ""leaves"" of a $\tree$ are defined as follows:
-	$$
-		\leaves t = \left\{  \begin{array}{cc}
+	\[
+		\leaves t = \begin{cases}
 			\epsilon                                 & \text{ if } t = a         \\
 			\setdef {0u} {u \in \leaves {t'}}
 			\cup \setdef {1u} {u \in \leaves {t''} } & \text{ if } t = a(t',t'')
-		\end{array}
-		\right.
-	$$
+		\end{cases}
+	\]
 \end{definition}
 
 \begin{remark}
 	$\leaves t \subseteq \nodes t$
 \end{remark}
 
-\begin{notation}
+\begin{definition}
 	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$ :
-	$$
-		\tlabel t n = \left\{  \begin{array}{cc}
+	\[
+		\tlabel t n =   \begin{cases}
 			a               & \text{ if } t = a \text{ and } n = \epsilon         \\
 			a               & \text{ if } t = a(t',t'') \text{ and } n = \epsilon \\
 			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m       \\
 			\tlabel {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
-		\end{array}
-		\right.
-	$$
-\end{notation}
+		\end{cases}
+	\]
+\end{definition}
 
 \begin{definition}
 	Let $t$ be a $\tree$ and $x, y \in \nodes t$, we define the ""ancestor"" relation as
-	$$ \ancestor x y \iff \exists z \in \nodes t, y = xz$$
+	\[ \ancestor x y \iff \exists z \in \nodes t, y = xz \]
 \end{definition}
 
 
 \section{Tree Automata}
 
 \begin{definition}[""Deterministic Bottom-Up Tree automaton""]
-	A Deterministic Bottom-Up Tree automaton (DFTA) is defined as a tuple:
-	$$ (\Sigma, Q, \text{init} : \Sigma \to Q, \delta : \Sigma \times Q \times Q \to Q, F) $$
-	where:
+	A Deterministic Bottom-Up Tree automaton (DFTA) is defined as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of states.
-		\item ""init"" is a function that initializes the states of the leaves.
-		\item $\delta$ is the transition function.
-		\item $F$ is the set of final states.
+		\item $\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
+		\item $\delta : \Sigma \times Q \times Q \to Q$ is the transition function.
+		\item $F \subseteq Q$ is the set of final states.
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
-	A Non-Deterministic Bottom-Up Tree automaton (NFTA) is defined as a tuple:
-	$$ (\Sigma, Q, I \subseteq \Sigma \times Q, \Delta \subseteq Q \times Q \times \Sigma \times Q, F \subseteq Q) $$
-\end{definition}
 
 \begin{definition}[Interpretation of an automaton]
 	The ""interpretation"" of an "DFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\interpret A : \tree_{\Sigma} &\to& Q \\
-		\interpret A (a) &=& \text{init}_a \\
-		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t'))
+		a &\mapsto& \init_a \\
+		a(t,t') &\mapsto& \delta_a (\interpret A (t), \interpret A (t'))
 	\end{eqnarray*}
 
 	The ""interpretation"" of an "NFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\interpret A : \tree_{\Sigma} &\to& \parts Q \\
-		\interpret A (a) &=&   \setdef {q \in Q} {(a,q) \in I} \\
-		\interpret A (a(t,t')) &=&
-		\setdef {q \in Q} {(q_t, q_{t'}, a, q) \in \Delta, q_t \in \interpret A (t), q_{t'} \in \interpret A (t')}
+		a &\mapsto&   \setdef {q \in Q} {(a,q) \in I} \\
+		a(t,t') &\mapsto& \setdef {q \in Q} {(q_t, q_{t'}, a, q) \in \Delta, q_t \in \interpret A (t), q_{t'} \in \interpret A (t')}
 	\end{eqnarray*}
 	\todo{check definition of NFTA}
 \end{definition}
 
+
+\begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
+	A Non-Deterministic Bottom-Up Tree automaton (NFTA) is defined as a tuple
+	$(\Sigma, Q, I \subseteq, \Delta , F )$ where:
+	\begin{itemize}
+		\item $\Sigma$ is an alphabet.
+		\item $Q$ is a finite set of states.
+		\item $I \subseteq \Sigma \times Q$ correspond to the possible states of the leaves.
+		\item $\Delta \subseteq Q \times Q \times \Sigma \times Q$ are the transitions.
+		\item $F \subseteq Q$ is the set of final states.
+	\end{itemize}
+\end{definition}
+
 \begin{definition}[Language of an automaton]
 	Let $A$ be a "DFTA". Its ""associated language"" is defined as:
-	$$\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}$$
+	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}\]
 \end{definition}
 
 
@@ -153,8 +156,8 @@
 
 	\begin{eqnarray*}
 		\exec A t : \nodes t &\to & Q \\
-		\exec A t (n)  &=& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
-		\exec A t (n)  &=& \delta_{\tlabel t n}(\exec A t (n0), \exec A t (n1)) \text{ if } n \in \nodes t \setminus \leaves t
+		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
+		n  &\mapsto& \delta_{\tlabel t n}(\exec A t (n0), \exec A t (n1)) \text{ if } n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
 	We say that $\exec A t$ is ""acceptant"" if $\exec A t (\epsilon) \in F$.
@@ -167,14 +170,14 @@
 		(\exec A t (n0), \exec A t (n1), \tlabel t n, \exec A t (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec A t$ is "acceptant" if $F \cap \exec A t (\epsilon) \neq 0$.
+	We say that $\exec A t$ is "acceptant" if $F \cap \exec A t (\epsilon) \neq \emptyset$.
 
 	\todo{Improve the NFTA definition}
 \end{definition}
 
 \begin{lemma}
 	For a "NFTA", $N$, for any tree $t = a(t',t'')$,
-	$$\exec N t (0) = \exec N {t'} (\epsilon) \text{ and } \exec N t (1) = \exec N {t'} (\epsilon)$$
+	\[ \exec N t (0) = \exec N {t'} (\epsilon) \text{ and } \exec N t (1) = \exec N {t'} (\epsilon) \]
 \end{lemma}
 
 \begin{proof}
@@ -184,7 +187,7 @@
 
 \begin{lemma}
 	Let $A$ be a "DFTA",
-	$$ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec A t (\epsilon) \in F} $$
+	\[ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec A t (\epsilon) \in F} \]
 \end{lemma}
 
 \begin{proof}
@@ -207,12 +210,12 @@
 
 \begin{theorem}
 	Let $N$ be a "NFTA", there exists a "DFTA", $D$, such that
-	$$\lang N = \lang D$$
+	\[ \lang N = \lang D \]
 \end{theorem}
 
 \begin{proof}
 	We consider the automaton
-	$$ D = (\Sigma, \parts Q, \text{init} : \Sigma \to \parts Q, \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, F' \subseteq \parts Q) $$
+	\[ D = (\Sigma, \parts Q, \text{init} : \Sigma \to \parts Q, \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, F' \subseteq \parts Q) \]
 	where
 	\begin{itemize}
 		\item $\init (a) = \setdef {q \in Q} {(a,q) \in I}$
@@ -221,7 +224,7 @@
 	\end{itemize}
 
 	We will show that for any tree $t$,
-	$$ \exec D  t (\epsilon)  = \exec N t (\epsilon)$$
+	\[ \exec D  t (\epsilon)  = \exec N t (\epsilon) \]
 	The proof proceeds by induction on the structure of trees.
 	\begin{itemize}
 		\item $(t = a)$\\
@@ -233,17 +236,16 @@
 		      $\exec D {t'} (\epsilon) = \exec N {t'} (\epsilon)$
 		      and
 		      $\exec D {t''} (\epsilon) =  \exec N {t''} (\epsilon)$
-
 		      \begin{eqnarray*}
 			      \exec D t (\epsilon) &=& \delta_a(\exec D t (0), \exec D t (1)) \\
 			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D t (0), y \in \exec D t (1)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D {t'} (\epsilon), y \in \exec D {t''} (\epsilon)}\\
 			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N {t'} (\epsilon), y \in \exec N {t''} (\epsilon)}\\
 			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N t (0), y \in \exec N t (1)}\\
 			      &=& \exec N t (\epsilon)
 		      \end{eqnarray*}
 	\end{itemize}
 	Then $ \exec D t (\epsilon)  = \exec N t (\epsilon)$.
-
 
 	We must now show that $D$ is "acceptant" iff $N$ is "acceptant".
 
@@ -261,24 +263,24 @@
 
 
 \begin{definition}
-	We say that a "DFTA" is ""order-invertible"" if
-	$$ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) $$
+	We say that a "DFTA" is ""order-insensitive"" if
+	\[ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) \]
 	and for a "NFTA"
-	$$ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta $$
+	\[ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta \]
 
 	\todo{discuss this name with Thomas}
 \end{definition}
 
 
 \begin{lemma}
-	If $N$ a "NFTA" is "order-invertible", then it's corresponding deterministic automaton is also "order-invertible".
+	If $N$ a "NFTA" is "order-insensitive", then it's corresponding deterministic automaton is also "order-insensitive".
 \end{lemma}
 
 \begin{proof}
 	Let $D$ be the deterministic automaton corresponding to $N$.
 	\begin{eqnarray*}
 		\delta_a (X,Y) &=& \setdef {q \in Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y} \\
-		&=& \setdef {q \in Q} {(y,x,a,q) \in \Delta, x \in X, y \in Y}  \reason {$N$ is "order-invertible"} \\
+		&=& \setdef {q \in Q} {(y,x,a,q) \in \Delta, x \in X, y \in Y}  \reason {$N$ is "order-insensitive"} \\
 		&=& \delta_a (Y,X)
 	\end{eqnarray*}
 \end{proof}
@@ -286,16 +288,16 @@
 \section{MSO}
 
 \begin{theorem}
-	If $A$ is a "order-invertible" "NFTA"  then there exists an MSO formula $\phi$ such that for all $\tree_{\Sigma} \ t$,
-	$$ M(t) \models \phi \iff t \in \lang A$$
+	If $A$ is a "order-insensitive" "NFTA"  then there exists an MSO formula $\phi$ such that for all $\tree_{\Sigma} \ t$,
+	\[ M(t) \models \phi \iff t \in \lang A \]
 	\todo{Write up all of the missing definitions}
 \end{theorem}
 
 \begin{proof}
 	Let $A$ be a "NFTA", and $k = \abs Q$.
-	$$\text{leaf} (x) = \forall y, \ancestor y x$$
-	$$\text{top} (x) = \forall y, \ancestor x y$$
-	$$F_i = \setdef {a \in \Sigma} {(i0,i1,a,i) \in \Delta, i \in F}$$
+	\[\text{leaf} (x) = \forall y, \ancestor y x \]
+	\[\text{top} (x) = \forall y, \ancestor x y \]
+	\[F_i = \setdef {a \in \Sigma} {(i0,i1,a,i) \in \Delta, i \in F}\]
 
 
 	\begin{eqnarray*}
