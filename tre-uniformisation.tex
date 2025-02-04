@@ -186,21 +186,21 @@
 \end{remark}
 
 \begin{proof}
-	We will proof that for any $\tree \ t$, $\interpret A (\tlabel t {\epsilon}) = \exec A t (\epsilon)$.
+	We will proof that for any $\tree \ t$, $\interpret A (t) = \exec A t (\epsilon)$.
 	The proof procedes by induction on the structure of trees.
 	\begin{itemize}
 		\item $t = a$. Then
-		      $\interpret A (\tlabel t {\epsilon}) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec A t (\epsilon)$
+		      $\interpret A (t) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec A t (\epsilon)$
 		\item $t = a(t',t'')$. Then
 		      \begin{eqnarray*}
 			      \exec A t (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec A t (0), \exec A t (1)) \\
 			      &=& \delta_a (\exec A t (0), \exec A t (1)) \\
-			      &=& \delta_a (\exec A {t'}(\epsilon), \exec A {t'''} (\epsilon)) \\
+			      &=& \delta_a (\exec A {t'}(\epsilon), \exec A {t''} (\epsilon)) \\
 			      &=& \delta_a (\interpret A (t'), \interpret A (t'')) \\
 			      &=& \interpret A (t)
 		      \end{eqnarray*}
 	\end{itemize}
-	\todo{reread this proof carefully and discuss it with Thomas.}
+	\todo{discuss this proof with Thomas.}
 \end{proof}
 
 \begin{theorem}
