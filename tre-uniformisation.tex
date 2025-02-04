@@ -123,13 +123,21 @@
 \end{definition}
 
 \begin{definition}[Interpretation of an automaton]
-	The ""interpretation"" of an automaton $A$ over an alphabet $\Sigma$ is defined as follows:
+	The ""interpretation"" of an "DFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\interpret A : \tree_{\Sigma} &\to& Q \\
 		\interpret A (a) &=& \text{init}_a \\
 		\interpret A (a(t,t')) &=& \delta_a (\interpret A (t), \interpret A (t'))
 	\end{eqnarray*}
-	\todo{extend definition to NFTA ?}
+
+	The ""interpretation"" of an "NFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
+	\begin{eqnarray*}
+		\interpret A : \tree_{\Sigma} &\to& \parts Q \\
+		\interpret A (a) &=&   \setdef {q \in Q} {(a,q) \in I} \\
+		\interpret A (a(t,t')) &=&
+		\setdef {q \in Q} {(q_t, q_{t'}, a, q) \in \Delta, q_t \in \interpret A (t), q_{t'} \in \interpret A (t')}
+	\end{eqnarray*}
+	\todo{check definition of NFTA}
 \end{definition}
 
 \begin{definition}[Language of an automaton]
@@ -142,49 +150,52 @@
 	The ""execution"" of a "DFTA" $A$ over a $\tree$ $t$ is :
 
 	\begin{eqnarray*}
-		\exec A : \nodes t &\to & Q \\
-		\exec A (n)  &=& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
-		\exec A (n)  &=& \delta_{\tlabel t n}(\exec A (n0), \exec A (n1)) \text{ if } n \in \nodes t \setminus \leaves t
+		\exec A t : \nodes t &\to & Q \\
+		\exec A t (n)  &=& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
+		\exec A t (n)  &=& \delta_{\tlabel t n}(\exec A t (n0), \exec A t (n1)) \text{ if } n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec A$ is ""acceptant"" if $\exec A (\epsilon) \in F$.
+	We say that $\exec A t$ is ""acceptant"" if $\exec A t (\epsilon) \in F$.
 
 	In the case of a "NFTA" :
 
 	\begin{eqnarray*}
-		\exec A : \nodes t &\to& \parts Q \\
-		(\tlabel t b,  \exec A (n)) \in I &\text{ if }& n \in \leaves t \\
-		(\exec A (n0), \exec A (n1), \tlabel t n, \exec A (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
+		\exec A t : \nodes t &\to& \parts Q \\
+		(\tlabel t b,  \exec A t (n)) \in I &\text{ if }& n \in \leaves t \\
+		(\exec A t (n0), \exec A t (n1), \tlabel t n, \exec A t (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec A$ is "acceptant" if $\exists f \in F, f \in \exec A (\epsilon)$.
+	We say that $\exec A t$ is "acceptant" if $F \cap \exec A t (\epsilon) \neq 0$.
 
 	\todo{Improve the NFTA definition}
 \end{definition}
 
 \begin{lemma}
 	For a "NFTA", $N$, for any tree $t = a(t',t'')$,
-	$\exec N (0) = \exec N (\epsilon_{t'})$
-	and
-	$\exec N (1) = \exec N (\epsilon_{t''})$.
+	$$\exec N t (0) = \exec N {t'} (\epsilon) \text{ and } \exec N t (1) = \exec N {t'} (\epsilon)$$
 \end{lemma}
+
+\begin{proof}
+	\todo{}
+\end{proof}
+
 
 \begin{remark}
 	Let $A$ be a "DFTA",
-	$$ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec A (\epsilon) \in F} $$
+	$$ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec A t (\epsilon) \in F} $$
 \end{remark}
 
 \begin{proof}
-	We will proof that for any $\tree \ t$, $\interpret A (\tlabel t {\epsilon}) = \exec A (\epsilon)$.
+	We will proof that for any $\tree \ t$, $\interpret A (\tlabel t {\epsilon}) = \exec A t (\epsilon)$.
 	The proof procedes by induction on the structure of trees.
 	\begin{itemize}
 		\item $t = a$. Then
-		      $\interpret A (\tlabel t {\epsilon}) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec A (\epsilon)$
+		      $\interpret A (\tlabel t {\epsilon}) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec A t (\epsilon)$
 		\item $t = a(t',t'')$. Then
 		      \begin{eqnarray*}
-			      \exec A (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec A (0), \exec A (1)) \\
-			      &=& \delta_a (\exec A (0), \exec A (1)) \\
-			      &=& \delta_a (\exec A (\epsilon_{t'}), \exec A (\epsilon_{t''})) \\
+			      \exec A t (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec A t (0), \exec A t (1)) \\
+			      &=& \delta_a (\exec A t (0), \exec A t (1)) \\
+			      &=& \delta_a (\exec A {t'}(\epsilon), \exec A {t'''} (\epsilon)) \\
 			      &=& \delta_a (\interpret A (t'), \interpret A (t'')) \\
 			      &=& \interpret A (t)
 		      \end{eqnarray*}
@@ -208,36 +219,36 @@
 	\end{itemize}
 
 	We will show that for any tree $t$,
-	$$ \exec D (\epsilon)  = \exec N (\epsilon)$$
+	$$ \exec D  t (\epsilon)  = \exec N t (\epsilon)$$
 	The proof proceeds by induction on the structure of trees.
 	\begin{itemize}
 		\item $(t = a)$\\
-		      In this case, $\exec D (\epsilon) = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
-		      exactly with $\exec N (\epsilon)$.
+		      In this case, $\exec D t (\epsilon) = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
+		      exactly with $\exec N  t (\epsilon)$.
 
 		\item $(t = a(t',t''))$\\
 		      By induction we know that
-		      $\exec D (\epsilon_{t'}) = \exec N ({\epsilon_{t'}})$
+		      $\exec D {t'} (\epsilon) = \exec N {t'} (\epsilon)$
 		      and
-		      $\exec D (\epsilon_{t''}) =  \exec N ({\epsilon_{t''}})$
+		      $\exec D {t''} (\epsilon) =  \exec N {t''} (\epsilon)$
 
 		      \begin{eqnarray*}
-			      \exec D (\epsilon) &=& \delta_a(\exec D (0), \exec D (1)) \\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D (0), y \in \exec D (1)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N ({\epsilon_{t'}}), y \in \exec N ({\epsilon_{t''}})}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N (0), y \in \exec N (1)}\\
-			      &=& \exec N (\epsilon)
+			      \exec D t (\epsilon) &=& \delta_a(\exec D t (0), \exec D t (1)) \\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D t (0), y \in \exec D t (1)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N {t'} (\epsilon), y \in \exec N {t''} (\epsilon)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N t (0), y \in \exec N t (1)}\\
+			      &=& \exec N t (\epsilon)
 		      \end{eqnarray*}
 	\end{itemize}
-	Then $ \exec D (\epsilon)  = \exec N (\epsilon)$.
+	Then $ \exec D t (\epsilon)  = \exec N t (\epsilon)$.
 
 
 	We must now show that $D$ is "acceptant" iff $N$ is "acceptant".
 
 	\begin{eqnarray*}
-		N \text{ is "acceptant" } &\iff& F \cap \exec N (\epsilon) \neq \emptyset \\
-		&\iff& F \cap \exec D (\epsilon) \neq \emptyset \\
-		&\iff& \exec D (\epsilon) \in F' \\
+		N \text{ is "acceptant" } &\iff& F \cap \exec N t (\epsilon) \neq \emptyset \\
+		&\iff& F \cap \exec D t (\epsilon) \neq \emptyset \\
+		&\iff& \exec D t (\epsilon) \in F' \\
 		&\iff& D \text{ is "acceptant" }
 	\end{eqnarray*}
 
@@ -248,9 +259,9 @@
 
 
 \begin{definition}
-	We say that an automaton is ""order-invertible"" if
-	$$ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) $$ et
-	and for the non deterministic ones
+	We say that a "DFTA" is ""order-invertible"" if
+	$$ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) $$
+	and for a "NFTA"
 	$$ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta $$
 
 	\todo{discuss this name with Thomas}
