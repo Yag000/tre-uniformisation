@@ -45,7 +45,7 @@
 
 \maketitle
 
-\section{Definitions}
+\section{Trees}
 
 
 \begin{definition}[Tree]
@@ -85,7 +85,6 @@
 	$\leaves t \subseteq \nodes t$
 \end{remark}
 
-
 \begin{notation}
 	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$ :
 	$$
@@ -103,6 +102,9 @@
 	Let $t$ be a $\tree$ and $x, y \in \nodes t$, we define the ""ancestor"" relation as
 	$$ \ancestor x y \iff \exists z \in \nodes t, y = xz$$
 \end{definition}
+
+
+\section{Tree Automata}
 
 \begin{definition}[""Deterministic Bottom-Up Tree automaton""]
 	A Deterministic Bottom-Up Tree automaton (DFTA) is defined as a tuple:
@@ -280,6 +282,8 @@
 		&=& \delta_a (Y,X)
 	\end{eqnarray*}
 \end{proof}
+
+\section{MSO}
 
 \begin{theorem}
 	If $A$ is a "order-invertible" "NFTA"  then there exists an MSO formula $\phi$ such that for all $\tree_{\Sigma} \ t$,
