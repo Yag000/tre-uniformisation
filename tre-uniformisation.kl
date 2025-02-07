@@ -4,8 +4,8 @@
     | Tree
     | Trees
 
-\knowledge{Deterministic Bottom-Up Tree automaton}[DFTA]{notion}
-\knowledge{Non-Deterministic Bottom-Up Tree automaton}[NFTA]{notion}
+\knowledge{Deterministic Bottom-Up Tree automaton}[DBUA]{notion}
+\knowledge{Non-Deterministic Bottom-Up Tree automaton}[NBUA]{notion}
 
 \knowledge{interpretation}{notion}
 \knowledge{associated language}[lang]{notion}

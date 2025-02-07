@@ -103,7 +103,7 @@
 \section{Tree Automata}
 
 \begin{definition}[""Deterministic Bottom-Up Tree automaton""]
-	A Deterministic Bottom-Up Tree automaton (DFTA) is defined as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
+	A Deterministic Bottom-Up Tree automaton (DBUA) is defined as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of states.
@@ -114,7 +114,7 @@
 \end{definition}
 
 \begin{definition}[Interpretation of an automaton]
-	The ""interpretation"" of an "DFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
+	The ""interpretation"" of a "DBUA" $A$ over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\interpret A : \tree_{\Sigma} &\to& Q \\
 		a &\mapsto& \init_a \\
@@ -123,12 +123,12 @@
 \end{definition}
 
 \begin{definition}[Language of an automaton]
-	Let $A$ be a "DFTA". Its ""associated language"" is defined as:
+	Let $A$ be a "DBUA". Its ""associated language"" is defined as:
 	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}\]
 \end{definition}
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
-	A Non-Deterministic Bottom-Up Tree automaton (NFTA) is defined as a tuple
+	A Non-Deterministic Bottom-Up Tree automaton (NBUA) is defined as a tuple
 	$(\Sigma, Q, I \subseteq, \Delta , F )$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
@@ -141,7 +141,7 @@
 
 
 \begin{definition}[Execution of an automaton]
-	An ""execution"" $\intro* \exec$ of a "NFTA" $A$ over a "tree" $t$ is :
+	An ""execution"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
 		\exec : \nodes t &\to& Q \\
@@ -153,7 +153,7 @@
 \end{definition}
 
 \begin{remark}
-	In the case of a "DFTA" there exists a unique "run" that corresponds to :
+	In the case of a "DBUA" there exists a unique "run" that corresponds to :
 
 	\begin{eqnarray*}
 		\exec : \nodes t &\to & Q \\
@@ -165,7 +165,7 @@
 \end{remark}
 
 \begin{lemma}\label{lem:exec-sub}
-	For a "DFTA" $A$, for any "run" $\exec$ over a "tree" $t$, and for any node $n \in \nodes t$, there exists $\exec'$ over
+	For a "DBUA" $A$, for any "run" $\exec$ over a "tree" $t$, and for any node $n \in \nodes t$, there exists $\exec'$ over
 	$\tnode t n$ such that $\exec (n) = \exec'(\epsilon)$.
 \end{lemma}
 
@@ -174,7 +174,7 @@
 \end{proof}
 
 \begin{lemma}
-	Let $A$ be a "DFTA",
+	Let $A$ be a "DBUA",
 	\[ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec (\epsilon) \in F} \]
 \end{lemma}
 
@@ -197,7 +197,7 @@
 \end{proof}
 
 \begin{theorem}
-	Let $N$ be a "NFTA", the "DFTA"
+	Let $N$ be a "NBUA", the "DBUA"
 	\[ D = (\Sigma, \parts Q, \text{init} , \delta , F' ) \]
 	where
 	\begin{itemize}
@@ -256,18 +256,17 @@
 
 
 \begin{definition}
-	We say that a "NFTA" is ""order-insensitive"" if
+	We say that a "NBUA" is ""order-insensitive"" if
 	\[ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta \]
 \end{definition}
 
 \begin{remark}
-	For a "DFTA" "order-insensitiveness" is equivalent to
+	For a "DBUA" "order-insensitiveness" is equivalent to
 	\[ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) \]
 \end{remark}
 
-
 \begin{lemma}
-	If $N$ a "NFTA" is "order-insensitive", then it's corresponding deterministic automaton is also "order-insensitive".
+	If $N$ a "NBUA" is "order-insensitive", then it's corresponding deterministic automaton is also "order-insensitive".
 \end{lemma}
 
 \begin{proof}
@@ -282,13 +281,13 @@
 \subsection{MSO}
 
 \begin{lemma}
-	If $A$ is a "order-insensitive" "NFTA"  then there exists an MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
+	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
 	\[ M(t) \models \phi \iff t \in \lang A \]
 	\todo{Write up all of the missing definitions}
 \end{lemma}
 
 \begin{proof}
-	Let $A$ be a "NFTA", and $k = \abs Q$.
+	Let $A$ be a "NBUA", and $k = \abs Q$.
 	\[\text{leaf} (x) = \forall y, \ancestor y x \]
 	\[\text{top} (x) = \forall y, \ancestor x y \]
 	\[F_i = \setdef {a \in \Sigma} {(i0,i1,a,i) \in \Delta, i \in F}\]
