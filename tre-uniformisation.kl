@@ -14,9 +14,16 @@
 \knowledge{label}{notion}
 \knowledge{ancestor}{notion}
 
-\knowledge{execution}{notion}
+\knowledge{notion}
+    | execution
+    | run
+
 \knowledge{\exec}[exec]{notion}
 
 \knowledge{init}{notion}
-\knowledge{order-insensitive}{notion}
+
+\knowledge{notion}
+    | order-insensitive
+    | order-insensitiveness
+
 \knowledge{acceptant}{notion}

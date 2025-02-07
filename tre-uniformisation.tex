@@ -72,7 +72,7 @@
 \end{remark}
 
 \begin{definition}
-	We note $\tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
+	We note $\intro* \tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
 	\[
 		\tlabel t n =   \begin{cases}
 			a               & \text{ if } t = a \text{ and } n = \epsilon         \\
@@ -141,10 +141,10 @@
 
 
 \begin{definition}[Execution of an automaton]
-	An ""execution"" of a "NFTA" $A$ over a "tree" $t$ is :
+	An ""execution"" $\intro* \exec$ of a "NFTA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
-		\intro* \exec : \nodes t &\to& Q \\
+		\exec : \nodes t &\to& Q \\
 		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \leaves t \\
 		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
@@ -198,12 +198,18 @@
 
 \begin{theorem}
 	Let $N$ be a "NFTA", the "DFTA"
-	\[ D = (\Sigma, \parts Q, \text{init} : \Sigma \to \parts Q, \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, F' \subseteq \parts Q) \]
+	\[ D = (\Sigma, \parts Q, \text{init} , \delta , F' ) \]
 	where
 	\begin{itemize}
-		\item $\init (a) = \setdef {q \in Q} {(a,q) \in I}$
-		\item $\delta ( X, Y, a) = \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}$
-		\item $F' = \setdef {X \in \parts Q} {X \cap F \neq \emptyset}$
+		\item \begin{align*}
+			      \init : \Sigma & \to      \parts Q                        \\
+			      a              & \mapsto  \setdef {q \in Q} {(a,q) \in I}
+		      \end{align*}
+		\item \begin{align*}
+			      \delta   : \Sigma \times \parts Q \times \parts Q & \to \parts Q                                                        \\
+			      ( X, Y, a)                                        & \mapsto \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}
+		      \end{align*}
+		\item $F'  = \setdef {X \in \parts Q} {X \cap F \neq \emptyset} \subseteq \parts Q$
 	\end{itemize}
 	verifies
 	\[ \lang N = \lang D \]
@@ -250,11 +256,14 @@
 
 
 \begin{definition}
-	We say that a "DFTA" is ""order-insensitive"" if
-	\[ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) \]
-	and for a "NFTA"
+	We say that a "NFTA" is ""order-insensitive"" if
 	\[ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta \]
 \end{definition}
+
+\begin{remark}
+	For a "DFTA" "order-insensitiveness" is equivalent to
+	\[ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) \]
+\end{remark}
 
 
 \begin{lemma}
