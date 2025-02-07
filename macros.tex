@@ -88,10 +88,12 @@
 
 \newcommand{\nodes}[1]{\kl[nodes]{\text{Nodes}} \left( #1 \right)}
 \newcommand{\leaves}[1]{\kl[leaves]{\text{Leaves}} \left( #1 \right)}
-\newcommand{\tlabel}[2]{\kl[label]{#1} \left( #2 \right)}
 
 
-\newcommand{\exec}[2]{ \kl[exec]{\rho_{#1}^{#2}} }
+\knowledgenewrobustcmd \tlabel [2] {\cmdkl {#1} \left( #2\right)}
+\knowledgenewrobustcmd \tnode [2] {\cmdkl {sub}_{#1} \left( #2\right)}
+
+\knowledgenewrobustcmd \exec {\cmdkl {\rho}}
 
 \newcommand{\init}{\kl[init]{\text{init}}}
 

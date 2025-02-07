@@ -1,0 +1,22 @@
+\knowledge{notion}
+    | tree
+    | trees
+    | Tree
+    | Trees
+
+\knowledge{Deterministic Bottom-Up Tree automaton}[DFTA]{notion}
+\knowledge{Non-Deterministic Bottom-Up Tree automaton}[NFTA]{notion}
+
+\knowledge{interpretation}{notion}
+\knowledge{associated language}[lang]{notion}
+\knowledge{nodes}{notion}
+\knowledge{leaves}{notion}
+\knowledge{label}{notion}
+\knowledge{ancestor}{notion}
+
+\knowledge{execution}{notion}
+\knowledge{\exec}[exec]{notion}
+
+\knowledge{init}{notion}
+\knowledge{order-insensitive}{notion}
+\knowledge{acceptant}{notion}

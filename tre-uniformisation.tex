@@ -19,25 +19,11 @@
 
 \usepackage[hyperref,paper]{knowledge}
 
-\usepackage{tre-uniformisation}
-
 \knowledgeconfigure{label scope=false, notion, quotation, protect quotation={tikzcd, automata}}
 
+\input{macros}
 
-\knowledge{tree}{notion}
-\knowledge{Deterministic Bottom-Up Tree automaton}[DFTA]{notion}
-\knowledge{Non-Deterministic Bottom-Up Tree automaton}[NFTA]{notion}
-\knowledge{interpretation}{notion}
-\knowledge{associated language}[lang]{notion}
-\knowledge{nodes}{notion}
-\knowledge{leaves}{notion}
-\knowledge{label}{notion}
-\knowledge{ancestor}{notion}
-\knowledge{execution}[exec]{notion}
-\knowledge{init}{notion}
-\knowledge{order-insensitive}{notion}
-\knowledge{acceptant}{notion}
-
+\input{tre-uniformisation.kl}
 
 \begin{document}
 
@@ -52,12 +38,14 @@
 	A ""tree"" over an alphabet $\Sigma$ is recursively defined as follows:
 	\begin{itemize}
 		\item $a$, where $a \in \Sigma$.
-		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are trees.
+		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are "trees".
 	\end{itemize}
+
+	The set of all "trees" over $\Sigma$ is $\tree_{\Sigma}$
 \end{definition}
 
 \begin{definition}[Nodes]
-	The ""nodes"" of a $\tree$ are defined as follows:
+	The ""nodes"" of a "tree" are defined as follows:
 	\[
 		\nodes t = \begin{cases}
 			\epsilon                                & \text{ if } t = a         \\
@@ -69,7 +57,7 @@
 
 
 \begin{definition}[Leaves]
-	The ""leaves"" of a $\tree$ are defined as follows:
+	The ""leaves"" of a "tree" are defined as follows:
 	\[
 		\leaves t = \begin{cases}
 			\epsilon                                 & \text{ if } t = a         \\
@@ -84,7 +72,7 @@
 \end{remark}
 
 \begin{definition}
-	We note $\tlabel t n$ the ""label"" of the node $n$ in the tree $t$ :
+	We note $\tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
 	\[
 		\tlabel t n =   \begin{cases}
 			a               & \text{ if } t = a \text{ and } n = \epsilon         \\
@@ -95,11 +83,22 @@
 	\]
 \end{definition}
 
+
 \begin{definition}
-	Let $t$ be a $\tree$ and $x, y \in \nodes t$, we define the ""ancestor"" relation as
-	\[ \ancestor x y \iff \exists z \in \nodes t, y = xz \]
+	We note $\intro* \tnode t n$ the subtree corresponding to the node $n$ in the "tree" $t$ :
+	\[
+		\tnode t n =   \begin{cases}
+			t              & \text{ if }  n = \epsilon                     \\
+			\tnode {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m \\
+			\tnode {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
+		\end{cases}
+	\]
 \end{definition}
 
+\begin{definition}
+	Let $t$ be a "tree" and $x, y \in \nodes t$, we define the ""ancestor"" relation as
+	\[ \ancestor x y \iff \exists z \in \nodes t, y = xz \]
+\end{definition}
 
 \section{Tree Automata}
 
@@ -108,12 +107,11 @@
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of states.
-		\item $\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
-		\item $\delta : \Sigma \times Q \times Q \to Q$ is the transition function.
+		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
+		\item $\delta : Q \times Q \times \Sigma \to Q$ is the transition function.
 		\item $F \subseteq Q$ is the set of final states.
 	\end{itemize}
 \end{definition}
-
 
 \begin{definition}[Interpretation of an automaton]
 	The ""interpretation"" of an "DFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
@@ -122,16 +120,12 @@
 		a &\mapsto& \init_a \\
 		a(t,t') &\mapsto& \delta_a (\interpret A (t), \interpret A (t'))
 	\end{eqnarray*}
-
-	The ""interpretation"" of an "NFTA" $A$ over an alphabet $\Sigma$ is defined as follows:
-	\begin{eqnarray*}
-		\interpret A : \tree_{\Sigma} &\to& \parts Q \\
-		a &\mapsto&   \setdef {q \in Q} {(a,q) \in I} \\
-		a(t,t') &\mapsto& \setdef {q \in Q} {(q_t, q_{t'}, a, q) \in \Delta, q_t \in \interpret A (t), q_{t'} \in \interpret A (t')}
-	\end{eqnarray*}
-	\todo{check definition of NFTA}
 \end{definition}
 
+\begin{definition}[Language of an automaton]
+	Let $A$ be a "DFTA". Its ""associated language"" is defined as:
+	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}\]
+\end{definition}
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
 	A Non-Deterministic Bottom-Up Tree automaton (NFTA) is defined as a tuple
@@ -145,63 +139,57 @@
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[Language of an automaton]
-	Let $A$ be a "DFTA". Its ""associated language"" is defined as:
-	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}\]
-\end{definition}
-
 
 \begin{definition}[Execution of an automaton]
-	The ""execution"" of a "DFTA" $A$ over a $\tree$ $t$ is :
+	An ""execution"" of a "NFTA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
-		\exec A t : \nodes t &\to & Q \\
-		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
-		n  &\mapsto& \delta_{\tlabel t n}(\exec A t (n0), \exec A t (n1)) \text{ if } n \in \nodes t \setminus \leaves t
+		\intro* \exec : \nodes t &\to& Q \\
+		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \leaves t \\
+		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec A t$ is ""acceptant"" if $\exec A t (\epsilon) \in F$.
-
-	In the case of a "NFTA" :
-
-	\begin{eqnarray*}
-		\exec A t : \nodes t &\to& \parts Q \\
-		(\tlabel t b,  \exec A t (n)) \in I &\text{ if }& n \in \leaves t \\
-		(\exec A t (n0), \exec A t (n1), \tlabel t n, \exec A t (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
-	\end{eqnarray*}
-
-	We say that $\exec A t$ is "acceptant" if $F \cap \exec A t (\epsilon) \neq \emptyset$.
-
-	\todo{Improve the NFTA definition}
+	We say that $\exec$ is ""acceptant"" if $F \cap \exec (\epsilon) \neq \emptyset$.
 \end{definition}
 
-\begin{lemma}
-	For a "NFTA", $N$, for any tree $t = a(t',t'')$,
-	\[ \exec N t (0) = \exec N {t'} (\epsilon) \text{ and } \exec N t (1) = \exec N {t'} (\epsilon) \]
+\begin{remark}
+	In the case of a "DFTA" there exists a unique "run" that corresponds to :
+
+	\begin{eqnarray*}
+		\exec : \nodes t &\to & Q \\
+		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
+		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \nodes t \setminus \leaves t
+	\end{eqnarray*}
+
+	$\exec$ is "acceptant" if $\exec (\epsilon) \in F$.
+\end{remark}
+
+\begin{lemma}\label{lem:exec-sub}
+	For a "DFTA" $A$, for any "run" $\exec$ over a "tree" $t$, and for any node $n \in \nodes t$, there exists $\exec'$ over
+	$\tnode t n$ such that $\exec (n) = \exec'(\epsilon)$.
 \end{lemma}
 
 \begin{proof}
 	\todo{}
 \end{proof}
 
-
 \begin{lemma}
 	Let $A$ be a "DFTA",
-	\[ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec A t (\epsilon) \in F} \]
+	\[ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec (\epsilon) \in F} \]
 \end{lemma}
 
 \begin{proof}
-	We will proof that for any $\tree \ t$, $\interpret A (t) = \exec A t (\epsilon)$.
-	The proof procedes by induction on the structure of trees.
+	We will proof that for any tree  "tree" $t$, $\interpret A (t) = \exec (\epsilon)$.
+	The proof procedes by induction on the structure of "trees".
 	\begin{itemize}
 		\item $t = a$. Then
-		      $\interpret A (t) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec A t (\epsilon)$
+		      $\interpret A (t) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
 		\item $t = a(t',t'')$. Then
 		      \begin{eqnarray*}
-			      \exec A t (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec A t (0), \exec A t (1)) \\
-			      &=& \delta_a (\exec A t (0), \exec A t (1)) \\
-			      &=& \delta_a (\exec A {t'}(\epsilon), \exec A {t''} (\epsilon)) \\
-			      &=& \delta_a (\interpret A (t'), \interpret A (t'')) \\
+			      \exec (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec (0), \exec (1)) \\
+			      &=& \delta_a (\exec (0), \exec (1)) \\
+			      &=& \delta_a (\exec' (\epsilon), \exec''  (\epsilon))  \reason{\ref{lem:exec-sub}}\\
+			      &=& \delta_a (\interpret A (t'), \interpret A (t'')) \reason{I.H.}\\
 			      &=& \interpret A (t)
 		      \end{eqnarray*}
 	\end{itemize}
@@ -209,50 +197,49 @@
 \end{proof}
 
 \begin{theorem}
-	Let $N$ be a "NFTA", there exists a "DFTA", $D$, such that
-	\[ \lang N = \lang D \]
-\end{theorem}
-
-\begin{proof}
-	We consider the automaton
+	Let $N$ be a "NFTA", the "DFTA"
 	\[ D = (\Sigma, \parts Q, \text{init} : \Sigma \to \parts Q, \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, F' \subseteq \parts Q) \]
 	where
 	\begin{itemize}
 		\item $\init (a) = \setdef {q \in Q} {(a,q) \in I}$
-		\item $\delta (a, X, Y) = \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}$
+		\item $\delta ( X, Y, a) = \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}$
 		\item $F' = \setdef {X \in \parts Q} {X \cap F \neq \emptyset}$
 	\end{itemize}
+	verifies
+	\[ \lang N = \lang D \]
+\end{theorem}
 
-	We will show that for any tree $t$,
-	\[ \exec D  t (\epsilon)  = \exec N t (\epsilon) \]
-	The proof proceeds by induction on the structure of trees.
+\begin{proof}
+	We will show that for any "tree" $t$,
+	\[ \exec (\epsilon)  = \exec (\epsilon) \]
+	The proof proceeds by induction on the structure of "trees".
 	\begin{itemize}
 		\item $(t = a)$\\
-		      In this case, $\exec D t (\epsilon) = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
-		      exactly with $\exec N  t (\epsilon)$.
+		      In this case, $\exec (\epsilon) = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
+		      exactly with $\exec (\epsilon)$.
 
 		\item $(t = a(t',t''))$\\
 		      By induction we know that
-		      $\exec D {t'} (\epsilon) = \exec N {t'} (\epsilon)$
+		      $\exec (\epsilon) = \exec (\epsilon)$
 		      and
-		      $\exec D {t''} (\epsilon) =  \exec N {t''} (\epsilon)$
+		      $\exec (\epsilon) =  \exec (\epsilon)$
 		      \begin{eqnarray*}
-			      \exec D t (\epsilon) &=& \delta_a(\exec D t (0), \exec D t (1)) \\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D t (0), y \in \exec D t (1)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec D {t'} (\epsilon), y \in \exec D {t''} (\epsilon)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N {t'} (\epsilon), y \in \exec N {t''} (\epsilon)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec N t (0), y \in \exec N t (1)}\\
-			      &=& \exec N t (\epsilon)
+			      \exec (\epsilon) &=& \delta_a(\exec (0), \exec (1)) \\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (0), y \in \exec (1)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (\epsilon), y \in \exec (\epsilon)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (\epsilon), y \in \exec (\epsilon)}\\
+			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (0), y \in \exec (1)}\\
+			      &=& \exec (\epsilon)
 		      \end{eqnarray*}
 	\end{itemize}
-	Then $ \exec D t (\epsilon)  = \exec N t (\epsilon)$.
+	Then $ \exec (\epsilon) = \exec (\epsilon)$.
 
 	We must now show that $D$ is "acceptant" iff $N$ is "acceptant".
 
 	\begin{eqnarray*}
-		N \text{ is "acceptant" } &\iff& F \cap \exec N t (\epsilon) \neq \emptyset \\
-		&\iff& F \cap \exec D t (\epsilon) \neq \emptyset \\
-		&\iff& \exec D t (\epsilon) \in F' \\
+		N \text{ is "acceptant" } &\iff& F \cap \exec (\epsilon) \neq \emptyset \\
+		&\iff& F \cap \exec (\epsilon) \neq \emptyset \\
+		&\iff& \exec (\epsilon) \in F' \\
 		&\iff& D \text{ is "acceptant" }
 	\end{eqnarray*}
 
@@ -267,8 +254,6 @@
 	\[ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) \]
 	and for a "NFTA"
 	\[ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta \]
-
-	\todo{discuss this name with Thomas}
 \end{definition}
 
 
@@ -285,13 +270,13 @@
 	\end{eqnarray*}
 \end{proof}
 
-\section{MSO}
+\subsection{MSO}
 
-\begin{theorem}
-	If $A$ is a "order-insensitive" "NFTA"  then there exists an MSO formula $\phi$ such that for all $\tree_{\Sigma} \ t$,
+\begin{lemma}
+	If $A$ is a "order-insensitive" "NFTA"  then there exists an MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
 	\[ M(t) \models \phi \iff t \in \lang A \]
 	\todo{Write up all of the missing definitions}
-\end{theorem}
+\end{lemma}
 
 \begin{proof}
 	Let $A$ be a "NFTA", and $k = \abs Q$.
@@ -301,7 +286,7 @@
 
 
 	\begin{eqnarray*}
-		\phi = \exists X_0,\ldots, \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \\
+		\phi = \exists X_0 \ldots \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \\
 		&\land& \forall x \left( \text{leaf} (x) \ra \bigvee_{(a,i)\in I}  X_i(x)   \right) \\
 		&\land& \forall x \left(\lnot \text{leaf}(x) \ra \bigvee_{(i,j,a,k)\in \Delta}  \left(X_i(x0) \land X_j(x1) \land a(x) \land X_k(x)\right)\right) \\
 		&\land& \forall x \left(\text{top}(x) \ra \bigwedge_{i= 0}^k \left( X_i(x) \ra \bigvee_{a \in F_i} a(x) \right)\right)
