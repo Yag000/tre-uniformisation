@@ -8,6 +8,7 @@
 \usepackage{dsfont}
 \usepackage{mathrsfs}
 \usepackage{mathtools}
+\usepackage{stmaryrd}
 
 \usepackage{tikz-cd}
 \usepackage{geometry}
@@ -114,17 +115,18 @@
 \end{definition}
 
 \begin{definition}[Interpretation of an automaton]
-	The ""interpretation"" of a "DBUA" $A$ over an alphabet $\Sigma$ is defined as follows:
+	The ""interpretation"" of a "DBUA" $A$,  $\intro* \interpret A ~$, over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
-		\interpret A : \tree_{\Sigma} &\to& Q \\
+		\interpret A ~: \tree_{\Sigma} &\to& Q \\
 		a &\mapsto& \init_a \\
-		a(t,t') &\mapsto& \delta_a (\interpret A (t), \interpret A (t'))
+		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
 	\end{eqnarray*}
 \end{definition}
 
+
 \begin{definition}[Language of an automaton]
 	Let $A$ be a "DBUA". Its ""associated language"" is defined as:
-	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A (t) \in F}\]
+	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A t \in F}\]
 \end{definition}
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
@@ -141,7 +143,7 @@
 
 
 \begin{definition}[Execution of an automaton]
-	An ""execution"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
+	An ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
 		\exec : \nodes t &\to& Q \\
@@ -178,40 +180,43 @@
 \end{lemma}
 
 \begin{proof}
-	We will proof that for any tree "tree" $t$, $\interpret A (t) = \exec (\epsilon)$.
+	We will proof that for any tree "tree" $t$, $\interpret A t = \exec (\epsilon)$.
 	The proof procedes by induction on the structure of "trees".
 	\begin{itemize}
 		\item $t = a$. Then
-		      $\interpret A (t) = \interpret A (a)=  \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
+		      $\interpret A t = \interpret A a = \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
 		\item $t = a(t',t'')$. Then
 		      \begin{eqnarray*}
 			      \exec (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec (0), \exec (1)) \\
 			      &=& \delta_a (\exec (0), \exec (1)) \\
 			      &=& \delta_a (\exec' (\epsilon), \exec''  (\epsilon))  \reason{\ref{lem:exec-sub}}\\
-			      &=& \delta_a (\interpret A (t'), \interpret A (t'')) \reason{I.H.}\\
-			      &=& \interpret A (t)
+			      &=& \delta_a (\interpret A {t'}, \interpret A {t''}) \reason{I.H.}\\
+			      &=& \interpret A t
 		      \end{eqnarray*}
 	\end{itemize}
 	\todo{discuss this proof with Thomas.}
 \end{proof}
 
 \begin{theorem}
-	Let $N$ be a "NBUA", the "DBUA"
-	\[ D = (\Sigma, \parts Q, \text{init} , \delta , F' ) \]
-	where
-	\begin{itemize}
-		\item \begin{align*}
-			      \init : \Sigma & \to      \parts Q                        \\
-			      a              & \mapsto  \setdef {q \in Q} {(a,q) \in I}
-		      \end{align*}
-		\item \begin{align*}
-			      \delta   : \Sigma \times \parts Q \times \parts Q & \to \parts Q                                                        \\
-			      ( X, Y, a)                                        & \mapsto \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y}
-		      \end{align*}
-		\item $F'  = \setdef {X \in \parts Q} {X \cap F \neq \emptyset} \subseteq \parts Q$
-	\end{itemize}
-	verifies
-	\[ \lang N = \lang D \]
+	\begin{theorem}
+		Let $N$ be a "NBUA", the "DBUA"
+		\[
+			D = (\Sigma, \parts Q, \text{init}, \delta, F' )
+		\]
+		where:
+
+		\begin{itemize}
+			\setlength{\itemsep}{0pt} % Reduce spacing between items
+			\item $ \init : \Sigma \to \parts Q, \quad a \mapsto \setdef{q \in Q}{(a,q) \in I}. $
+			\item $ \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, \quad (X, Y, a) \mapsto \setdef{q \in Q}{(x,y,a,q) \in \Delta, x \in X, y \in Y}. $
+			\item $ F' = \setdef{X \in \parts Q}{X \cap F \neq \emptyset} \subseteq \parts Q. $
+		\end{itemize}
+
+		This verifies
+		\[
+			\lang N = \lang D.
+		\]
+	\end{theorem}
 \end{theorem}
 
 \begin{proof}
@@ -220,17 +225,19 @@
 	The proof proceeds by induction on the structure of "trees".
 	\begin{itemize}
 		\item $(t = a)$\\
-		      In this case, $\interpret D  t = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
-		      exactly with $\exec (\epsilon)$. \\
-		      \todo{fix}
+		      In this case
+		      \begin{eqnarray*}
+			      \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} &=&  \setdef {q \in Q} {(a,q) \in I} \\
+			      &=& \interpret D t
+		      \end{eqnarray*}
 		\item $(t = a(t_1,t_2))$\\
 		      By induction we know that
 		      $\interpret D {t_i} = q_i$ iff there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
 
 		      \begin{eqnarray*}
-			      q \in \interpret D t &\iff& \delta_a (\interpret D (t_1), \interpret D (t_2)) \\
-			      &\iff& \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D (t_1), x_2 \in \interpret D (t_2)} \\
-			      &\iff& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D (t_1), x_2 \in \interpret D (t_2) \\
+			      q \in \interpret D t &\iff& \delta_a (\interpret D {t_1}, \interpret D {t_2}) \\
+			      &\iff& \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2}} \\
+			      &\iff& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2} \\
 			      &\iff& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
 			      &\iff& \exists \exec, \exec (\epsilon) = q
 		      \end{eqnarray*}

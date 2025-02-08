@@ -149,7 +149,9 @@
 
 %% Project specific
 
-\newcommand{\interpret}[1]{\kl[interpretation]{[|} #1 \kl[interpretation]{|]}}
+
+\newcommand{\app}[1]{\ifx#1~ \else \left( #1 \right)\fi}
+
 \newcommand{\tree}{\text{\kl[tree]{Tree}}}
 
 \newcommand{\nodes}[1]{\kl[nodes]{\text{Nodes}} \left( #1 \right)}
@@ -160,6 +162,9 @@
 \knowledgenewrobustcmd \tnode [2] {\cmdkl {sub}_{#1} \left( #2\right)}
 
 \knowledgenewrobustcmd \exec {\cmdkl {\rho}}
+
+\knowledgenewrobustcmd \interpret [2] {\cmdkl{\llbracket} #1 \cmdkl{\rrbracket} \app{#2}}
+
 
 \newcommand{\init}{\kl[init]{\text{init}}}
 
