@@ -26,4 +26,6 @@
     | order-insensitive
     | order-insensitiveness
 
-\knowledge{acceptant}{notion}
+\knowledge{notion}
+    | acceptant
+    | accepts

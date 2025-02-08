@@ -23,7 +23,22 @@
 	urlcolor={blue!80!black}
 }
 
-%% Basic algebra
+%% Math
+
+%%% Proofs
+
+\newcommand{\bimpRL}{\fbox{$\Leftarrow$}}
+\newcommand{\bimpLR}{\fbox{$\Rightarrow$}}
+
+\newenvironment{proofI}[1][\proofname]{%
+	\begin{proof}[#1]$ $\par\nobreak\ignorespaces
+		}{%
+	\end{proof}
+}
+
+\newcommand{\reason}[1]{\quad\left(\textit{#1}\right)}
+
+%%% Sets
 
 \newcommand{\N}{\mathbb{N}}
 
@@ -39,29 +54,78 @@
 
 \newcommand{\K}{\mathbb{K}}
 
-\newcommand{\id}{\text{id}}
-
-
-%% Vector spaces
-
-\newcommand{\sprod}[2]{\left\langle #1, #2 \right\rangle}
-
-\newcommand{\abs}[1]{\left|#1\right|}
-
-
-%% Functions
-
-\newcommand{\restr}[2]{#1_{\restriction #2}}
-
-%% Logic
 
 \newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\setdef}[2]{\set{#1 \mid #2}}
 \newcommand{\parts}[1]{\mathcal{P}\left(#1\right)}
+\newcommand{\enum}[2]{\set{#1,\ldots,#2}}
 
 
+%%% Logic
+
+\newcommand{\ra}{\rightarrow}
 \newcommand{\contradict}{\lightning}
 
+
+%%% Functions
+
+\newcommand{\restr}[2]{#1_{\restriction #2}}
+\newcommand{\im}[1]{\text{Im}\left(#1\right)}
+
+\newcommand{\pgcd}[2]{\text{pgcd}(#1,#2)}
+\newcommand{\car}{\text{car}}
+\newcommand{\id}{\text{id}}
+
+
+%%% Polynomials
+
+\newcommand{\QX}{\mathbb{Q}[X]}
+\newcommand{\RX}{\mathbb{R}[X]}
+\newcommand{\CX}{\mathbb{C}[X]}
+
+\newcommand{\AX}{A[X]}
+
+%%% Vector spaces
+
+\newcommand{\sprod}[2]{\left\langle #1, #2 \right\rangle}
+
+\newcommand{\spec}{\text{Spec}}
+
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\abs{\abs{#1}}}
+\newcommand{\normop}[1]{\abs{\abs{\abs{#1}}}}
+
+\newcommand{\dist}[2]{\text{ d}\left(#1, #2\right)}
+\newcommand{\vect}[1]{\text{Vect}\left( #1 \right)}
+
+\newcommand{\Mn}[2]{\mathcal{M}_{#1}(#2)}
+
+%%% Probability notation
+
+\newcommand{\Pro}{\mathscr{P}}
+\newcommand{\E}{\mathbb{E}}
+
+\newcommand{\1}{\mathds{1}}
+
+%% Abbreviations
+
+\newcommand{\ie}{\textit{i.e.} }
+\newcommand{\eg}{\textit{e.g.} }
+
+
+%% Semantics
+
+\newcommand{\syntaxHeader}[3]{#1 &::=& #2 &\quad\text{#3}\\}
+\newcommand{\syntaxExtension}[1]{\syntaxHeader{#1}{\cdots}{}}
+\newcommand{\syntax}[2]{&|&#1&\quad\text{#2}\\}
+
+\newenvironment{syntaxdef} {\begin{mathpar} \begin{array}{lcll}} {\end{array} \end{mathpar}}
+
+
+%% Misc commands
+
+\newcommand{\quotes}[1] {"#1"}
+\newcommand{\todo}[1]{\red{TODO: #1}}
 
 %% Environments
 
@@ -82,6 +146,8 @@
 \newtheorem{remark}{Remark}[subsection]
 
 
+
+%% Project specific
 
 \newcommand{\interpret}[1]{\kl[interpretation]{[|} #1 \kl[interpretation]{|]}}
 \newcommand{\tree}{\text{\kl[tree]{Tree}}}
@@ -108,23 +174,5 @@
 \newcommand{\motDecomp}[2] {
 	#1 = \decomp{#1}{#2}
 }
-\newcommand{\reason}[1]{\quad\left(\textit{#1}\right)}
-
-\newcommand{\bimpRL}{\fbox{$\Leftarrow$}}
-\newcommand{\bimpLR}{\fbox{$\Rightarrow$}}
-
-\newcommand{\ra}{\rightarrow}
-
-\newenvironment{proofI}[1][\proofname]{%
-	\begin{proof}[#1]$ $\par\nobreak\ignorespaces
-		}{%
-	\end{proof}
-}
-
 
 \newcommand{\ancestor}[2]{#1  \kl[ancestor]{\sqsubseteq} #2}
-
-\newcommand{\todo}[1]{\red{TODO: #1}}
-
-\newcommand{\quotes}[1] {"#1"}
-

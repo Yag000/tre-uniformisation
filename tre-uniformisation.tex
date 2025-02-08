@@ -149,7 +149,8 @@
 		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec$ is ""acceptant"" if $F \cap \exec (\epsilon) \neq \emptyset$.
+	We say that $\exec$ is ""acceptant"" if $F \cap \exec (\epsilon) \neq \emptyset$ and $A$ "accepts" $t$ if
+	$F \cap \setdef { q\in Q} {\exec (\epsilon) = q} \neq \emptyset$
 \end{definition}
 
 \begin{remark}
@@ -160,8 +161,6 @@
 		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
 		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
-
-	$\exec$ is "acceptant" if $\exec (\epsilon) \in F$.
 \end{remark}
 
 \begin{lemma}\label{lem:exec-sub}
@@ -179,7 +178,7 @@
 \end{lemma}
 
 \begin{proof}
-	We will proof that for any tree  "tree" $t$, $\interpret A (t) = \exec (\epsilon)$.
+	We will proof that for any tree "tree" $t$, $\interpret A (t) = \exec (\epsilon)$.
 	The proof procedes by induction on the structure of "trees".
 	\begin{itemize}
 		\item $t = a$. Then
@@ -217,36 +216,34 @@
 
 \begin{proof}
 	We will show that for any "tree" $t$,
-	\[ \exec (\epsilon)  = \exec (\epsilon) \]
+	\[ \interpret D t = \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} \]
 	The proof proceeds by induction on the structure of "trees".
 	\begin{itemize}
 		\item $(t = a)$\\
-		      In this case, $\exec (\epsilon) = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
-		      exactly with $\exec (\epsilon)$.
-
-		\item $(t = a(t',t''))$\\
+		      In this case, $\interpret D  t = \setdef {q \in Q} {(a,q) \in I}$ which corresponds
+		      exactly with $\exec (\epsilon)$. \\
+		      \todo{fix}
+		\item $(t = a(t_1,t_2))$\\
 		      By induction we know that
-		      $\exec (\epsilon) = \exec (\epsilon)$
-		      and
-		      $\exec (\epsilon) =  \exec (\epsilon)$
+		      $\interpret D {t_i} = q_i$ iff there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
+
 		      \begin{eqnarray*}
-			      \exec (\epsilon) &=& \delta_a(\exec (0), \exec (1)) \\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (0), y \in \exec (1)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (\epsilon), y \in \exec (\epsilon)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (\epsilon), y \in \exec (\epsilon)}\\
-			      &=& \setdef {q \in  Q} {(x,y,a,q) \in \Delta, x \in \exec (0), y \in \exec (1)}\\
-			      &=& \exec (\epsilon)
+			      q \in \interpret D t &\iff& \delta_a (\interpret D (t_1), \interpret D (t_2)) \\
+			      &\iff& \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D (t_1), x_2 \in \interpret D (t_2)} \\
+			      &\iff& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D (t_1), x_2 \in \interpret D (t_2) \\
+			      &\iff& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
+			      &\iff& \exists \exec, \exec (\epsilon) = q
 		      \end{eqnarray*}
 	\end{itemize}
-	Then $ \exec (\epsilon) = \exec (\epsilon)$.
+	Then $ \interpret A t = \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} $.
 
-	We must now show that $D$ is "acceptant" iff $N$ is "acceptant".
+	We must now show that $D$ "accepts" $t$ iff $N$ "accepts" $t$.
 
 	\begin{eqnarray*}
-		N \text{ is "acceptant" } &\iff& F \cap \exec (\epsilon) \neq \emptyset \\
-		&\iff& F \cap \exec (\epsilon) \neq \emptyset \\
-		&\iff& \exec (\epsilon) \in F' \\
-		&\iff& D \text{ is "acceptant" }
+		N \text{ "accepts" } t &\iff& F \cap \setdef {q \in Q} {(a,q) \in I} \neq \emptyset \\
+		&\iff&   F \cap  \interpret D t \neq \emptyset \\
+		&\iff& \interpret D t  \in F' \\
+		&\iff& D \text{ "accepts" } t
 	\end{eqnarray*}
 
 	and so $\lang N = \lang D$.
