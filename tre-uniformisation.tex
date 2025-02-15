@@ -101,37 +101,13 @@
 	\[ \ancestor x y \iff \exists z \in \nodes t, y = xz \]
 \end{definition}
 
+
+
 \section{Tree Automata}
-
-\begin{definition}[""Deterministic Bottom-Up Tree automaton""]
-	A Deterministic Bottom-Up Tree automaton (DBUA) is defined as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
-	\begin{itemize}
-		\item $\Sigma$ is an alphabet.
-		\item $Q$ is a finite set of states.
-		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
-		\item $\delta : Q \times Q \times \Sigma \to Q$ is the transition function.
-		\item $F \subseteq Q$ is the set of final states.
-	\end{itemize}
-\end{definition}
-
-\begin{definition}[Interpretation of an automaton]
-	The ""interpretation"" of a "DBUA" $A$,  $\intro* \interpret A ~$, over an alphabet $\Sigma$ is defined as follows:
-	\begin{eqnarray*}
-		\interpret A ~: \tree_{\Sigma} &\to& Q \\
-		a &\mapsto& \init_a \\
-		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
-	\end{eqnarray*}
-\end{definition}
-
-
-\begin{definition}[Language of an automaton]
-	Let $A$ be a "DBUA". Its ""associated language"" is defined as:
-	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A t \in F}\]
-\end{definition}
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
 	A Non-Deterministic Bottom-Up Tree automaton (NBUA) is defined as a tuple
-	$(\Sigma, Q, I \subseteq, \Delta , F )$ where:
+	$(\Sigma, Q, I, \Delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of states.
@@ -140,7 +116,6 @@
 		\item $F \subseteq Q$ is the set of final states.
 	\end{itemize}
 \end{definition}
-
 
 \begin{definition}[Execution of an automaton]
 	An ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
@@ -151,8 +126,41 @@
 		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 
-	We say that $\exec$ is ""acceptant"" if $F \cap \exec (\epsilon) \neq \emptyset$ and $A$ "accepts" $t$ if
+	We say that $\exec$ is ""acceptant"" if $\exec (\epsilon) \in F$ and $A$ "accepts" $t$ if
 	$F \cap \setdef { q\in Q} {\exec (\epsilon) = q} \neq \emptyset$
+\end{definition}
+
+
+\begin{definition}[Language of an automaton]
+	Let $A$ be a "NBUA". Its ""associated language"" is defined as:
+	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\exists \exec,  \exec (\epsilon) \in F}\]
+\end{definition}
+
+
+\begin{definition}[""Deterministic Bottom-Up Tree automaton""]
+	A Deterministic Bottom-Up Tree automaton (DBUA) is "NBUA" that that verifies
+	\[ \forall q,r,a,t,t' \ (q,r,a,t) \in \Delta \land   (q,r,a,t') \in \Delta  \implies t = t' \]
+\end{definition}
+
+\begin{remark}
+	A "DBUA" can also be defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
+	\begin{itemize}
+		\item $\Sigma$ is an alphabet.
+		\item $Q$ is a finite set of states.
+		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
+		\item $\delta : Q \times Q \times \Sigma \to Q$ is the transition function.
+		\item $F \subseteq Q$ is the set of final states.
+	\end{itemize}
+	We will show that the two definitions are equivalent.
+\end{remark}
+
+\begin{definition}[Interpretation of an automaton]
+	The ""interpretation"" of a "DBUA" $A$,  $\intro* \interpret A ~$, over an alphabet $\Sigma$ is defined as follows:
+	\begin{eqnarray*}
+		\interpret A ~: \tree_{\Sigma} &\to& Q \\
+		a &\mapsto& \init_a \\
+		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
+	\end{eqnarray*}
 \end{definition}
 
 \begin{remark}
@@ -176,7 +184,7 @@
 
 \begin{lemma}
 	Let $A$ be a "DBUA",
-	\[ \lang A = \setdef {t \in \tree_{\Sigma}} {\exec (\epsilon) \in F} \]
+	\[ \lang A = \setdef {t \in \tree_{\Sigma}} {\interpret A t \in F} \]
 \end{lemma}
 
 \begin{proof}
@@ -293,11 +301,11 @@
 
 	We define the following formulas:
 	\begin{itemize}
-		\item This formula encodes the fact that \( x \) is a "leaf":
+		\item We can encode the fact that $ x $ is a "leaf" as follows :
 		      \[\text{leaf} (x) = \forall y, \ancestor y x \]
-		\item This formula encodes the fact that \( x \) is the root of the tree:
+		\item $x$ is the root of the tree is equivalent to :
 		      \[\text{root} (x) = \forall y, \ancestor x y \]
-		\item This formula encodes the fact that \( x \) and \( y \) are the immediate children of \( z \):
+		\item The following formula encodes the fact that $ x $ and $y$ are the immediate children of $z$:
 		      \[\text{children} (x,y,z) =
 			      x \neq y \land
 			      \ancestor z x \land \ancestor z y \land
@@ -309,20 +317,34 @@
 				      w = x \lor w = y
 				      )
 			      \right) \]
-		\item \( F_i \) is the set of all "labels" leading to a final state:
+		\item $F_i$ is the set of all "labels" leading to a final state:
 		      \[F_i = \setdef {a \in \Sigma} {(i0,i1,a,i) \in \Delta, i \in F}\]
 	\end{itemize}
 
-	\begin{eqnarray*}
-		\phi = \exists X_0 \ldots \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \\
-		&\land& \forall x \left( \bigwedge_{0 \leq i \leq j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \\
-		&\land& \forall x  \left( \text{leaf} (x) \ra \bigvee_{(a,i)\in I}  X_i(x) \right) \\
-		&\land& \forall x \forall y \forall z \left(\text{children}(x,y,z) \ra \bigvee_{(i,j,a,k)\in \Delta} \left(X_i(x) \land X_j(y) \land a(z) \land X_k(z)\right)\right) \\
-		&\land& \forall x \left(\text{root}(x) \ra \bigwedge_{i= 0}^k \left( X_i(x) \ra \bigvee_{a \in F_i} a(x) \right)\right)
-	\end{eqnarray*}
+	\begin{eqnarray}
+		\phi = \exists X_0 \ldots \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1}\\
+		&\land& \forall x \left( \bigwedge_{0 \leq i \leq j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2} \\
+		&\land& \forall x  \left( \text{leaf} (x) \ra \bigvee_{(a,i)\in I}  X_i(x) \right) \label{lem:AMSO3}\\
+		&\land& \forall x \forall y \forall z \left(\text{children}(x,y,z) \ra \bigvee_{(i,j,a,k)\in \Delta} \left(X_i(x) \land X_j(y) \land a(z) \land X_k(z)\right)\right) \label{lem:AMSO4} \\
+		&\land& \forall x \left(\text{root}(x) \ra \bigwedge_{i= 0}^k \left( X_i(x) \ra \bigvee_{a \in F_i} a(x) \right)\right) \label{lem:AMSO5}
+	\end{eqnarray}
 
+	\todo{fix overfull}
 
-	\todo {Write actual proof}
+	$j \in X_i$ iff, for a given run, the state $i$ is reached from the node $j$.
+
+	The formula $\phi$ encodes the following properties:
+
+	\begin{enumerate}
+		\item Every node has an associated state.
+		\item A node cannot be in two states at the same time.
+		\item The transitions originate from the leaves.
+		\item The transitions of inner nodes ensure that for every trio of nodes, where two are children of the third, there exists a transition from the children to the parent.
+		\item Finally, the word is accepted if and only if the state associated with the root node is a final state.
+	\end{enumerate}
+
+	From this we deduce that
+	\[ M(t) \models \phi \iff t \in \lang A \]
 \end{proof}
 
 
