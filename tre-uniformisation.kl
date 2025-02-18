@@ -15,8 +15,8 @@
 \knowledge{ancestor}{notion}
 
 \knowledge{notion}
-    | execution
     | run
+    | runs
 
 \knowledge{\exec}[exec]{notion}
 
@@ -29,3 +29,10 @@
 \knowledge{notion}
     | acceptant
     | accepts
+%%%%% NEW KNOWLEDGES 
+%
+%\knowledge{notion}
+%  | leaf
+%
+%\knowledge{notion}
+%  | labels
