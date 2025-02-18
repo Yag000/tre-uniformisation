@@ -110,10 +110,10 @@
 	$(\Sigma, Q, I, \Delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
-		\item $Q$ is a finite set of states.
+		\item $Q$ is a finite set of ""states"".
 		\item $I \subseteq \Sigma \times Q$ correspond to the possible states of the leaves.
-		\item $\Delta \subseteq Q \times Q \times \Sigma \times Q$ are the transitions.
-		\item $F \subseteq Q$ is the set of final states.
+		\item $\Delta \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
+		\item $F \subseteq Q$ is the set of ""final states"".
 	\end{itemize}
 \end{definition}
 
@@ -146,10 +146,10 @@
 	A "DBUA" can also be defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
-		\item $Q$ is a finite set of states.
+		\item $Q$ is a finite set of "states".
 		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
-		\item $\delta : Q \times Q \times \Sigma \to Q$ is the transition function.
-		\item $F \subseteq Q$ is the set of final states.
+		\item $\delta : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
+		\item $F \subseteq Q$ is the set of "final states".
 	\end{itemize}
 	We will show that the two definitions are equivalent.
 \end{remark}
@@ -193,43 +193,50 @@
 	\begin{itemize}
 		\item If $t = a$. Let $\rho$ be defined by $\rho(\varepsilon)=\init_a$, then $\rho$ is a "run" of~$A$ over~$t$. We have proved (a).
 		      Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\epsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).
-		      %		      $\interpret A t = \interpret A a = \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
+
 		\item If $t = a(t',t'')$. By induction hypothesis (a), there exists "runs"~$\rho'$ and $\rho''$ on~$t'$ and $t''$ respectively.
 		      Let~$\rho$ be defined by $\rho(\epsilon)=\delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon))$,
 		      $\rho(0u)=\rho'(u)$ for all $u\in\nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
-		      Consider now some~$run$ $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all ... and $\rho''()$ ...,
-		      then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
+
+		      Consider now some "run" $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all $u \in \nodes {t'}$ and $\rho''(u)=\rho(0u)$ for all $u \in \nodes {t''}$.
+		      Then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
 		      We have now $\rho(\epsilon) = \delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon)) = \delta_{t(\epsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
-	\todo{discuss this proof with Thomas.}
 \end{proof}
 
-\begin{theorem}
-	Let $N$ be a "NBUA", the "DBUA"
-	\[
-		D = (\Sigma, \parts Q, \text{init}, \delta, F' )
-	\]
-	where:
+\begin{definition}
+	Let $A \NBUA$ be a "NBUA", we define the ""power set automaton"" of "A", noted $\intro* \Det A$ as
+	$\Det A = (\Sigma, \parts Q, \text{init}, \delta, F')$ where:
 
 	\begin{itemize}
-		\setlength{\itemsep}{0pt} % Reduce spacing between items
-		\item $ \init : \Sigma \to \parts Q, \quad a \mapsto \setdef{q \in Q}{(a,q) \in I}. $
-		\item $ \delta : \Sigma \times \parts Q \times \parts Q \to \parts Q, \quad (X, Y, a) \mapsto \setdef{q \in Q}{(x,y,a,q) \in \Delta, x \in X, y \in Y}. $
-		\item $ F' = \setdef{X \in \parts Q}{X \cap F \neq \emptyset} \subseteq \parts Q. $
-	\end{itemize}
+		\item $\begin{aligned}[t]
+				      \init      : \Sigma & \to \parts Q                          \\
+				      a                   & \mapsto \setdef{q \in Q}{(a,q) \in I}
+			      \end{aligned} $
 
-	This verifies
+		\item $\begin{aligned}[t]
+				      \delta               : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                     \\
+				      (X, Y, a)                                                     & \mapsto \setdef{q \in Q}{(x,y,a,q) \in \Delta, x \in X, y \in Y}
+			      \end{aligned}$
+
+		\item $F' = \setdef{X \in \parts Q}{X \cap F \neq \emptyset} \subseteq \parts Q$
+	\end{itemize}
+\end{definition}
+
+\begin{theorem}
+    For all $N \NBUA$ an "NBUA", the "power set automaton" verifies that 
 	\[
-		\lang N = \lang D.
+        \interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
 	\]
+    and $ \lang N = \lang {\Det N}. $
 \end{theorem}
 
 \begin{proof}
-	We will show that for any "tree" $t$,
+	We will first show that for all "tree" $t$,
 	\[
-		\interpret D t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
+		\interpret  t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
 	\]
-	The proof proceeds by induction on the structure of "trees".
+	The proof proceeds by induction on the structure of $t$.
 	\begin{itemize}
 		\item If $t = a$, then
 		      \begin{eqnarray*}
@@ -242,8 +249,8 @@
 
 		      \begin{eqnarray*}
 			      &&q \in \interpret D t \\
-			      &\text{if and only if}& \delta_a (\interpret D {t_1}, \interpret D {t_2}) \\
-			      &\text{if and only if}& \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2}} \\
+			      &\text{if and only if}& q \in \delta_a (\interpret D {t_1}, \interpret D {t_2}) \\
+			      &\text{if and only if}& q \in \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2}} \\
 			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2} \\
 			      &\text{if and only if}& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
 			      &\text{if and only if}& \exists \exec, \exec (\epsilon) = q
