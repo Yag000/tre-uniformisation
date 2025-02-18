@@ -98,7 +98,7 @@
 
 \begin{definition}
 	Let $t$ be a "tree" and $x, y \in \nodes t$, we define the ""ancestor"" relation as
-	\[ \ancestor x y \iff \exists z \in \nodes t, y = xz \]
+	\[  x \intro* \ancestor y \iff \exists z \in \nodes t, y = xz \]
 \end{definition}
 
 
@@ -188,18 +188,18 @@
 \end{lemma}
 
 \begin{proof}
-	We will prove by induction on a "tree"~$t$ that (a) there exists a "run" of~$A$ over~$t$, and (b) for all "runs"~$\exec$ of $A$ over $t$, $\interpret A t = \exec (\epsilon)$. 
+	We will prove by induction on a "tree"~$t$ that (a) there exists a "run" of~$A$ over~$t$, and (b) for all "runs"~$\exec$ of $A$ over $t$, $\interpret A t = \exec (\epsilon)$.
 	We proceed by case distinction.
 	\begin{itemize}
 		\item If $t = a$. Let $\rho$ be defined by $\rho(\varepsilon)=\init_a$, then $\rho$ is a "run" of~$A$ over~$t$. We have proved (a).
-			Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\epsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).	
-%		      $\interpret A t = \interpret A a = \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
+		      Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\epsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).
+		      %		      $\interpret A t = \interpret A a = \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
 		\item If $t = a(t',t'')$. By induction hypothesis (a), there exists "runs"~$\rho'$ and $\rho''$ on~$t'$ and $t''$ respectively.
-			Let~$\rho$ be defined by $\rho(\epsilon)=\delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon))$,
-			$\rho(0u)=\rho'(u)$ for all $u\in\nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
-			Consider now some~$run$ $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all ... and $\rho''()$ ...,
-			then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
-			We have now $\rho(\epsilon) = \delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon)) = \delta_{t(\epsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
+		      Let~$\rho$ be defined by $\rho(\epsilon)=\delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon))$,
+		      $\rho(0u)=\rho'(u)$ for all $u\in\nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
+		      Consider now some~$run$ $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all ... and $\rho''()$ ...,
+		      then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
+		      We have now $\rho(\epsilon) = \delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon)) = \delta_{t(\epsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
 	\todo{discuss this proof with Thomas.}
 \end{proof}
@@ -226,9 +226,9 @@
 
 \begin{proof}
 	We will show that for any "tree" $t$,
-	\[ 
+	\[
 		\interpret D t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
-	 \]
+	\]
 	The proof proceeds by induction on the structure of "trees".
 	\begin{itemize}
 		\item If $t = a$, then
@@ -272,7 +272,7 @@
 \end{definition}
 
 \begin{remark}
-	For a "DBUA" of "transition map"~$\delta$, it is "order-insensitive" if and only if 
+	For a "DBUA" of "transition map"~$\delta$, it is "order-insensitive" if and only if
 	$\delta_a (p,q) = \delta_a (q,p)$ for all "states"~$p,q$ and letter~$a$.
 \end{remark}
 
@@ -294,7 +294,7 @@
 \begin{definition}
 	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
 
-	\[\intro* \Model t := (\nodes t, \ancestor ~ ~, (a (x))_{a \in \Sigma}) \]
+	\[\intro* \Model t := (\nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
 
 	where : $a(x) \iff \tlabel t x = a$
 \end{definition}
@@ -311,17 +311,17 @@
 	We define the following formulas:
 	\begin{itemize}
 		\item We can encode the fact that $ x $ is a "leaf" as follows :
-		      \[\text{leaf} (x) = \forall y, \ancestor y x \]
+		      \[\text{leaf} (x) = \forall y,  y \ancestor x \]
 		\item $x$ is the root of the tree is equivalent to :
-		      \[\text{root} (x) = \forall y, \ancestor x y \]
+		      \[\text{root} (x) = \forall y,  x \ancestor y \]
 		\item The following formula encodes the fact that $ x $ and $y$ are the immediate children of $z$:
 		      \[\text{children} (x,y,z) =
 			      x \neq y \land
-			      \ancestor z x \land \ancestor z y \land
+			      z  \ancestor  x \land  z \ancestor y \land
 			      \forall w
 			      \left( \left(
-				      \ancestor z w \land
-					      (\ancestor w x \lor \ancestor w y) \right) \rightarrow (
+				      z \ancestor w \land
+					      (w \ancestor x \lor w \ancestor  y) \right) \rightarrow (
 				      w = x \lor w = y
 				      )
 			      \right) \]

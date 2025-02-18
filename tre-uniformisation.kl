@@ -23,6 +23,8 @@
     | label
     | labels
 
+\knowledge{\ancestor}{notion}
+
 \knowledge{ancestor}{notion}
 
 \knowledge{notion}

@@ -165,6 +165,9 @@
 
 \knowledgenewrobustcmd \interpret [2] {\cmdkl{\llbracket} #1 \cmdkl{\rrbracket} \app{#2}}
 
+\knowledgenewrobustcmd{\ancestor}{\mathrel{\cmdkl{\sqsubseteq}}}
+
+\knowledgenewrobustcmd \Model [1] {\cmdkl{\mathcal M} \app{#1}}
 
 \newcommand{\init}{\kl[init]{\text{init}}}
 
@@ -180,6 +183,3 @@
 	#1 = \decomp{#1}{#2}
 }
 
-\knowledgenewrobustcmd{\ancestor}[2]{#1  \mathrel{\cmdkl{\sqsubseteq}} #2}
-
-\knowledgenewrobustcmd \Model [1] {\cmdkl{\mathcal M} \app{#1}}
