@@ -291,9 +291,17 @@
 
 \subsection{MSO}
 
+\begin{definition}
+	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
+
+	\[\intro* \Model t := (\nodes t, \ancestor ~ ~, (a (x))_{a \in \Sigma}) \]
+
+	where : $a(x) \iff \tlabel t x = a$
+\end{definition}
+
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
-	\[ M(t) \models \phi \iff t \in \lang A \]
+	\[ \Model t \models \phi \iff t \in \lang A \]
 	\todo{Write up all of the missing definitions}
 \end{lemma}
 
@@ -311,8 +319,7 @@
 			      x \neq y \land
 			      \ancestor z x \land \ancestor z y \land
 			      \forall w
-			      \left(
-			      \left(
+			      \left( \left(
 				      \ancestor z w \land
 					      (\ancestor w x \lor \ancestor w y) \right) \rightarrow (
 				      w = x \lor w = y
@@ -345,7 +352,7 @@
 	\end{enumerate}
 
 	From this we deduce that
-	\[ M(t) \models \phi \iff t \in \lang A \]
+	\[ \Model t \models \phi \iff t \in \lang A \]
 \end{proof}
 
 

@@ -9,9 +9,20 @@
 
 \knowledge{interpretation}{notion}
 \knowledge{associated language}[lang]{notion}
-\knowledge{nodes}{notion}
-\knowledge{leaves}{notion}
-\knowledge{label}{notion}
+
+\knowledge{notion}
+    | Nodes
+    | node
+    | nodes
+
+\knowledge{notion}
+    | leaves
+    | leaf
+
+\knowledge{notion}
+    | label
+    | labels
+
 \knowledge{ancestor}{notion}
 
 \knowledge{notion}
