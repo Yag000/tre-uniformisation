@@ -154,12 +154,11 @@
 
 \newcommand{\tree}{\text{\kl[tree]{Tree}}}
 
-\newcommand{\nodes}[1]{\kl[nodes]{\text{Nodes}} \left( #1 \right)}
-\newcommand{\leaves}[1]{\kl[leaves]{\text{Leaves}} \left( #1 \right)}
 
+\knowledgenewrobustcmd \nodes [1] {\cmdkl {\text{Nodes}} \app {#1}}
+\knowledgenewrobustcmd \leaves [1] {\cmdkl {\text{Leaves}} \app {#1}}
 
 \knowledgenewrobustcmd \tlabel [2] {\cmdkl {#1} \left( #2\right)}
-\knowledgenewrobustcmd \tnode [2] {\cmdkl {sub}_{#1} \left( #2\right)}
 
 \knowledgenewrobustcmd \exec {\cmdkl {\rho}}
 
@@ -171,11 +170,10 @@
 
 \knowledgenewrobustcmd \Det [1] {\cmdkl{\text{Det}} \app{#1}}
 
-\newcommand{\init}{\kl[init]{\text{init}}}
+\knowledgenewrobustcmd \init {\cmdkl {\text{init}}}
 
 \newcommand{\La}{\mathcal{L}}
-\newcommand{\lang}[1]{\kl[lang]{\La}\left(#1\right)}
-
+\knowledgenewrobustcmd \lang [1] {\cmdkl{\La} \app{#1}}
 
 \newcommand{\decomp}[2] {
 	#1_1 #1_2 \ldots #1_{#2}

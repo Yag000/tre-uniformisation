@@ -16,6 +16,28 @@
     | nodes
 
 \knowledge{notion}
+| states 
+
+
+\knowledge{notion}
+| transition relation
+
+\knowledge{notion}
+| transition map
+
+\knowledge{notion}
+| state
+| states
+
+\knowledge{notion}
+| final state
+| final states
+
+
+\knowledge{notion}
+| power set automaton
+
+\knowledge{notion}
     | leaves
     | leaf
 
