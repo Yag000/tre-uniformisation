@@ -18,7 +18,7 @@
 
 \usepackage{fancyhdr}
 
-\usepackage[hyperref,paper]{knowledge}
+\usepackage[hyperref]{knowledge}
 
 \knowledgeconfigure{label scope=false, notion, quotation, protect quotation={tikzcd, automata}}
 
@@ -188,19 +188,18 @@
 \end{lemma}
 
 \begin{proof}
-	We will proof that for any tree "tree" $t$, $\interpret A t = \exec (\epsilon)$.
-	The proof procedes by induction on the structure of "trees".
+	We will prove by induction on a "tree"~$t$ that (a) there exists a "run" of~$A$ over~$t$, and (b) for all "runs"~$\exec$ of $A$ over $t$, $\interpret A t = \exec (\epsilon)$. 
+	We proceed by case distinction.
 	\begin{itemize}
-		\item $t = a$. Then
-		      $\interpret A t = \interpret A a = \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
-		\item $t = a(t',t'')$. Then
-		      \begin{eqnarray*}
-			      \exec (\epsilon)  &=& \delta_{\tlabel t {\epsilon}}(\exec (0), \exec (1)) \\
-			      &=& \delta_a (\exec (0), \exec (1)) \\
-			      &=& \delta_a (\exec' (\epsilon), \exec''  (\epsilon))  \reason{\ref{lem:exec-sub}}\\
-			      &=& \delta_a (\interpret A {t'}, \interpret A {t''}) \reason{I.H.}\\
-			      &=& \interpret A t
-		      \end{eqnarray*}
+		\item If $t = a$. Let $\rho$ be defined by $\rho(\varepsilon)=\init_a$, then $\rho$ is a "run" of~$A$ over~$t$. We have proved (a).
+			Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\epsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).	
+%		      $\interpret A t = \interpret A a = \init_a = \init_{\tlabel t {\epsilon}} = \exec (\epsilon)$
+		\item If $t = a(t',t'')$. By induction hypothesis (a), there exists "runs"~$\rho'$ and $\rho''$ on~$t'$ and $t''$ respectively.
+			Let~$\rho$ be defined by $\rho(\epsilon)=\delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon))$,
+			$\rho(0u)=\rho'(u)$ for all $u\in\nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
+			Consider now some~$run$ $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all ... and $\rho''()$ ...,
+			then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
+			We have now $\rho(\epsilon) = \delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon)) = \delta_{t(\epsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
 	\todo{discuss this proof with Thomas.}
 \end{proof}
@@ -227,25 +226,27 @@
 
 \begin{proof}
 	We will show that for any "tree" $t$,
-	\[ \interpret D t = \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} \]
+	\[ 
+		\interpret D t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
+	 \]
 	The proof proceeds by induction on the structure of "trees".
 	\begin{itemize}
-		\item $(t = a)$\\
-		      In this case
+		\item If $t = a$, then
 		      \begin{eqnarray*}
 			      \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} &=&  \setdef {q \in Q} {(a,q) \in I} \\
-			      &=& \interpret D t
+			      &=& \interpret D t\ .
 		      \end{eqnarray*}
 		\item $(t = a(t_1,t_2))$\\
 		      By induction we know that
 		      $\interpret D {t_i} = q_i$ iff there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
 
 		      \begin{eqnarray*}
-			      q \in \interpret D t &\iff& \delta_a (\interpret D {t_1}, \interpret D {t_2}) \\
-			      &\iff& \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2}} \\
-			      &\iff& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2} \\
-			      &\iff& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
-			      &\iff& \exists \exec, \exec (\epsilon) = q
+			      &&q \in \interpret D t \\
+			      &\text{if and only if}& \delta_a (\interpret D {t_1}, \interpret D {t_2}) \\
+			      &\text{if and only if}& \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2}} \\
+			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2} \\
+			      &\text{if and only if}& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
+			      &\text{if and only if}& \exists \exec, \exec (\epsilon) = q
 		      \end{eqnarray*}
 	\end{itemize}
 	Then $ \interpret A t = \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} $.
@@ -266,13 +267,13 @@
 
 
 \begin{definition}
-	We say that a "NBUA" is ""order-insensitive"" if
-	\[ \forall p,q,a,r,\, (p,q,a,r) \in \Delta \iff  (q,p,a,r) \in \Delta \]
+	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions" $(p,q,a,r) \in \Delta$,
+	$(q,p,a,r) \in \Delta$.
 \end{definition}
 
 \begin{remark}
-	For a "DBUA" "order-insensitiveness" is equivalent to
-	\[ \forall p,q,a,\, \delta_a (p,q) = \delta_a (q,p) \]
+	For a "DBUA" of "transition map"~$\delta$, it is "order-insensitive" if and only if 
+	$\delta_a (p,q) = \delta_a (q,p)$ for all "states"~$p,q$ and letter~$a$.
 \end{remark}
 
 \begin{lemma}
