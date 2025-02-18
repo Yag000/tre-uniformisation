@@ -84,24 +84,10 @@
 	\]
 \end{definition}
 
-
-\begin{definition}
-	We note $\intro* \tnode t n$ the subtree corresponding to the node $n$ in the "tree" $t$ :
-	\[
-		\tnode t n =   \begin{cases}
-			t              & \text{ if }  n = \epsilon                     \\
-			\tnode {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m \\
-			\tnode {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
-		\end{cases}
-	\]
-\end{definition}
-
 \begin{definition}
 	Let $t$ be a "tree" and $x, y \in \nodes t$, we define the ""ancestor"" relation as
 	\[  x \intro* \ancestor y \iff \exists z \in \nodes t, y = xz \]
 \end{definition}
-
-
 
 \section{Tree Automata}
 
@@ -172,15 +158,6 @@
 		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \nodes t \setminus \leaves t
 	\end{eqnarray*}
 \end{remark}
-
-\begin{lemma}\label{lem:exec-sub}
-	For a "DBUA" $A$, for any "run" $\exec$ over a "tree" $t$, and for any node $n \in \nodes t$, there exists $\exec'$ over
-	$\tnode t n$ such that $\exec (n) = \exec'(\epsilon)$.
-\end{lemma}
-
-\begin{proof}
-	\todo{~}
-\end{proof}
 
 \begin{lemma}
 	Let $A$ be a "DBUA",
