@@ -86,7 +86,7 @@
 
 \begin{definition}
 	Let $t$ be a "tree" and $x, y \in \nodes t$, we define the ""ancestor"" relation as
-	\[  x \intro* \ancestor y \iff \exists z \in \nodes t, y = xz \]
+	\[  x \intro* \ancestor y \tiff \exists z \in \nodes t, y = xz \]
 \end{definition}
 
 \section{Tree Automata}
@@ -182,7 +182,7 @@
 \end{proof}
 
 \begin{definition}
-	Let $A \NBUA$ be a "NBUA", we define the ""power set automaton"" of "A", noted $\intro* \Det A$ as
+	Let $A \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$ as
 	$\Det A = (\Sigma, \parts Q, \text{init}, \delta, F')$ where:
 
 	\begin{itemize}
@@ -201,57 +201,56 @@
 \end{definition}
 
 \begin{theorem}
-    For all $N \NBUA$ an "NBUA", the "power set automaton" verifies that 
+	For all $N \NBUA$ an "NBUA", the "power set automaton" verifies that
 	\[
-        \interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
+		\interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} \text{ and } \lang N = \lang {\Det N}
 	\]
-    and $ \lang N = \lang {\Det N}. $
 \end{theorem}
 
 \begin{proof}
 	We will first show that for all "tree" $t$,
 	\[
-		\interpret  t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
+		\interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
 	\]
-	The proof proceeds by induction on the structure of $t$.
+	We will prove this property by induction over $t$. We proceed by case distinction.
 	\begin{itemize}
 		\item If $t = a$, then
 		      \begin{eqnarray*}
-			      \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} &=&  \setdef {q \in Q} {(a,q) \in I} \\
-			      &=& \interpret D t\ .
+			      \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} &=&  \setdef {q \in Q} {(a,q) \in I} \\
+			      &=& \interpret {\Det N} t\ .
 		      \end{eqnarray*}
-		\item $(t = a(t_1,t_2))$\\
-		      By induction we know that
-		      $\interpret D {t_i} = q_i$ iff there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
+		\item If $t = a(t_1,t_2)$, then
+		      by the induction hypothesis we know that
+		      $\interpret {\Det N} {t_i} = q_i$ \tiff there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
 
 		      \begin{eqnarray*}
-			      &&q \in \interpret D t \\
-			      &\text{if and only if}& q \in \delta_a (\interpret D {t_1}, \interpret D {t_2}) \\
-			      &\text{if and only if}& q \in \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2}} \\
-			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret D {t_1}, x_2 \in \interpret D {t_2} \\
+			      &&q \in \interpret {\Det N} t \\
+			      &\text{if and only if}& q \in \delta_a (\interpret {\Det N} {t_1}, \interpret {\Det N} {t_2}) \\
+			      &\text{if and only if}& q \in \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2}} \\
+			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2} \\
 			      &\text{if and only if}& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
-			      &\text{if and only if}& \exists \exec, \exec (\epsilon) = q
+			      &\text{if and only if}& q \in \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}
 		      \end{eqnarray*}
 	\end{itemize}
-	Then $ \interpret A t = \setdef {q \in Q} {\exists \exec, \exec (\epsilon) = q} $.
+	Then $ \interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}$.
 
-	We must now show that $D$ "accepts" $t$ iff $N$ "accepts" $t$.
+	We must now show that $\Det N$ "accepts" $t$ \tiff $N$ "accepts" $t$.
 
 	\begin{eqnarray*}
-		N \text{ "accepts" } t &\iff& F \cap \setdef {q \in Q} {(a,q) \in I} \neq \emptyset \\
-		&\iff&   F \cap  \interpret D t \neq \emptyset \\
-		&\iff& \interpret D t  \in F' \\
-		&\iff& D \text{ "accepts" } t
+		N \text{ "accepts" } t &\tiff& F \cap \setdef {q \in Q} {(a,q) \in I} \neq \emptyset \\
+		&\tiff&   F \cap  \interpret {\Det N} t \neq \emptyset \\
+		&\tiff& \interpret {\Det N} t  \in F' \\
+		&\tiff& {\Det N} \text{ "accepts" } t
 	\end{eqnarray*}
 
-	and so $\lang N = \lang D$.
+	and so $\lang N = \lang {\Det N}$.
 
 	\todo{Discuss proof}
 \end{proof}
 
 
 \begin{definition}
-	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions" $(p,q,a,r) \in \Delta$,
+	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
 	$(q,p,a,r) \in \Delta$.
 \end{definition}
 
@@ -261,11 +260,10 @@
 \end{remark}
 
 \begin{lemma}
-	If $N$ a "NBUA" is "order-insensitive", then it's corresponding deterministic automaton is also "order-insensitive".
+	If $N \NBUA$ a "NBUA" is "order-insensitive", then $\Det N$ is also "order-insensitive".
 \end{lemma}
 
 \begin{proof}
-	Let $D$ be the deterministic automaton corresponding to $N$.
 	\begin{eqnarray*}
 		\delta_a (X,Y) &=& \setdef {q \in Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y} \\
 		&=& \setdef {q \in Q} {(y,x,a,q) \in \Delta, x \in X, y \in Y}  \reason {$N$ is "order-insensitive"} \\
@@ -280,50 +278,52 @@
 
 	\[\intro* \Model t := (\nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
 
-	where : $a(x) \iff \tlabel t x = a$
+	where : $a(x) \tiff \tlabel t x = a$
 \end{definition}
+
+We will discuss some examples of MSO formulas.
+
+\begin{example}
+	The formula $\intro* \leaf (x) = \forall y,  y \ancestor x$ encodes the fact that $x$ is a "leaf".
+\end{example}
+
+\begin{example}
+	$x$ is the root of the "tree" is equivalent to :
+	\[\intro* \treeroot (x) = \forall y,  x \ancestor y \]
+\end{example}
+
+\begin{example}
+	The following formula encodes the fact that $x$ and $y$ are the immediate children of $z$:
+	\[\intro* \children (x,y,z) =
+		x \neq y \land
+		z  \ancestor  x \land  z \ancestor y \land
+		\forall w
+		\left( \left(
+			z \ancestor w \land
+				(w \ancestor x \lor w \ancestor  y) \right) \rightarrow (
+			w = x \lor w = y
+			)
+		\right) \]
+\end{example}
 
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
-	\[ \Model t \models \phi \iff t \in \lang A \]
-	\todo{Write up all of the missing definitions}
+	\[ \Model t \models \phi \tiff t \in \lang A \]
 \end{lemma}
 
 \begin{proof}
-	Let $A$ be a "NBUA", and $k = \abs Q$.
-
-	We define the following formulas:
-	\begin{itemize}
-		\item We can encode the fact that $ x $ is a "leaf" as follows :
-		      \[\text{leaf} (x) = \forall y,  y \ancestor x \]
-		\item $x$ is the root of the tree is equivalent to :
-		      \[\text{root} (x) = \forall y,  x \ancestor y \]
-		\item The following formula encodes the fact that $ x $ and $y$ are the immediate children of $z$:
-		      \[\text{children} (x,y,z) =
-			      x \neq y \land
-			      z  \ancestor  x \land  z \ancestor y \land
-			      \forall w
-			      \left( \left(
-				      z \ancestor w \land
-					      (w \ancestor x \lor w \ancestor  y) \right) \rightarrow (
-				      w = x \lor w = y
-				      )
-			      \right) \]
-		\item $F_i$ is the set of all "labels" leading to a final state:
-		      \[F_i = \setdef {a \in \Sigma} {(i0,i1,a,i) \in \Delta, i \in F}\]
-	\end{itemize}
-
+	Let $A\NBUA$ be a "NBUA", and $k = \abs Q$.
 	\begin{eqnarray}
 		\phi = \exists X_0 \ldots \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1}\\
 		&\land& \forall x \left( \bigwedge_{0 \leq i \leq j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2} \\
-		&\land& \forall x  \left( \text{leaf} (x) \ra \bigvee_{(a,i)\in I}  X_i(x) \right) \label{lem:AMSO3}\\
-		&\land& \forall x \forall y \forall z \left(\text{children}(x,y,z) \ra \bigvee_{(i,j,a,k)\in \Delta} \left(X_i(x) \land X_j(y) \land a(z) \land X_k(z)\right)\right) \label{lem:AMSO4} \\
-		&\land& \forall x \left(\text{root}(x) \ra \bigwedge_{i= 0}^k \left( X_i(x) \ra \bigvee_{a \in F_i} a(x) \right)\right) \label{lem:AMSO5}
+		&\land& \forall x  \left( \leaf (x) \ra \bigvee_{(a,i)\in I}  X_i(x) \right) \label{lem:AMSO3}\\
+		&\land& \forall x \forall y \forall z \left(\children(x,y,z) \ra \bigvee_{(p,q,a,r)\in \Delta} \left(X_p(x) \land X_q(y) \land a(z) \land X_r(z)\right)\right) \label{lem:AMSO4} \\
+		&\land& \forall x \left(\treeroot (x) \ra \bigvee_{q \in F} X_q(x) \right) \label{lem:AMSO5}
 	\end{eqnarray}
 
 	\todo{fix overfull}
 
-	$j \in X_i$ iff, for a given run, the state $i$ is reached from the node $j$.
+	$j \in X_i$ \tiff, for a given run, the state $i$ is reached from the node $j$.
 
 	The formula $\phi$ encodes the following properties:
 
@@ -336,7 +336,7 @@
 	\end{enumerate}
 
 	From this we deduce that
-	\[ \Model t \models \phi \iff t \in \lang A \]
+	\[ \Model t \models \phi \tiff t \in \lang A \]
 \end{proof}
 
 

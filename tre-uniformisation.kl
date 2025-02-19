@@ -21,6 +21,8 @@
 
 \knowledge{notion}
 | transition relation
+| transition@relation
+| transitions@relation
 
 \knowledge{notion}
 | transition map
@@ -64,10 +66,3 @@
 \knowledge{notion}
     | acceptant
     | accepts
-%%%%% NEW KNOWLEDGES 
-%
-%\knowledge{notion}
-%  | leaf
-%
-%\knowledge{notion}
-%  | labels
