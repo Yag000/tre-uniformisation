@@ -48,10 +48,10 @@
 \begin{definition}[Nodes]
 	The ""nodes"" of a "tree" are defined as follows:
 	\[
-		\nodes t = \begin{cases}
+		\Nodes t = \begin{cases}
 			\epsilon                                & \text{ if } t = a         \\
-			\epsilon \cup \setdef {0u} {u \in \nodes {t'}}
-			\cup \setdef {1u} {u \in \nodes {t''} } & \text{ if } t = a(t',t'')
+			\epsilon \cup \setdef {0u} {u \in \Nodes {t'}}
+			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{ if } t = a(t',t'')
 		\end{cases}
 	\]
 \end{definition}
@@ -60,16 +60,16 @@
 \begin{definition}[Leaves]
 	The ""leaves"" of a "tree" are defined as follows:
 	\[
-		\leaves t = \begin{cases}
+		\Leaves t = \begin{cases}
 			\epsilon                                 & \text{ if } t = a         \\
-			\setdef {0u} {u \in \leaves {t'}}
-			\cup \setdef {1u} {u \in \leaves {t''} } & \text{ if } t = a(t',t'')
+			\setdef {0u} {u \in \Leaves {t'}}
+			\cup \setdef {1u} {u \in \Leaves {t''} } & \text{ if } t = a(t',t'')
 		\end{cases}
 	\]
 \end{definition}
 
 \begin{remark}
-	$\leaves t \subseteq \nodes t$
+	$\Leaves t \subseteq \Nodes t$
 \end{remark}
 
 \begin{definition}
@@ -85,8 +85,8 @@
 \end{definition}
 
 \begin{definition}
-	Let $t$ be a "tree" and $x, y \in \nodes t$, we define the ""ancestor"" relation as
-	\[  x \intro* \ancestor y \tiff \exists z \in \nodes t, y = xz \]
+	Let $t$ be a "tree" and $x, y \in \Nodes t$, we define the ""ancestor"" relation as
+	\[  x \intro* \ancestor y \tiff \exists z \in \Nodes t, y = xz \]
 \end{definition}
 
 \section{Tree Automata}
@@ -97,7 +97,7 @@
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of ""states"".
-		\item $I \subseteq \Sigma \times Q$ correspond to the possible states of the leaves.
+		\item $I \subseteq \Sigma \times Q$ correspond to the possible states of the "leaves".
 		\item $\Delta \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
 		\item $F \subseteq Q$ is the set of ""final states"".
 	\end{itemize}
@@ -107,9 +107,9 @@
 	An ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
-		\exec : \nodes t &\to& Q \\
-		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \leaves t \\
-		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \nodes t \setminus \leaves t
+		\exec : \Nodes t &\to& Q \\
+		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \Leaves t \\
+		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 
 	We say that $\exec$ is ""acceptant"" if $\exec (\epsilon) \in F$ and $A$ "accepts" $t$ if
@@ -133,7 +133,7 @@
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of "states".
-		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the leaves.
+		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
 		\item $\delta : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
 		\item $F \subseteq Q$ is the set of "final states".
 	\end{itemize}
@@ -153,9 +153,9 @@
 	In the case of a "DBUA" there exists a unique "run" that corresponds to :
 
 	\begin{eqnarray*}
-		\exec : \nodes t &\to & Q \\
-		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \leaves t \\
-		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \nodes t \setminus \leaves t
+		\exec : \Nodes t &\to & Q \\
+		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \Leaves t \\
+		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 \end{remark}
 
@@ -173,9 +173,9 @@
 
 		\item If $t = a(t',t'')$. By induction hypothesis (a), there exists "runs"~$\rho'$ and $\rho''$ on~$t'$ and $t''$ respectively.
 		      Let~$\rho$ be defined by $\rho(\epsilon)=\delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon))$,
-		      $\rho(0u)=\rho'(u)$ for all $u\in\nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
+		      $\rho(0u)=\rho'(u)$ for all $u\in\Nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \Nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
 
-		      Consider now some "run" $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all $u \in \nodes {t'}$ and $\rho''(u)=\rho(0u)$ for all $u \in \nodes {t''}$.
+		      Consider now some "run" $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all $u \in \Nodes {t'}$ and $\rho''(u)=\rho(0u)$ for all $u \in \Nodes {t''}$.
 		      Then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
 		      We have now $\rho(\epsilon) = \delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon)) = \delta_{t(\epsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
@@ -276,7 +276,7 @@
 \begin{definition}
 	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
 
-	\[\intro* \Model t := (\nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
+	\[\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
 
 	where : $a(x) \tiff \tlabel t x = a$
 \end{definition}
@@ -323,16 +323,16 @@ We will discuss some examples of MSO formulas.
 
 	\todo{fix overfull}
 
-	$j \in X_i$ \tiff, for a given run, the state $i$ is reached from the node $j$.
+	$j \in X_i$ \tiff, for a given "run", the state $i$ is reached from the node $j$.
 
 	The formula $\phi$ encodes the following properties:
 
 	\begin{enumerate}
-		\item Every node has an associated state.
-		\item A node cannot be in two states at the same time.
-		\item The transitions originate from the leaves.
-		\item The transitions of inner nodes ensure that for every trio of nodes, where two are children of the third, there exists a transition from the children to the parent.
-		\item Finally, the word is accepted if and only if the state associated with the root node is a final state.
+		\item Every "node" has an associated "state".
+		\item A node cannot be in two "states" at the same time.
+		\item The "transitions@@relation" originate from the "leaves".
+		\item The "transitions@@relation" of inner nodes ensure that for every trio of nodes, where two are children of the third, there exists a transition from the children to the parent.
+		\item Finally, the word is accepted if and only if the state associated with the root node is a "final state".
 	\end{enumerate}
 
 	From this we deduce that
@@ -357,7 +357,7 @@ We will discuss some examples of MSO formulas.
 
 
 \begin{lemma}
-	Let $A = \NBUA$ the automaton $A' = (\Sigma, Q, I, \Delta, Q \cap F)$
+	Let $A = \NBUA$ the "NBUA" $A' = (\Sigma, Q, I, \Delta, Q \cap F)$
 	verifies that $\lang {A'} = (\lang {A_1})^{\complement}$
 \end{lemma}
 
