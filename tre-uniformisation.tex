@@ -351,9 +351,11 @@ We will discuss some examples of MSO formulas.
 \end{lemma}
 
 \begin{lemma}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "NBUA", then $A_3 = A_1 \Atimes A_2$ with "final states" $F' = \setdef {(q_1,q_2)} {q_1 \in F_1  \text{ or } q_2 \in F_2}$
+	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "NBUA", then
+	\[ A_3 = (\Sigma, Q_1 \uplus Q_2, I_1 \uplus I_2, \Delta_1 \uplus \Delta_2, F_1 \uplus F_2) \]
 	verifies that $\lang {A_3} = \lang {A_1} \cup \lang {A_2}$
 \end{lemma}
+
 
 
 \begin{lemma}
