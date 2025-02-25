@@ -49,8 +49,8 @@
 	The ""nodes"" of a "tree" are defined as follows:
 	\[
 		\intro* \Nodes t = \begin{cases}
-			\epsilon                                & \text{ if } t = a         \\
-			\epsilon \cup \setdef {0u} {u \in \Nodes {t'}}
+			\varepsilon                                & \text{ if } t = a         \\
+			\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
 			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{ if } t = a(t',t'')
 		\end{cases}
 	\]
@@ -61,7 +61,7 @@
 	The ""leaves"" of a "tree" are defined as follows:
 	\[
 		\intro* \Leaves t = \begin{cases}
-			\epsilon                                 & \text{ if } t = a         \\
+			\varepsilon                                 & \text{ if } t = a         \\
 			\setdef {0u} {u \in \Leaves {t'}}
 			\cup \setdef {1u} {u \in \Leaves {t''} } & \text{ if } t = a(t',t'')
 		\end{cases}
@@ -76,8 +76,8 @@
 	We note $\intro* \tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
 	\[
 		\intro* \tlabel t n =   \begin{cases}
-			a               & \text{ if } t = a \text{ and } n = \epsilon         \\
-			a               & \text{ if } t = a(t',t'') \text{ and } n = \epsilon \\
+			a               & \text{ if } t = a \text{ and } n = \varepsilon         \\
+			a               & \text{ if } t = a(t',t'') \text{ and } n = \varepsilon \\
 			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m       \\
 			\tlabel {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
 		\end{cases}
@@ -112,8 +112,8 @@
 		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 
-	We say that $\exec$ is ""acceptant"" if $\exec (\epsilon) \in F$ and $A$ "accepts" $t$ if
-	$F \cap \setdef { q\in Q} {\exec (\epsilon) = q} \neq \emptyset$
+	We say that $\exec$ is ""acceptant"" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
+	$F \cap \setdef { q\in Q} {\exec (\varepsilon) = q} \neq \emptyset$
 \end{definition}
 
 
@@ -165,19 +165,19 @@
 \end{lemma}
 
 \begin{proof}
-	We will prove by induction on a "tree"~$t$ that (a) there exists a "run" of~$A$ over~$t$, and (b) for all "runs"~$\exec$ of $A$ over $t$, $\interpret A t = \exec (\epsilon)$.
+	We will prove by induction on a "tree"~$t$ that (a) there exists a "run" of~$A$ over~$t$, and (b) for all "runs"~$\exec$ of $A$ over $t$, $\interpret A t = \exec (\varepsilon)$.
 	We proceed by case distinction.
 	\begin{itemize}
 		\item If $t = a$. Let $\rho$ be defined by $\rho(\varepsilon)=\init_a$, then $\rho$ is a "run" of~$A$ over~$t$. We have proved (a).
-		      Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\epsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).
+		      Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\varepsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).
 
 		\item If $t = a(t',t'')$. By induction hypothesis (a), there exists "runs"~$\rho'$ and $\rho''$ on~$t'$ and $t''$ respectively.
-		      Let~$\rho$ be defined by $\rho(\epsilon)=\delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon))$,
+		      Let~$\rho$ be defined by $\rho(\varepsilon)=\delta_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon))$,
 		      $\rho(0u)=\rho'(u)$ for all $u\in\Nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \Nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
 
 		      Consider now some "run" $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all $u \in \Nodes {t'}$ and $\rho''(u)=\rho(0u)$ for all $u \in \Nodes {t''}$.
-		      Then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\epsilon)=\interpret A {t'}$ and $\rho''(\epsilon)=\interpret A {t''}$.
-		      We have now $\rho(\epsilon) = \delta_{t(\epsilon)}(\rho'(\epsilon),\rho''(\epsilon)) = \delta_{t(\epsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
+		      Then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\varepsilon)=\interpret A {t'}$ and $\rho''(\varepsilon)=\interpret A {t''}$.
+		      We have now $\rho(\varepsilon) = \delta_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon)) = \delta_{t(\varepsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
 \end{proof}
 
@@ -203,20 +203,20 @@
 \begin{theorem}
 	For all $N = \NBUA$ an "NBUA", the "power set automaton" verifies that
 	\[
-		\interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} \text{ and } \lang N = \lang {\Det N}
+		\interpret {\Det N} t = \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} \text{ and } \lang N = \lang {\Det N}
 	\]
 \end{theorem}
 
 \begin{proof}
 	We will first show that for all "tree" $t$,
 	\[
-		\interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
+		\interpret {\Det N} t = \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}\ .
 	\]
 	We will prove this property by induction over $t$. We proceed by case distinction.
 	\begin{itemize}
 		\item If $t = a$, then
 		      \begin{eqnarray*}
-			      \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} &=&  \setdef {q \in Q} {(a,q) \in I} \\
+			      \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} &=&  \setdef {q \in Q} {(a,q) \in I} \\
 			      &=& \interpret {\Det N} t\ .
 		      \end{eqnarray*}
 		\item If $t = a(t_1,t_2)$, then
@@ -229,10 +229,10 @@
 			      &\text{if and only if}& q \in \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2}} \\
 			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2} \\
 			      &\text{if and only if}& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
-			      &\text{if and only if}& q \in \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}
+			      &\text{if and only if}& q \in \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}
 		      \end{eqnarray*}
 	\end{itemize}
-	Then $ \interpret {\Det N} t = \setdef {\rho(\epsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}$.
+	Then $ \interpret {\Det N} t = \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}$.
 
 	We must now show that $\Det N$ "accepts" $t$ \tiff $N$ "accepts" $t$.
 
@@ -356,12 +356,12 @@ We will discuss some examples of MSO formulas.
 	verifies that $\lang {A_3} = \lang {A_1} \cup \lang {A_2}$
 \end{lemma}
 
-
-
 \begin{lemma}
 	Let $A = \NBUA$ the "NBUA" $A' = (\Sigma, Q, I, \Delta, Q \cap F)$
 	verifies that $\lang {A'} = (\lang A )^{\complement}$
 \end{lemma}
+
+
 
 
 \iffalse
