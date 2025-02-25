@@ -48,7 +48,7 @@
 \begin{definition}[Nodes]
 	The ""nodes"" of a "tree" are defined as follows:
 	\[
-		\Nodes t = \begin{cases}
+		\intro* \Nodes t = \begin{cases}
 			\epsilon                                & \text{ if } t = a         \\
 			\epsilon \cup \setdef {0u} {u \in \Nodes {t'}}
 			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{ if } t = a(t',t'')
@@ -60,7 +60,7 @@
 \begin{definition}[Leaves]
 	The ""leaves"" of a "tree" are defined as follows:
 	\[
-		\Leaves t = \begin{cases}
+		\intro* \Leaves t = \begin{cases}
 			\epsilon                                 & \text{ if } t = a         \\
 			\setdef {0u} {u \in \Leaves {t'}}
 			\cup \setdef {1u} {u \in \Leaves {t''} } & \text{ if } t = a(t',t'')
@@ -75,7 +75,7 @@
 \begin{definition}
 	We note $\intro* \tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
 	\[
-		\tlabel t n =   \begin{cases}
+		\intro* \tlabel t n =   \begin{cases}
 			a               & \text{ if } t = a \text{ and } n = \epsilon         \\
 			a               & \text{ if } t = a(t',t'') \text{ and } n = \epsilon \\
 			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m       \\
@@ -103,8 +103,8 @@
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[Execution of an automaton]
-	An ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
+\begin{definition}[Run of an automaton]
+	A ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
 		\exec : \Nodes t &\to& Q \\
@@ -119,7 +119,7 @@
 
 \begin{definition}[Language of an automaton]
 	Let $A$ be a "NBUA". Its ""associated language"" is defined as:
-	\[\lang A = \setdef {t \in \tree_{\Sigma}} {\exists \exec,  \exec (\epsilon) \in F}\]
+    \[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
 
@@ -141,9 +141,9 @@
 \end{remark}
 
 \begin{definition}[Interpretation of an automaton]
-	The ""interpretation"" of a "DBUA" $A$,  $\intro* \interpret A ~$, over an alphabet $\Sigma$ is defined as follows:
+	The ""interpretation"" of a "DBUA" $A$  over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
-		\interpret A ~: \tree_{\Sigma} &\to& Q \\
+		\intro* \interpret A ~: \tree_{\Sigma} &\to& Q \\
 		a &\mapsto& \init_a \\
 		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
 	\end{eqnarray*}
