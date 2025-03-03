@@ -49,7 +49,7 @@
 	The ""nodes"" of a "tree" are defined as follows:
 	\[
 		\intro* \Nodes t = \begin{cases}
-			\varepsilon                                & \text{ if } t = a         \\
+			\varepsilon                             & \text{ if } t = a         \\
 			\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
 			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{ if } t = a(t',t'')
 		\end{cases}
@@ -61,7 +61,7 @@
 	The ""leaves"" of a "tree" are defined as follows:
 	\[
 		\intro* \Leaves t = \begin{cases}
-			\varepsilon                                 & \text{ if } t = a         \\
+			\varepsilon                              & \text{ if } t = a         \\
 			\setdef {0u} {u \in \Leaves {t'}}
 			\cup \setdef {1u} {u \in \Leaves {t''} } & \text{ if } t = a(t',t'')
 		\end{cases}
@@ -78,7 +78,7 @@
 		\intro* \tlabel t n =   \begin{cases}
 			a               & \text{ if } t = a \text{ and } n = \varepsilon         \\
 			a               & \text{ if } t = a(t',t'') \text{ and } n = \varepsilon \\
-			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m       \\
+			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m          \\
 			\tlabel {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
 		\end{cases}
 	\]
@@ -113,13 +113,13 @@
 	\end{eqnarray*}
 
 	We say that $\exec$ is ""acceptant"" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
-	$F \cap \setdef { q\in Q} {\exec (\varepsilon) = q} \neq \emptyset$
+	$F \cap \setdef {\rho(\varepsilon)} {\text{$\rho$ "run" of~$A$ over~$t$}} \neq \emptyset$
 \end{definition}
 
 
 \begin{definition}[Language of an automaton]
 	Let $A$ be a "NBUA". Its ""associated language"" is defined as:
-    \[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
+	\[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
 
@@ -362,6 +362,108 @@ We will discuss some examples of MSO formulas.
 \end{lemma}
 
 
+
+\begin{lemma}
+	Over the alphabet $\Sigma \times \set {0,1}$ the automaton $A$ described bellow can decide the formula $a (x)$,
+	where $a \in \Sigma$ and $x$ is a free variable.
+
+
+	\[A =   (\Sigma \times \set {0,1}, \set {\text {Yes, No}} ,  \init, \delta, \text{Yes})  \]
+
+	The following function definitions should be interpreted as a pattern match, with priority for the first rule :
+
+	\begin{itemize}
+		\item $\begin{aligned}[t]
+				      \init      : \Sigma \times \set{0,1} & \to \parts Q       \\
+				      (a, 1)                               & \mapsto \text{Yes} \\
+				      \_                                   & \mapsto \text{No}
+			      \end{aligned} $
+
+		\item $\begin{aligned}[t]
+				      \delta               : Q \times Q \times (\Sigma \times \set {0,1}) & \to Q              \\
+				      (\_, \_, (a,1))                                                     & \mapsto \text{Yes} \\
+				      (\text{No}, \text{No},  \_)                                         & \mapsto \text{No}  \\
+				      \_                                                                  & \mapsto \text{Yes}
+			      \end{aligned}$
+	\end{itemize}
+\end{lemma}
+
+
+\begin{lemma}
+	Over the alphabet $\Sigma \times \set {0,1}^2$ the automaton $A$ described bellow can decide the formula $x  \ancestor y $,
+	where $x$ and $y$ are free variables.
+
+	\[A =   (\Sigma \times \set {0,1}^2, \set {\text {Yes, No, FoundY}} ,  \init, \delta, \text{Yes})  \]
+
+	The following function definitions should be interpreted as a pattern match, with priority for the first rule :
+
+	\begin{itemize}
+		\item $\begin{aligned}[t]
+				      \init      : \Sigma \times \set{0,1}^2 & \to \parts Q          \\
+				      (\_, \_, 1)                            & \mapsto \text{FoundY} \\
+				      \_                                     & \mapsto \text{No}
+			      \end{aligned} $
+
+		\item $\begin{aligned}[t]
+				      \delta               : Q \times Q \times (\Sigma \times \set {0,1}^2) & \to Q                 \\
+				      (\text{FoundY}, \_, (\_,1,0))                                         & \mapsto \text{Yes}    \\
+				      (\_, \text{FoundY}, (\_,1,0))                                         & \mapsto \text{Yes}    \\
+				      (\text{FoundY}, \_, (\_,0,0))                                         & \mapsto \text{FoundY} \\
+				      (\_, \text{FoundY}, (\_,0,0))                                         & \mapsto \text{FoundY} \\
+				      (\text{Yes}, \_, \_)                                                  & \mapsto \text{Yes}    \\
+				      (\_, \text{Yes}, \_)                                                  & \mapsto \text{Yes}    \\
+				      (\_, \_, (\_, 0, 1))                                                  & \mapsto \text{FoundY} \\
+				      \_                                                                    & \mapsto \text{No}
+			      \end{aligned}$
+	\end{itemize}
+\end{lemma}
+
+
+
+\begin{lemma}
+	If $\phi$ is a MSO formula there exists $A$ a "NBUA" such that for all $t \in \tree_{\Sigma}$,
+	\[ \Model t \models \phi \tiff t \in \lang A \]
+\end{lemma}
+
+
+\begin{proof}
+	The proof procedes by induction on the structure of $\phi$.
+
+	If $\phi$ is an atomic formula, then the lemmas above decide it.
+
+	If $\phi$ is of the form $\psi_1 \land \psi_2$ then we can compute the intersection between the automata for $\psi_1$ and $\psi_2$, obtained using the induction hypothesis.
+	We can deal with the disjuction using the union instead of the intersection.
+
+	If $\phi$ is of the form $\lnot \psi$ then we can compute the complement of the automaton corresponding to $\psi$.
+
+	We have to deal with the case $\phi = \exists x.\psi(x)$. We can find a "NBUA" $A = \NBUA$ for $\psi$ where $x$ is treated as a free variable.
+
+	Then the automaton $A' = (\Sigma \times \set{0,1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$
+	where
+	\[
+		\begin{aligned}
+			\Delta' = & \left\{
+			\begin{aligned}
+				 & ((q,u), (q', u'), (a, X), (q'',u'')) \mid u, u' \in \{0,1\},                          \\
+				 & \quad u'' = u \land u', X = (\ldots, 0, \ldots) \in \{0,1\}^n \text{ at position } i, \\
+				 & \quad (q, q', (a, X), q'') \in \Delta
+			\end{aligned}
+			\right\}                 \\
+			          & \cup \left\{
+			\begin{aligned}
+				 & ((q,0), (q', 0), (a, X), (q'',1)) \mid                              \\
+				 & \quad X = (\ldots, 1, \ldots) \in \{0,1\}^n \text{ at position } i, \\
+				 & \quad (q, q', (a, X), q'') \in \Delta
+			\end{aligned}
+			\right\}.
+		\end{aligned}
+	\]
+	can decide $\phi$. If the existential quantification is performed on a variable of the second order we check 
+    the automation remains the same but instead of looking at a single variable in the transition function we look at all 
+    of the ones present in the set.
+
+
+\end{proof}
 
 
 \iffalse
