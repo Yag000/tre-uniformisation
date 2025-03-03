@@ -440,27 +440,29 @@ We will discuss some examples of MSO formulas.
 
 	Then the automaton $A' = (\Sigma \times \set{0,1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$
 	where
+
+
 	\[
 		\begin{aligned}
 			\Delta' = & \left\{
 			\begin{aligned}
-				 & ((q,u), (q', u'), (a, X), (q'',u'')) \mid u, u' \in \{0,1\},                          \\
-				 & \quad u'' = u \land u', X = (\ldots, 0, \ldots) \in \{0,1\}^n \text{ at position } i, \\
+				 & ((q,u), (q', u'), (a, X), (q'',u'')) \mid u, u' \in \{0,1\},     \\
+				 & \quad u'' = u \land u', X \text{ has } 0 \text{ at position } i, \\
 				 & \quad (q, q', (a, X), q'') \in \Delta
 			\end{aligned}
 			\right\}                 \\
 			          & \cup \left\{
 			\begin{aligned}
-				 & ((q,0), (q', 0), (a, X), (q'',1)) \mid                              \\
-				 & \quad X = (\ldots, 1, \ldots) \in \{0,1\}^n \text{ at position } i, \\
+				 & ((q,0), (q', 0), (a, X), (q'',1)) \mid          \\
+				 & \quad X3 \text{ has } 1 \text{ at position } i, \\
 				 & \quad (q, q', (a, X), q'') \in \Delta
 			\end{aligned}
 			\right\}.
 		\end{aligned}
 	\]
-	can decide $\phi$. If the existential quantification is performed on a variable of the second order we check 
-    the automation remains the same but instead of looking at a single variable in the transition function we look at all 
-    of the ones present in the set.
+	and $i$ corresponds to the variable $x$, can decide $\phi$. If the existential quantification is performed on a
+	variable of the second order we check the automation remains the same but instead of looking at a single variable
+	in the transition function we look at all of the ones present in the set.
 
 
 \end{proof}
