@@ -75,7 +75,7 @@
 \begin{definition}
 	We note $\intro* \tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
 	\[
-		\intro* \tlabel t n =   \begin{cases}
+		\tlabel t n =   \begin{cases}
 			a               & \text{ if } t = a \text{ and } n = \varepsilon         \\
 			a               & \text{ if } t = a(t',t'') \text{ and } n = \varepsilon \\
 			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m          \\
@@ -288,17 +288,17 @@
 
 \begin{proofI}
 	\begin{itemize}
-        \item $\bsubLR$\vspace{0.15cm}\\ 
+		\item $\bsubLR$\vspace{0.15cm}\\
 		      We will prove by induction that $q \in \Sa A \implies$ there exists $t \in \tree_\Sigma$ such that
 		      $\interpret A t = q$.
 
 		      \begin{itemize}
 			      \item If $q = \init(a) \in \Sa A$, then the "tree" $a$ works : $\interpret A a = \init (a) = q$.
-			      \item If $q = \delta (p,q,a) \in \Sa A$ where $p,q \in \Sa A$ and $a \in \Sigma$. Then b the induction hypothetses tehre exists
-			            $t'$ such that $\interpret A {t'} = p$ and $t''$ such that $\interpret A {t''} = q$.
+			      \item If $q = \delta (p,q,a) \in \Sa A$ where $p,q \in \Sa A$ and $a \in \Sigma$. Then by the induction hypothesis
+			            there exists $t'$ such that $\interpret A {t'} = p$ and $t''$ such that $\interpret A {t''} = q$.
 			            Then we have that $t = a(t',t'')$ verifies $\interpret A t = q$.
 		      \end{itemize}
-		\item $\bsubRL$\vspace{0.15cm}\\ 
+		\item $\bsubRL$\vspace{0.15cm}\\
 		      We will prove it by induction on the structure of a "tree" $t$. We proceed by case distinction.
 		      \begin{itemize}
 			      \item If $t = a$, then we have $ \interpret A a = \init (a) \in \Sa A$
@@ -311,6 +311,24 @@
 \begin{definition}
 	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every tree.
 \end{definition}
+
+
+\begin{theorem}
+	$A = \DBUA$ is "universal" if and only if $\Sa A \subseteq F$.
+\end{theorem}
+
+\begin{proofI}
+	\begin{itemize}
+		\item $\bimpLR$\\
+		      We suppose $A$ "universal", then for all $t \in \tree_\Sigma$ we have that $\interpret A t \in F$, because $A$ "accepts" $t$.
+		      Since $\Sa A = \setdef {\interpret A t} {t\in \tree_\Sigma}$ we have that $\Sa A \subseteq F$.
+
+		\item $\bimpRL$\\
+		      We suppose $\Sa A \subseteq F$. Let $t$ be a "tree", then $\interpret A t \in \Sa \subseteq F$, so $\interpret A t \in F$ and $A$
+		      "accepts" $t$. We have proven that $A$ is "universal".
+	\end{itemize}
+\end{proofI}
+
 
 
 
