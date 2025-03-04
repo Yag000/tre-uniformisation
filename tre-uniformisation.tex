@@ -436,24 +436,22 @@ We will discuss some examples of MSO formulas.
 
 	We have to deal with the case $\phi = \exists x.\psi(x)$. We can find a "NBUA" $A = \NBUA$ for $\psi$ where $x$ is treated as a free variable.
 
-	Then the automaton $A' = (\Sigma \times \set{0,1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$
+	Then the automaton $A' = (\Sigma \times \set{0,1}^{n-1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$
 	where
-
-
 	\[
 		\begin{aligned}
 			\Delta' = & \left\{
 			\begin{aligned}
-				 & ((q,u), (q', u'), (a, X), (q'',u'')) \mid u, u' \in \{0,1\},     \\
-				 & \quad u'' = u \land u', X \text{ has } 0 \text{ at position } i, \\
-				 & \quad (q, q', (a, X), q'') \in \Delta
+				 & ((q,u), (q', u'), (a, X), (q'',u'')) \mid u, u' \in \{0,1\},    \\
+				 & \quad X' \text{ is $X$ where we add } 0 \text{ at position } i, \\
+				 & \quad u'' = u \land u', \quad (q, q', (a, X'), q'') \in \Delta
 			\end{aligned}
 			\right\}                 \\
 			          & \cup \left\{
 			\begin{aligned}
-				 & ((q,0), (q', 0), (a, X), (q'',1)) \mid          \\
-				 & \quad X3 \text{ has } 1 \text{ at position } i, \\
-				 & \quad (q, q', (a, X), q'') \in \Delta
+				 & ((q,0), (q', 0), (a, X), (q'',1)) \mid                          \\
+				 & \quad X' \text{ is $X$ where we add } 1 \text{ at position } i, \\
+				 & \quad (q, q', (a, X'), q'') \in \Delta
 			\end{aligned}
 			\right\}.
 		\end{aligned}
@@ -468,7 +466,7 @@ We will discuss some examples of MSO formulas.
 
 
 \begin{problem}
-Given an MSO formula $\phi$, determine whether there exists an MSO formula $\psi$ such that, for all "trees" $t$, the following conditions hold:
+Given an MSO formula $\phi(x)$, determine whether there exists an MSO formula $\psi(x)$ such that, for all "trees" $t$, the following conditions hold:
 \begin{enumerate}
 	\item There exists at most one element $x$ such that $\Model t \models \psi(x)$.
 	\item If there exists an element $x$ such that $\Model t \models \phi(x)$, then there exists an element $y$ such that $\Model t \models \psi(y) \land \phi(y)$.
@@ -478,7 +476,7 @@ Given an MSO formula $\phi$, determine whether there exists an MSO formula $\psi
 This problem can be equivalently reformulated as follows:
 
 \begin{problem}
-Given an MSO formula $\phi$, decide whether there exists an MSO formula $\psi$ such that, for all "trees" $t$, the following holds:
+Given an MSO formula $\phi(X)$, decide whether there exists an MSO formula $\psi(X)$ such that, for all "trees" $t$, the following holds:
 \begin{eqnarray*}
 	\Model t \models &\quad &  \forall X \forall Y \, \Big((\psi(X) \land \psi(Y)) \rightarrow X = Y\Big) \\
 	& \land & (\exists X \, \phi(X)) \rightarrow (\exists X \, \psi(X)) \\
@@ -490,7 +488,7 @@ Given an MSO formula $\phi$, decide whether there exists an MSO formula $\psi$ s
 	We analyze the conditions in the first formulation and show their correspondence to the logical constraints in the second formulation:
 
 	\begin{enumerate}
-		\item The formula $\forall X \forall Y \, (\psi(X) \land \psi(Y)) \rightarrow X = Y)$ ensures that $\psi$ is satisfied by at most one element
+		\item The formula $\forall X \forall Y \, (\psi(X) \land \psi(Y) \rightarrow X = Y)$ ensures that $\psi$ is satisfied by at most one element
 		      in $\Model t$. This directly corresponds to the first condition in the original problem statement.
 
 		\item The formula $\exists X \, \phi(X) \rightarrow \exists X \, \psi(X)$ expresses that whenever $\phi$ has a solution, $\psi$ must also have a solution.
