@@ -271,6 +271,50 @@
 	\end{eqnarray*}
 \end{proof}
 
+\begin{definition}
+	Let $A = \DBUA$ a "DBUA", let $\intro* \Sa A \subseteq Q$ be the smallest set such that
+	\begin{enumerate}
+		\item $\init (a) \in \Sa A$ for all $a \in \Sigma$,
+		\item $\delta (p,q,a) \in \Sa A$ for all $p,q \in \Sa A$ and $a \in \Sigma$.
+	\end{enumerate}
+\end{definition}
+
+
+\begin{lemma}
+	Let $A$ a "DBUA", then
+	\[\Sa A = \setdef {\interpret A t} {t \in \tree_\Sigma} \]
+\end{lemma}
+
+
+\begin{proofI}
+	\begin{itemize}
+        \item $\bsubLR$\vspace{0.15cm}\\ 
+		      We will prove by induction that $q \in \Sa A \implies$ there exists $t \in \tree_\Sigma$ such that
+		      $\interpret A t = q$.
+
+		      \begin{itemize}
+			      \item If $q = \init(a) \in \Sa A$, then the "tree" $a$ works : $\interpret A a = \init (a) = q$.
+			      \item If $q = \delta (p,q,a) \in \Sa A$ where $p,q \in \Sa A$ and $a \in \Sigma$. Then b the induction hypothetses tehre exists
+			            $t'$ such that $\interpret A {t'} = p$ and $t''$ such that $\interpret A {t''} = q$.
+			            Then we have that $t = a(t',t'')$ verifies $\interpret A t = q$.
+		      \end{itemize}
+		\item $\bsubRL$\vspace{0.15cm}\\ 
+		      We will prove it by induction on the structure of a "tree" $t$. We proceed by case distinction.
+		      \begin{itemize}
+			      \item If $t = a$, then we have $ \interpret A a = \init (a) \in \Sa A$
+			      \item If $t = a(t',t'')$, we have $ \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Sa A$
+			            because by the induction hypothesis $\interpret A {t'} \in \Sa A$  and $\interpret A {t''} \in \Sa A$.
+		      \end{itemize}
+	\end{itemize}
+\end{proofI}
+
+\begin{definition}
+	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every tree.
+\end{definition}
+
+
+
+
 \subsection{MSO}
 
 \begin{definition}
@@ -434,10 +478,10 @@ We will discuss some examples of MSO formulas.
 
 	If $\phi$ is of the form $\lnot \psi$ then we can compute the complement of the automaton corresponding to $\psi$.
 
-	We have to deal with the case $\phi = \exists x.\psi(x)$. We can find a "NBUA" $A = \NBUA$ for $\psi$ where $x$ is treated as a free variable.
+	We have to deal with the case $\phi = \exists x.\psi(x)$. We can find a "NBUA" $A = (\Sigma \times \set{0,1}^n, Q, I, \Delta, F)$
+	for $\psi$ where $x$ is treated as a free variable.
 
-	Then the automaton $A' = (\Sigma \times \set{0,1}^{n-1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$
-	where
+	Then the automaton $A' = (\Sigma \times \set{0,1}^{n-1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$ where
 	\[
 		\begin{aligned}
 			\Delta' = & \left\{
@@ -503,11 +547,14 @@ Given an MSO formula $\phi(X)$, decide whether there exists an MSO formula $\psi
 
 
 
-
-
 \iffalse
 	\bibliographystyle{alpha}
 	\bibliography{tre-uniformisation}
 \fi
+
+
+
+
+
 
 \end{document}
