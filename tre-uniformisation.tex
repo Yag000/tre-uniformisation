@@ -361,12 +361,9 @@ We will discuss some examples of MSO formulas.
 	verifies that $\lang {A'} = (\lang A )^{\complement}$
 \end{lemma}
 
-
-
 \begin{lemma}
 	Over the alphabet $\Sigma \times \set {0,1}$ the automaton $A$ described bellow can decide the formula $a (x)$,
 	where $a \in \Sigma$ and $x$ is a free variable.
-
 
 	\[A =   (\Sigma \times \set {0,1}, \set {\text {Yes, No}} ,  \init, \delta, \text{Yes})  \]
 
@@ -431,8 +428,9 @@ We will discuss some examples of MSO formulas.
 
 	If $\phi$ is an atomic formula, then the lemmas above decide it.
 
-	If $\phi$ is of the form $\psi_1 \land \psi_2$ then we can compute the intersection between the automata for $\psi_1$ and $\psi_2$, obtained using the induction hypothesis.
-	We can deal with the disjuction using the union instead of the intersection.
+	If $\phi$ is of the form $\psi_1 \land \psi_2$ then we can compute the intersection between the automata
+	for $\psi_1$ and $\psi_2$, obtained using the induction hypothesis. We can deal with the disjuction using the
+	union instead of the intersection.
 
 	If $\phi$ is of the form $\lnot \psi$ then we can compute the complement of the automaton corresponding to $\psi$.
 
@@ -461,10 +459,52 @@ We will discuss some examples of MSO formulas.
 		\end{aligned}
 	\]
 	and $i$ corresponds to the variable $x$, can decide $\phi$. If existential quantification is applied to a
-	second-order variable, the automation remains unchanged. However, instead of considering a single variable
+	second-order variable, the automaton remains unchanged. However, instead of considering a single variable
 	in the transition function, look at all the variables within the given set.
 
 \end{proof}
+
+\section{Uniformisation}
+
+
+\begin{problem}
+Given an MSO formula $\phi$, determine whether there exists an MSO formula $\psi$ such that, for all "trees" $t$, the following conditions hold:
+\begin{enumerate}
+	\item There exists at most one element $x$ such that $\Model t \models \psi(x)$.
+	\item If there exists an element $x$ such that $\Model t \models \phi(x)$, then there exists an element $y$ such that $\Model t \models \psi(y) \land \phi(y)$.
+\end{enumerate}
+\end{problem}
+
+This problem can be equivalently reformulated as follows:
+
+\begin{problem}
+Given an MSO formula $\phi$, decide whether there exists an MSO formula $\psi$ such that, for all "trees" $t$, the following holds:
+\begin{eqnarray*}
+	\Model t \models &\quad &  \forall X \forall Y \, \Big((\psi(X) \land \psi(Y)) \rightarrow X = Y\Big) \\
+	& \land & (\exists X \, \phi(X)) \rightarrow (\exists X \, \psi(X)) \\
+	& \land& (\forall X \, \psi(X) \rightarrow \phi(X)).
+\end{eqnarray*}
+\end{problem}
+
+\begin{proof}
+	We analyze the conditions in the first formulation and show their correspondence to the logical constraints in the second formulation:
+
+	\begin{enumerate}
+		\item The formula $\forall X \forall Y \, (\psi(X) \land \psi(Y)) \rightarrow X = Y)$ ensures that $\psi$ is satisfied by at most one element
+		      in $\Model t$. This directly corresponds to the first condition in the original problem statement.
+
+		\item The formula $\exists X \, \phi(X) \rightarrow \exists X \, \psi(X)$ expresses that whenever $\phi$ has a solution, $\psi$ must also have a solution.
+		      However, this does not require $\psi$ to hold for the same element as $\phi$.
+
+		      The formula $\forall X \, (\psi(X) \rightarrow \phi(X))$ ensures that whenever $\psi$ holds for an element, $\phi$ must also hold for that same element.
+
+		      Combining the last two constraints, we obtain the second condition: whenever there exists an element satisfying $\phi$, there must exist an element
+		      satisfying both $\psi$ and $\phi$.
+	\end{enumerate}
+\end{proof}
+
+
+
 
 
 \iffalse
