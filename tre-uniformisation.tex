@@ -534,8 +534,8 @@ We will discuss some examples of MSO formulas.
 \begin{definition}[Uniformiser]
 	We say that a formula $\psi(X)$ is a ""uniformiser"" of $\phi(X)$ if for all "trees" $t$, the following conditions hold:
 	\begin{enumerate}
-		\item There exists at most one set $X$ such that $\Model t \models \psi(C)$.
-		\item If there exists a set $C$ such that $\Model t \models \phi(C)$, then there exists a set $Y$ such that $\Model t \models \psi(Y) \land \phi(Y)$.
+		\item There exists at most one set $X$ such that $\Model t \models \psi(X)$.
+		\item If there exists a set $X$ such that $\Model t \models \phi(X)$, then there exists a set $Y$ such that $\Model t \models \psi(Y) \land \phi(Y)$.
 	\end{enumerate}
 \end{definition}
 
@@ -601,7 +601,7 @@ This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Ps
 from \ref{coro:univeral-Sa} we can decide if $\Psi$ is satisfied by all models.
 
 We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
-the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same constructios as for $\psi$ but modifying
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\psi$ but modifying
 the "transition function".
 We look at the "DBUA" $U = (\Sigma, \parts Q \times \parts {Q}, \init', \delta', F')$ where
 \begin{itemize}
