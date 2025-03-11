@@ -48,7 +48,8 @@
 \begin{definition}[Nodes]
 	The ""nodes"" of a "tree" are defined as follows:
 	\[
-		\intro* \Nodes t = \begin{cases}
+		\intro* \Nodes t =
+		\begin{cases}
 			\varepsilon                             & \text{ if } t = a         \\
 			\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
 			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{ if } t = a(t',t'')
@@ -579,25 +580,49 @@ is satisfiable for all "trees". We will build a "DBUA" than can decide if a "tre
 Thanks to the construction from \ref{lem:MSO-aut}, we can build a "DBUA" for $A = (\Sigma \times \set{0,1}, Q, \init, \delta, F)$ for $\phi(X)$
 and another one $A' = (\Sigma' \times \set{0,1}, Q', \init', \delta', F')$ for $\psi(Y)$.
 
-We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts Q', \init'', \delta'', F'')$ where
+We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init'', \delta'', F'')$ where
 \begin{itemize}
 	\item$\begin{aligned}[t]
-			      \init'' : \Sigma & \to      \parts Q \times \parts Q'                                                            \\
+			      \init'' : \Sigma & \to      \parts Q \times \parts {Q'}                                                          \\
 			      a                & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init'(a,b) } {b \in \set{0,1}})
 		      \end{aligned}$
 
 	\item$\begin{aligned}[t]
-			      \delta'' : (\parts Q \times \parts Q)^2 \times \Sigma & \to      \parts Q \times \parts Q'                                                        \\
-			      ((X,X'),(Y,Y'),a)                                     & \mapsto \left(\begin{aligned}
-					                                                                            \{ \delta(x,y,(a,b)) \}   & \mid  \{x \in X, y \in Y, b \in \set{0,1}\},    \\
-					                                                                            \{ \delta'(x',y',(a,b))\} & \mid  \{x' \in X', y' \in Y', b \in \set{0,1}\}
-				                                                                            \end{aligned}\right)
+			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                      \\
+			      ((X,X'),(Y,Y'),a)                                        & \mapsto \left(\begin{aligned}
+					                                                                               \{ \delta(x,y,(a,b)) \}   & \mid  \{x \in X, y \in Y, b \in \set{0,1}\},    \\
+					                                                                               \{ \delta'(x',y',(a,b))\} & \mid  \{x' \in X', y' \in Y', b \in \set{0,1}\}
+				                                                                               \end{aligned}\right)
 		      \end{aligned}$
 
 	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
 \end{itemize}
 This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Psi$. In particular, using the decision procedure
 from \ref{coro:univeral-Sa} we can decide if $\Psi$ is satisfied by all models.
+
+We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable".
+
+We look at the "DBUA" $U = (\Sigma, \parts Q \times \parts {Q}, \init', \delta', F')$ where
+\begin{itemize}
+	\item$\begin{aligned}[t]
+			      \init' : \Sigma & \to      \parts Q \times \parts Q                                                            \\
+			      a               & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init(a,b) } {b \in \set{0,1}})
+		      \end{aligned}$
+	\item \[
+		      \delta'(X,Y,a) = \begin{cases}
+			      \setdef {\delta(p,q,(a,b))} {p \in X, q \in Y, a \in \Sigma, b \in \set{0,1}, p = q} & \text{ if } X = Y \\
+			      \setdef {\delta(p,q,(a,b))} {p \in X, q \in Y, a \in \Sigma, b \in \set{0,1} }       & \text{ otherwise} \\
+		      \end{cases}
+	      \]
+	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
+	\item And $\delta$ is the automaton for $\phi(X)$, $X$ a free variable.
+\end{itemize}
+
+\begin{remark}
+	Let $t$ be a "tree", if $U$ accepts $t$ then  $\Model t \models \phi(t)$
+\end{remark}
+
 
 
 
