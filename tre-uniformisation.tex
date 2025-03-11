@@ -601,22 +601,17 @@ This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Ps
 from \ref{coro:univeral-Sa} we can decide if $\Psi$ is satisfied by all models.
 
 We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
-the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable".
-
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same constructios as for $\psi$ but modifying
+the "transition function".
 We look at the "DBUA" $U = (\Sigma, \parts Q \times \parts {Q}, \init', \delta', F')$ where
 \begin{itemize}
-	\item$\begin{aligned}[t]
-			      \init' : \Sigma & \to      \parts Q \times \parts Q                                                            \\
-			      a               & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init(a,b) } {b \in \set{0,1}})
-		      \end{aligned}$
 	\item \[
 		      \delta'(X,Y,a) = \begin{cases}
 			      \setdef {\delta(p,q,(a,b))} {p \in X, q \in Y, a \in \Sigma, b \in \set{0,1}, p = q} & \text{ if } X = Y \\
 			      \setdef {\delta(p,q,(a,b))} {p \in X, q \in Y, a \in \Sigma, b \in \set{0,1} }       & \text{ otherwise} \\
 		      \end{cases}
 	      \]
-	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
-	\item And $\delta$ is the automaton for $\phi(X)$, $X$ a free variable.
+	\item And the rest follow the definition of the automaton of $\Psi$.
 \end{itemize}
 
 \begin{remark}
