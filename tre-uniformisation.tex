@@ -380,7 +380,7 @@ We will discuss some examples of MSO formulas.
 	Let $A = \NBUA$ be a "NBUA", and $k = \abs Q$.
 	\begin{eqnarray}
 		\phi = \exists X_0 \ldots \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1} \\
-		&\land& \forall x \left( \bigwedge_{0 \leq i \leq j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2} \\
+		&\land& \forall x \left( \bigwedge_{0 \leq i < j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2} \\
 		&\land& \forall x  \left( \leaf (x) \ra \bigvee_{(a,i)\in I}  X_i(x) \right) \label{lem:AMSO3} \\
 		&\land& \forall x \forall y \forall z \left(\children(x,y,z) \ra \bigvee_{(p,q,a,r)\in \Delta} \left(X_p(x) \land X_q(y) \land a(z) \land X_r(z)\right)\right) \label{lem:AMSO4} \\
 		&\land& \forall x \left(\treeroot (x) \ra \bigvee_{q \in F} X_q(x) \right) \label{lem:AMSO5}
