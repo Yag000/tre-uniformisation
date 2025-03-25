@@ -1,4 +1,4 @@
-\knowledge{notion}
+ \knowledge{notion}
     | tree
     | trees
     | Tree
@@ -16,16 +16,13 @@
     | nodes
 
 \knowledge{notion}
-| states 
-
-
-\knowledge{notion}
 | transition relation
 | transition@relation
 | transitions@relation
 
 \knowledge{notion}
 | transition map
+| transition function
 
 \knowledge{notion}
 | state
@@ -50,15 +47,12 @@
     | label
     | labels
 
-\knowledge{\ancestor}{notion}
-
 \knowledge{ancestor}{notion}
 
 \knowledge{notion}
     | run
     | runs
 
-\knowledge{\exec}[exec]{notion}
 
 \knowledge{init}{notion}
 
@@ -70,6 +64,7 @@
     | acceptant
     | accepting
     | accepts
+    | accepting run
 
 
 \knowledge{notion}
@@ -78,3 +73,7 @@
 
 \knowledge{notion}
     | uniformiser
+    | uniformisable
+
+\knowledge{notion}
+    | unifier automaton

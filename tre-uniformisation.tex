@@ -91,6 +91,7 @@
 \end{definition}
 
 \section{Tree Automata}
+\subsection{Non-Deterministic Bottom-Up Tree automata}
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
 	A Non-Deterministic Bottom-Up Tree automaton (NBUA) is defined as a tuple
@@ -123,11 +124,14 @@
 	\[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
+\subsection{Deterministic Bottom-Up Tree automata}
 
 \begin{definition}[""Deterministic Bottom-Up Tree automaton""]
 	A Deterministic Bottom-Up Tree automaton (DBUA) is "NBUA" that that verifies
 	\[ \forall q,r,a,t,t' \ (q,r,a,t) \in \Delta \land   (q,r,a,t') \in \Delta  \implies t = t' \]
 \end{definition}
+
+
 
 \begin{remark}
 	A "DBUA" can also be defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
@@ -250,6 +254,8 @@
 \end{proof}
 
 
+\subsection{Order-insensitive}
+
 \begin{definition}
 	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
 	$(q,p,a,r) \in \Delta$.
@@ -309,6 +315,8 @@
 	\end{itemize}
 \end{proofI}
 
+\subsection{Universality}
+
 \begin{definition}
 	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every tree.
 \end{definition}
@@ -336,7 +344,7 @@
 \end{coro}
 
 
-\subsection{MSO}
+\section{MSO}
 
 \begin{definition}
 	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
@@ -371,6 +379,13 @@ We will discuss some examples of MSO formulas.
 		\right) \]
 \end{example}
 
+
+\begin{example}
+	The formula $\intro* \equal (X,T) = \forall x,  (X(x) \ra Y(x)) \land (Y(x) \ra X(x))$ encodes the fact that $X$ and $Y$ are the same set.
+\end{example}
+
+\subsection{Automaton $\ra$ MSO}
+
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
 	\[ \Model t \models \phi \tiff t \in \lang A \]
@@ -380,7 +395,7 @@ We will discuss some examples of MSO formulas.
 	Let $A = \NBUA$ be a "NBUA", and $k = \abs Q$.
 	\begin{eqnarray}
 		\phi = \exists X_0 \ldots \exists X_{k-1} &\ & \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1} \\
-		&\land& \forall x \left( \bigwedge_{0 \leq i \leq j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2} \\
+		&\land& \forall x \left( \bigwedge_{0 \leq i < j \leq k-1}  \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2} \\
 		&\land& \forall x  \left( \leaf (x) \ra \bigvee_{(a,i)\in I}  X_i(x) \right) \label{lem:AMSO3} \\
 		&\land& \forall x \forall y \forall z \left(\children(x,y,z) \ra \bigvee_{(p,q,a,r)\in \Delta} \left(X_p(x) \land X_q(y) \land a(z) \land X_r(z)\right)\right) \label{lem:AMSO4} \\
 		&\land& \forall x \left(\treeroot (x) \ra \bigvee_{q \in F} X_q(x) \right) \label{lem:AMSO5}
@@ -403,6 +418,9 @@ We will discuss some examples of MSO formulas.
 	From this we deduce that
 	\[ \Model t \models \phi \tiff t \in \lang A \]
 \end{proof}
+
+
+\subsection{MSO $\ra$ automaton}
 
 \begin{definition}
 	The ""cartesian product automata"" of two "NBUA" $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ with "final states" $F' \subseteq Q_1 \times Q_2$ is :
@@ -529,8 +547,6 @@ We will discuss some examples of MSO formulas.
 
 \section{Uniformisation}
 
-
-
 \begin{definition}[Uniformiser]
 	We say that a formula $\psi(X)$ is a ""uniformiser"" of $\phi(X)$ if for all "trees" $t$, the following conditions hold:
 	\begin{enumerate}
@@ -574,10 +590,9 @@ In an intuitive way, the above problem is equivalent to asking if the following 
 because we are quantifying over a formula) holds for every $\phi$ :
 \[ (\exists X.\, \phi(X)) \ra (\exists \psi(\_).\, \phi(\setdef x {\psi(x)} ) \]
 
-
 We will start by studying how we can decide for two formulas $\phi(X)$ and $\psi(X)$ if the formula $\Psi = \exists X. \phi (X) \ra \exists Y. \phi' (Y)$
 is satisfiable for all "trees". We will build a "DBUA" than can decide if a "tree" satisfies $\Psi$.
-Thanks to the construction from \ref{lem:MSO-aut}, we can build a "DBUA" for $A = (\Sigma \times \set{0,1}, Q, \init, \delta, F)$ for $\phi(X)$
+Thanks to the construction from \ref{lem:MSO-aut}, we can build a "DBUA" $A = (\Sigma \times \set{0,1}, Q, \init, \delta, F)$ for $\phi(X)$
 and another one $A' = (\Sigma' \times \set{0,1}, Q', \init', \delta', F')$ for $\psi(Y)$.
 
 We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init'', \delta'', F'')$ where
@@ -588,11 +603,11 @@ We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init
 		      \end{aligned}$
 
 	\item$\begin{aligned}[t]
-			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                      \\
-			      ((X,X'),(Y,Y'),a)                                        & \mapsto \left(\begin{aligned}
-					                                                                               \{ \delta(x,y,(a,b)) \}   & \mid  \{x \in X, y \in Y, b \in \set{0,1}\},    \\
-					                                                                               \{ \delta'(x',y',(a,b))\} & \mid  \{x' \in X', y' \in Y', b \in \set{0,1}\}
-				                                                                               \end{aligned}\right)
+			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                 \\
+			      ((X,X'),(Y,Y'),a)                                        & \mapsto \begin{aligned}
+				                                                                         (\{ \delta(x,y,(a,b)) \}  & \mid  \{x \in X, y \in Y, b \in \set{0,1}\},     \\
+				                                                                         \{ \delta'(x',y',(a,b))\} & \mid  \{x' \in X', y' \in Y', b \in \set{0,1}\})
+			                                                                         \end{aligned}
 		      \end{aligned}$
 
 	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
@@ -601,23 +616,60 @@ This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Ps
 from \ref{coro:univeral-Sa} we can decide if $\Psi$ is satisfied by all models.
 
 We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
-the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\psi$ but modifying
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\Psi$ but modifying
 the "transition function".
-We look at the "DBUA" $U = (\Sigma, \parts Q \times \parts {Q}, \init', \delta', F')$ where
-\begin{itemize}
-	\item \[
-		      \delta'(X,Y,a) = \begin{cases}
-			      \setdef {\delta(p,q,(a,b))} {p \in X, q \in Y, a \in \Sigma, b \in \set{0,1}, p = q} & \text{ if } X = Y \\
-			      \setdef {\delta(p,q,(a,b))} {p \in X, q \in Y, a \in \Sigma, b \in \set{0,1} }       & \text{ otherwise} \\
-		      \end{cases}
-	      \]
-	\item And the rest follow the definition of the automaton of $\Psi$.
-\end{itemize}
 
-\begin{remark}
-	Let $t$ be a "tree", if $U$ accepts $t$ then  $\Model t \models \phi(t)$
-\end{remark}
+\begin{definition}
+	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$
+	the "unifier automaton" of $\phi$, where
+	\begin{itemize}
+		\item$\begin{aligned}[t]
+				      \init' : \Sigma & \to      \parts Q \times \parts {Q'}                                                          \\
+				      a               & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init'(a,b) } {b \in \set{0,1}})
+			      \end{aligned}$
+		\item$\begin{aligned}[t]
+				      \delta' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                                                        \\
+				      ((X,X'),(Y,Y'),a)                                       & \mapsto \begin{aligned}
+					                                                                         & (\{ \delta(x,y,(a,b)) \}  \mid  \{x \in X, y \in Y, b \in \set{0,1}\},                                            \\
+					                                                                         & \begin{cases}
+						         \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1}, p = q\} & \text{ if } X' = Y' \\
+						         \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1} \}       & \text{ otherwise}
+					         \end{cases})
+				                                                                        \end{aligned}
+			      \end{aligned}$
+		      \todo{make prettier}
+		\item $F' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F \neq \emptyset)}$
+	\end{itemize}
 
+\end{definition}
+\begin{lemma}
+	Let $\phi(X)$ be and MSO formula, if the "unifier automaton" $U$ of $\phi$ is "universal" then $\phi$ is "uniformisable".
+\end{lemma}
+
+\begin{proof}
+	We need to exhibit a $\psi$ that is a "uniformiser" for $\phi(X)$.
+	We consider $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ then "unifier automaton" of $\phi$.
+
+	We first introduce a choice function $\intro*\choice : \parts Q \times \parts Q \times Q \times \Sigma \to \set{0,1} \times Q \times Q$
+	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \delta'(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X' \and q \in Y'$
+	and if $X' = Y'$ then $p = q$.
+
+	Let $k = \abs Q$.
+	\begin{eqnarray} \psi &=& \exists X_0, \ldots, X_{k-1} \quad \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \\
+		&& \land \forall x \left( \bigwedge_{0 \leq i < j \leq k-1} \neg (X_i(x) \land X_j(x)) \right) \\
+		&& \land \forall x \left( \leaf (x) \rightarrow \bigvee_{(a,i)\in I} X_i(x) \right) \\
+		&& \land \forall x \forall y \forall z \Big( \children(x,y,z) \rightarrow \\
+		&& \quad \quad \bigvee_{(X',Y',a,Z')\in \delta} \bigvee_{\substack{p \in X' \\ q \in Y' \\ b \in \{0,1\} \\ r \in Z'}} \big( \choice(X',Y',Z',a) = (p,q,b) \\
+		&& \quad \quad \quad \land X_p(x) \land X_q(y) \land a(z) \land X_r(z) \big) \Big) \\
+		&& \land \forall x \left(\treeroot (x) \rightarrow \bigvee_{q \in F} X_q(x) \right)
+	\end{eqnarray}
+
+
+	If $U$ is "universal", then for a given "tree" $t$, either the accepting state $(X,X')$ verifies $X \cap F = \emptyset$ in which case the formula $\psi$ won't be satisfied (which is in accordance with the
+	definition of "uniformiser"), or $X \cap F \neq \emptyset$. The above formula describes a unique "run" (thanks to the $\choice$ function the "run" is unique) of the automaton for $\phi(X)$ that ends in a
+	state belonging to $F$, so it's an "accepting run". Thus we have a formula $\psi$ that has a single solution for every model and that if satisfied, then $\phi$ is also satisfied. We conclude that
+	$\psi$ is a "uniformiser" for $\phi$.
+\end{proof}
 
 
 

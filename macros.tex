@@ -183,12 +183,15 @@
 \knowledgenewrobustcmd \leaf {\cmdkl {\text{leaf}}}
 \knowledgenewrobustcmd \treeroot {\cmdkl {\text{root}}}
 \knowledgenewrobustcmd \children {\cmdkl {\text{children}}}
+\knowledgenewrobustcmd \equal {\cmdkl {\text{equal}}}
 
 
 \knowledgenewrobustcmd \Sa [1] {\cmdkl {\text{S}_{#1}}}
 
 
 \knowledgenewrobustcmd \Atimes {\cmdkl {\times}}
+
+\knowledgenewrobustcmd \choice {\cmdkl {\text{choice}}}
 
 \newcommand{\setcomp}[1]{{#1}^\complement}
 
@@ -209,3 +212,9 @@
 
 
 \newcommand{\tiff}{\text{ if and only if }}
+
+
+
+\NewCommandCopy{\phiswap}{\phi}
+\RenewCommandCopy{\phi}{\varphi}
+\RenewCommandCopy{\varphi}{\phiswap}
