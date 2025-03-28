@@ -167,6 +167,8 @@
 
 \knowledgenewrobustcmd \tlabel [2] {\cmdkl {#1} \left( #2\right)}
 
+\knowledgenewrobustcmd \subtree[2] {\cmdkl{{#1}^{#2}}}
+
 \knowledgenewrobustcmd \exec {\cmdkl {\rho}}
 
 \knowledgenewrobustcmd \interpret [2] {\cmdkl{\llbracket} #1 \cmdkl{\rrbracket} \app{#2}}
@@ -185,13 +187,14 @@
 \knowledgenewrobustcmd \children {\cmdkl {\text{children}}}
 \knowledgenewrobustcmd \equal {\cmdkl {\text{equal}}}
 
-
 \knowledgenewrobustcmd \Sa [1] {\cmdkl {\text{S}_{#1}}}
 
 
 \knowledgenewrobustcmd \Atimes {\cmdkl {\times}}
 
 \knowledgenewrobustcmd \choice {\cmdkl {\text{choice}}}
+\knowledgenewrobustcmd \ustate {\cmdkl {\text{u\_state}}}
+\knowledgenewrobustcmd \deltau {\cmdkl {\delta_U}}
 
 \newcommand{\setcomp}[1]{{#1}^\complement}
 

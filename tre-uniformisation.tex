@@ -90,6 +90,19 @@
 	\[  x \intro* \ancestor y \tiff \exists z \in \Nodes t, y = xz \]
 \end{definition}
 
+
+\begin{definition}
+	We note $\intro* \subtree t n$ the ""subtree"" corresponding to the "node" $n$ on the "tree" $t$ :
+	\[
+		\subtree t n =   \begin{cases}
+			t                & \text{ if }  n = \epsilon                     \\
+			\subtree {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m \\
+			\subtree {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
+		\end{cases}
+	\]
+\end{definition}
+
+
 \section{Tree Automata}
 \subsection{Non-Deterministic Bottom-Up Tree automata}
 
@@ -333,7 +346,7 @@
 		      Since $\Sa A = \setdef {\interpret A t} {t\in \tree_\Sigma}$ we have that $\Sa A \subseteq F$.
 
 		\item $\bimpRL$\\
-		      We suppose $\Sa A \subseteq F$. Let $t$ be a "tree", then $\interpret A t \in \Sa \subseteq F$, so $\interpret A t \in F$ and $A$
+		      We suppose $\Sa A \subseteq F$. Let $t$ be a "tree", then $\interpret A t \in \Sa A \subseteq F$, so $\interpret A t \in F$ and $A$
 		      "accepts" $t$. We have proven that $A$ is "universal".
 	\end{itemize}
 \end{proofI}
@@ -624,31 +637,37 @@ the "transition function".
 	the "unifier automaton" of $\phi$, where
 	\begin{itemize}
 		\item$\begin{aligned}[t]
-				      \init' : \Sigma & \to      \parts Q \times \parts {Q'}                                                          \\
-				      a               & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init'(a,b) } {b \in \set{0,1}})
+				      \init' : \Sigma & \to      \parts Q \times \parts {Q}                                                          \\
+				      a               & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init(a,b) } {b \in \set{0,1}})
 			      \end{aligned}$
 		\item$\begin{aligned}[t]
-				      \delta' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                                                        \\
-				      ((X,X'),(Y,Y'),a)                                       & \mapsto \begin{aligned}
-					                                                                         & (\{ \delta(x,y,(a,b)) \}  \mid  \{x \in X, y \in Y, b \in \set{0,1}\},                                            \\
-					                                                                         & \begin{cases}
-						         \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1}, p = q\} & \text{ if } X' = Y' \\
-						         \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1} \}       & \text{ otherwise}
-					         \end{cases})
-				                                                                        \end{aligned}
+				      \delta' : {\parts Q}^2 \times {\parts {Q}}^2 \times \Sigma & \to    {\parts {Q}}^2                                                                             \\
+				      ((X,X'),(Y,Y'),a)                                          & \mapsto (\{ \delta(X,Y,(a,b)) \}  \mid  \{x \in X, y \in Y, b \in \set{0,1}\}, \deltau (X',Y',a)) \\
 			      \end{aligned}$
-		      \todo{make prettier}
+		\item $ \begin{aligned}[t]
+				      \intro*\deltau : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                                              \\
+				      (X', Y', a)                                             & \mapsto \begin{cases}
+					                                                                        \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1}, p = q\} & \text{ if } X' = Y' \\
+					                                                                        \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1} \}       & \text{ otherwise}
+				                                                                        \end{cases}
+			      \end{aligned}$
 		\item $F' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F \neq \emptyset)}$
 	\end{itemize}
-
 \end{definition}
+
 \begin{lemma}
 	Let $\phi(X)$ be and MSO formula, if the "unifier automaton" $U$ of $\phi$ is "universal" then $\phi$ is "uniformisable".
 \end{lemma}
 
 \begin{proof}
 	We need to exhibit a $\psi$ that is a "uniformiser" for $\phi(X)$.
-	We consider $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ then "unifier automaton" of $\phi$.
+	We consider $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$.
+
+	Given a set of "states" $P$, there exists a formula $\ustate_P(x)$ such that
+	\[ \Model t \models \ustate_(x) \text{ if and only if } \deltau(\subtree t x) = P \]
+	this formula exists because of lemma \ref{lem:MSO-aut}.
+
+	\todo{Explain somewhere the notation $\delta(t)$}
 
 	We first introduce a choice function $\intro*\choice : \parts Q \times \parts Q \times Q \times \Sigma \to \set{0,1} \times Q \times Q$
 	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \delta'(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X' \and q \in Y'$
@@ -657,12 +676,14 @@ the "transition function".
 	Let $k = \abs Q$.
 	\begin{eqnarray} \psi &=& \exists X_0, \ldots, X_{k-1} \quad \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \\
 		&& \land \forall x \left( \bigwedge_{0 \leq i < j \leq k-1} \neg (X_i(x) \land X_j(x)) \right) \\
-		&& \land \forall x \left( \leaf (x) \rightarrow \bigvee_{(a,i)\in I} X_i(x) \right) \\
 		&& \land \forall x \forall y \forall z \Big( \children(x,y,z) \rightarrow \\
-		&& \quad \quad \bigvee_{(X',Y',a,Z')\in \delta} \bigvee_{\substack{p \in X' \\ q \in Y' \\ b \in \{0,1\} \\ r \in Z'}} \big( \choice(X',Y',Z',a) = (p,q,b) \\
-		&& \quad \quad \quad \land X_p(x) \land X_q(y) \land a(z) \land X_r(z) \big) \Big) \\
+		&& \quad \quad \bigvee_{ \substack{(P',Q',a,R')\in \deltau   \\ r \in R' \\ \choice(P',Q',a,r) = (p,q,b)}} \big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
+		&& \qquad \qquad \qquad \qquad \qquad  \quad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \big) \Big) \\
 		&& \land \forall x \left(\treeroot (x) \rightarrow \bigvee_{q \in F} X_q(x) \right)
 	\end{eqnarray}
+
+    \todo{$\init$ should be on the choice function, maybe writing another one ? (choice\_init) Or extending the current one to something like $\parts Q \uplus \set {\emptyset}$ to represent leaves.}\\
+	\todo{Find a way to fix $r$}
 
 
 	If $U$ is "universal", then for a given "tree" $t$, either the accepting state $(X,X')$ verifies $X \cap F = \emptyset$ in which case the formula $\psi$ won't be satisfied (which is in accordance with the
@@ -672,8 +693,14 @@ the "transition function".
 \end{proof}
 
 
+\begin{lemma}
+	Let $\phi(X)$ be and MSO formula, if $\phi$ is "uniformisable" then the "unifier automaton" $U$ of $\phi$ is "universal".
+\end{lemma}
 
-
+\begin{proof}
+	We will prove the contraposition.
+	\todo{~}
+\end{proof}
 
 
 
