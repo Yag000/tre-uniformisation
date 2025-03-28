@@ -4,6 +4,9 @@
     | Tree
     | Trees
 
+\knowledge{notion}
+    | subtree
+
 \knowledge{Deterministic Bottom-Up Tree automaton}[DBUA]{notion}
 \knowledge{Non-Deterministic Bottom-Up Tree automaton}[NBUA]{notion}
 
