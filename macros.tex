@@ -132,26 +132,26 @@
 
 %% Environments
 
-
-
-\newtheorem{problem}{Problem}
-
-\theoremstyle{plain}
+\numberwithin{equation}{section}
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{coro}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{prop}[theorem]{Proposition}
-
+\newcommand{\addtheorem}[2]{%
+  \AddToHook{env/#1/begin}{%
+    \zcsetup{countertype={theorem=#1}}%
+  }%
+  \zcRefTypeSetup{#1}{Name-sg=#2}%
+  \newtheorem{#1}[theorem]{#2}%
+}
+\addtheorem{coro}{Corollary}
+\addtheorem{lemma}{Lemma}
+\addtheorem{proposition}{Proposition}
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{notation}[theorem]{Notation}
-\newtheorem{example}{Example}[subsection]
-\newtheorem{exercice}{Exercice}[subsection]
-
+\addtheorem{definition}{Definition}
+\addtheorem{assumption}{Assumption}
+\addtheorem{remark}{Remark}
+\addtheorem{example}{Example}
 
 \theoremstyle{plain}
-\newtheorem{remark}{Remark}[subsection]
-
+\newtheorem{problem}{Problem}
 
 
 %% Project specific
@@ -195,6 +195,8 @@
 \knowledgenewrobustcmd \choice {\cmdkl {\text{choice}}}
 \knowledgenewrobustcmd \ustate {\cmdkl {\text{u\_state}}}
 \knowledgenewrobustcmd \deltau {\cmdkl {\delta_U}}
+\knowledgenewrobustcmd \rhou {\cmdkl {\rho_U}}
+\knowledgenewrobustcmd \unif{\cmdkl {\text{unif}}}
 
 \newcommand{\setcomp}[1]{{#1}^\complement}
 
