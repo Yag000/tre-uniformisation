@@ -673,33 +673,30 @@ the "transition function".
 
 	We first introduce a choice function $\intro*\choice : \parts Q \times \parts Q \times Q \times \Sigma \to Q \times Q \times \set{0,1}$
 	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \delta'(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
-	and if $X' = Y'$ then $p = q$. We overload its type to also be $\choice : \Sigma \to Q \times \set{0,1} $, in which case it chooses
-	$(b,p)$ such that $p = \init(a,b)$. The last overload is used to choose from a final state: $\choice : \parts Q \to  Q$ where
+	and if $X' = Y'$ then $p = q$. We overload its type to also be $\choice : Q \times \Sigma \to \set{0,1} $, in which case it chooses
+	$b$ such that $p = \init(a,b)$. The last overload is used to choose from a final state: $\choice : \parts Q \to  Q$ where
 	$\choice (X) = q$ such that if $X \cap F \neq \emptyset$ then $q \in X \cap F$. If the premises are not satisfied in any of the cases, then
 	$\choice$ returns an arbitrary value.
 
-	We will define a "run" $\intro*\rhou$ over a "tree" $t$ by induction :
+	We define the set $X$ ant the "run" $\intro*\rhou$ over the "tree" $(t,X)$ by induction on the depth of the node as follows:
 	\begin{itemize}
-		\item $\rhou(\varepsilon) = \choice(\delta'(t))$.
-		\item For all "leaves" $x$ of "label" $a$ we have $(\rhou(x), b) = \choice(a)$ where $x \in X$ if and only if $b = 1$.
-		\item For all inner nodes $x$ with children $y$ and $z$ we have $(\rhou(y), \rhou(z), b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x)$
-		      where $x \in X$ if and only if $b = 1$.
+		\item For the root, we define $\rhou(\varepsilon) = \choice(\delta'(t))$.
+		\item For all inner nodes $x$ with children $y$ and $z$. Let $(q,r,v)$ be~$\choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x)$, we define
+		$\rhou(y)=q$, $\rhou(z)=r$, and $x \in X$ if and only if $b = 1$.
+		\item For all "leaves" $x$, we define $(\rhou(x), b) = \choice(\tlabel tx)$ where $x \in X$ if and only if $b = 1$.
 	\end{itemize}
 
-	We are going to procede by proving a series of lemmas that will help us arrive at the final formula $\psi$.
-
-	\begin{enumerate}
-		\item We start by proving that the "run" $\rhou$ is well defined and unique.
-
-		      We will prove by top-down induction that for all "nodes" $x$ of $t$, there exists a unique "state" $q$ such that $\rhou(x) = q$.
-		      \begin{itemize}
+	We claim now that the $\rhou$ is well defined, unique, and indeed a "run".
+	For this, we show by top-down induction that for all "nodes" $x$ of $t$, there exists a unique "state" $q$ such that $\rhou(x) = q$.
+	\begin{itemize}
 			      \item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choice(\delta'(t))$, since $\choice$ is deterministic, $\rhou(\varepsilon)$ is unique.
 			      \item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then
 			            since $\choice$ is deterministic there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), r, \tlabel t x)$.
 			            We have that $\rhou(y) = p$ and $\rhou(z) =q$.
 			      \item For the "leaves" $x$ of "label" $a$, we have that $\rhou(x) = \choice(a)$ which is well defined since $a \in \Sigma$ and unique.
-		      \end{itemize}
-		\item We will now show that for all "nodes" $x$ of $t$, $\rhou(x) \in \deltau(\subtree t x)$ and that $\rhou(X)$ is a "run" of $A$ over $(t,X)$.
+	\end{itemize}
+	
+	We claim also that for all "nodes" $x$ of $t$, $\rhou(x) \in \deltau(\subtree t x)$ and that $\rhou(X)$ is a "run" of $A$ over $(t,X)$.
 		      We start by showing that for all $x \in \Nodes t$, $\rhou(x) \in \deltau(\subtree t x)$.
 		      The proof procedes again by top-down induction.
 		      \begin{itemize}
@@ -710,7 +707,6 @@ the "transition function".
 			            By the definition of $\choice$ whe have that $\rhou (y) \in \deltau(\subtree t y)$ and  $\rhou (z) \in \deltau(\subtree t z)$.
 			      \item For the "leaves" $x$ of "label" $a$, we have that $\rhou(x) = \choice(a)$ which by definition $\rhou(x) \in \init'(a) = \deltau(\subtree t x)$.
 			            \todo{$\delta$ and $\init$ should be the same, overload the definition}
-
 		      \end{itemize}
 
 		      We now prove that $\rhou(X)$ is a "run" of $A$ over $(t,X)$ by case distinction. Let $x$ be a "node" of "label" $a$ of $t$.
@@ -722,8 +718,12 @@ the "transition function".
 			            By definition of choice we have that $\delta(\rhou(y), \rhou(z), (a,b)) = \rhou(x)$
 			            and, since $x \in X$ \tiff $b = 1$, this is a valid step of a run over $(t,X)$.
 		      \end{itemize}
-		\item We want to a formula $\intro*\unif (X)$ such that
-		      \[  \Model t \models \unif(X) \text{ \tiff } X \text{ corresponds to the set ''computed'' by } \rhou. \]
+		 The claim is proved.     
+		 
+		 We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\Phi$ is "uniformisable".
+		 This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, ie.
+		      \[  \Model t \models \unif(X) \text{ \tiff } X=X_U% \text{ corresponds to the set ''computed'' by } \rhou.
+		      \]
 
 		      Let $k = \abs Q$.
 		      We define 3 subformulas :
@@ -756,7 +756,6 @@ the "transition function".
 		      \todo{Prove that $\unif$ satisfies the main property}
 		\item The last thing we have to prove is that there is a unique $\rhou, X$ that satisfy the formula.
 		      \todo{~}
-	\end{enumerate}
 \end{proof}
 
 
