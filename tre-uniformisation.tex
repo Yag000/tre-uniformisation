@@ -682,80 +682,79 @@ the "transition function".
 	\begin{itemize}
 		\item For the root, we define $\rhou(\varepsilon) = \choice(\delta'(t))$.
 		\item For all inner nodes $x$ with children $y$ and $z$. Let $(q,r,v)$ be~$\choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x)$, we define
-		$\rhou(y)=q$, $\rhou(z)=r$, and $x \in X$ if and only if $b = 1$.
+		      $\rhou(y)=q$, $\rhou(z)=r$, and $x \in X$ if and only if $b = 1$.
 		\item For all "leaves" $x$, we define $(\rhou(x), b) = \choice(\tlabel tx)$ where $x \in X$ if and only if $b = 1$.
 	\end{itemize}
 
 	We claim now that the $\rhou$ is well defined, unique, and indeed a "run".
 	For this, we show by top-down induction that for all "nodes" $x$ of $t$, there exists a unique "state" $q$ such that $\rhou(x) = q$.
 	\begin{itemize}
-			      \item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choice(\delta'(t))$, since $\choice$ is deterministic, $\rhou(\varepsilon)$ is unique.
-			      \item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then
-			            since $\choice$ is deterministic there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), r, \tlabel t x)$.
-			            We have that $\rhou(y) = p$ and $\rhou(z) =q$.
-			      \item For the "leaves" $x$ of "label" $a$, we have that $\rhou(x) = \choice(a)$ which is well defined since $a \in \Sigma$ and unique.
+		\item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choice(\delta'(t))$, since $\choice$ is deterministic, $\rhou(\varepsilon)$ is unique.
+		\item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then
+		      since $\choice$ is deterministic there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), r, \tlabel t x)$.
+		      We have that $\rhou(y) = p$ and $\rhou(z) =q$.
+		\item For the "leaves" $x$ of "label" $a$, we have that $\rhou(x) = \choice(a)$ which is well defined since $a \in \Sigma$ and unique.
 	\end{itemize}
-	
+
 	We claim also that for all "nodes" $x$ of $t$, $\rhou(x) \in \deltau(\subtree t x)$ and that $\rhou(X)$ is a "run" of $A$ over $(t,X)$.
-		      We start by showing that for all $x \in \Nodes t$, $\rhou(x) \in \deltau(\subtree t x)$.
-		      The proof procedes again by top-down induction.
-		      \begin{itemize}
-			      \item For $\varepsilon$, we have that $\rhou(\varepsilon) = \choice(\delta'(t)) = \deltau'(\subtree t {\varepsilon}) \subseteq (\subtree t {\varepsilon}) \cap F$
-			      \item For the inner nodes $x$ with children $y$ and $z$, we have that $\rhou(x) \in \deltau(\subtree t x)$.
-			            Since $\rhou (y)$ and $\rhou (z)$ verify
-			            \[(\rhou(y), \rhou(z), b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x).\]
-			            By the definition of $\choice$ whe have that $\rhou (y) \in \deltau(\subtree t y)$ and  $\rhou (z) \in \deltau(\subtree t z)$.
-			      \item For the "leaves" $x$ of "label" $a$, we have that $\rhou(x) = \choice(a)$ which by definition $\rhou(x) \in \init'(a) = \deltau(\subtree t x)$.
-			            \todo{$\delta$ and $\init$ should be the same, overload the definition}
-		      \end{itemize}
+	We start by showing that for all $x \in \Nodes t$, $\rhou(x) \in \deltau(\subtree t x)$.
+	The proof procedes again by top-down induction.
+	\begin{itemize}
+		\item For $\varepsilon$, we have that $\rhou(\varepsilon) = \choice(\delta'(t)) = \deltau'(\subtree t {\varepsilon}) \subseteq (\subtree t {\varepsilon}) \cap F$
+		\item For the inner nodes $x$ with children $y$ and $z$, we have that $\rhou(x) \in \deltau(\subtree t x)$.
+		      Since $\rhou (y)$ and $\rhou (z)$ verify
+		      \[(\rhou(y), \rhou(z), b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x).\]
+		      By the definition of $\choice$ whe have that $\rhou (y) \in \deltau(\subtree t y)$ and  $\rhou (z) \in \deltau(\subtree t z)$.
+		\item For the "leaves" $x$ of "label" $a$, we have that $\rhou(x) = \choice(a)$ which by definition $\rhou(x) \in \init'(a) = \deltau(\subtree t x)$.
+		      \todo{$\delta$ and $\init$ should be the same, overload the definition}
+	\end{itemize}
 
-		      We now prove that $\rhou(X)$ is a "run" of $A$ over $(t,X)$ by case distinction. Let $x$ be a "node" of "label" $a$ of $t$.
-		      \begin{itemize}
-			      \item If $x \in \Leaves t$ then $(\rhou(x),b) = \choice (x, a)$. We have that, by definition of $\choice$, $\rhou(x) = \init(a,b)$.
-			            And by definition of $X$, $x \in X$ \tiff $b = 1$. So this is a valid step of a run over $(t,X)$.
-			      \item If $x \in \Nodes t \setminus \Leaves t$ with children $y,z$, we have that
-			            \[(\rhou(y), \rhou(z), b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x).\]
-			            By definition of choice we have that $\delta(\rhou(y), \rhou(z), (a,b)) = \rhou(x)$
-			            and, since $x \in X$ \tiff $b = 1$, this is a valid step of a run over $(t,X)$.
-		      \end{itemize}
-		 The claim is proved.     
-		 
-		 We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\Phi$ is "uniformisable".
-		 This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, ie.
-		      \[  \Model t \models \unif(X) \text{ \tiff } X=X_U% \text{ corresponds to the set ''computed'' by } \rhou.
-		      \]
+	We now prove that $\rhou(X)$ is a "run" of $A$ over $(t,X)$ by case distinction. Let $x$ be a "node" of "label" $a$ of $t$.
+	\begin{itemize}
+		\item If $x \in \Leaves t$ then $(\rhou(x),b) = \choice (x, a)$. We have that, by definition of $\choice$, $\rhou(x) = \init(a,b)$.
+		      And by definition of $X$, $x \in X$ \tiff $b = 1$. So this is a valid step of a run over $(t,X)$.
+		\item If $x \in \Nodes t \setminus \Leaves t$ with children $y,z$, we have that
+		      \[(\rhou(y), \rhou(z), b) = \choice(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x).\]
+		      By definition of choice we have that $\delta(\rhou(y), \rhou(z), (a,b)) = \rhou(x)$
+		      and, since $x \in X$ \tiff $b = 1$, this is a valid step of a run over $(t,X)$.
+	\end{itemize}
+	The claim is proved.
 
-		      Let $k = \abs Q$.
-		      We define 3 subformulas :
-		      \begin{itemize}
-			      \item \begin{eqnarray*}
-				            \text{single\_state} (X_{p_1}, \ldots, X_{p_k})  &=& \forall x, \bigvee_{p_i \in \Nodes t} X_{p_i} (x)\\
-				            &\land& \forall x, \bigwedge_{p_i, p_j \in \Nodes t, i \neq j} \lnot(X_{p_i} (x) \land X_{p_j}(x))
-			            \end{eqnarray*}
+	We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\Phi$ is "uniformisable".
+	This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, ie.
+	\[  \Model t \models \unif(X) \text{ \tiff } X=X_U \]
 
-			      \item $\text{root\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x, \treeroot(x) \ra (\bigvee_{p_i \in \choose \deltau(\varepsilon)} X_{p_i}(x))$
-
-
-
-			      \item \begin{eqnarray*}
-				            \text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)  &=& \forall x \forall y, \forall z, \children (x,y,z) \ra \\
-				            && \bigvee_{ \substack{(P',Q',a,R')\in \deltau   \\ r \in R' \\ \choice(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
-				            && \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \\
-				            && \qquad \land (\bigwedge_{b = 1}  X(x)) \land (\bigwedge_{b = 0}  \lnot X(x)) \Big)
-			            \end{eqnarray*}
-                        \todo{Leaves, but I'll do it when $\init$ becomes $\delta$.}
-		      \end{itemize}
-
-		      We can now define $\unif(X)$:
-		      \begin{eqnarray*}
-			      \unif (X) &=& \exists X_{p_1}, \ldots, \exists X_{p_k}, \text{single\_state} (X_{p_1}, \ldots, X_{p_k}) \\
-			      &\land& \text{root\_node} (X_{p_1}, \ldots, X_{p_k})\\
-			      &\land& \text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)
+	Let $k = \abs Q$.
+	We define 3 subformulas :
+	\begin{itemize}
+		\item \begin{eqnarray*}
+			      \text{single\_state} (X_{p_1}, \ldots, X_{p_k})  &=& \forall x, \bigvee_{p_i \in \Nodes t} X_{p_i} (x)\\
+			      &\land& \forall x, \bigwedge_{p_i, p_j \in \Nodes t, i \neq j} \lnot(X_{p_i} (x) \land X_{p_j}(x))
 		      \end{eqnarray*}
 
-		      \todo{Prove that $\unif$ satisfies the main property}
-		\item The last thing we have to prove is that there is a unique $\rhou, X$ that satisfy the formula.
-		      \todo{~}
+		\item $\text{root\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x, \treeroot(x) \ra (\bigvee_{p_i \in \choose \deltau(\varepsilon)} X_{p_i}(x))$
+
+
+
+		\item \begin{eqnarray*}
+			      \text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)  &=& \forall x \forall y, \forall z, \children (x,y,z) \ra \\
+			      && \bigvee_{ \substack{(P',Q',a,R')\in \deltau   \\ r \in R' \\ \choice(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
+			      && \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \\
+			      && \qquad \land (\bigwedge_{b = 1}  X(x)) \land (\bigwedge_{b = 0}  \lnot X(x)) \Big)
+		      \end{eqnarray*}
+		      \todo{Leaves, but I'll do it when $\init$ becomes $\delta$.}
+	\end{itemize}
+
+	We can now define $\unif(X)$:
+	\begin{eqnarray*}
+		\unif (X) &=& \exists X_{p_1}, \ldots, \exists X_{p_k}, \text{single\_state} (X_{p_1}, \ldots, X_{p_k}) \\
+		&\land& \text{root\_node} (X_{p_1}, \ldots, X_{p_k})\\
+		&\land& \text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)
+	\end{eqnarray*}
+
+	\todo{Prove that $\unif$ satisfies the main property}
+	\item The last thing we have to prove is that there is a unique $\rhou, X$ that satisfy the formula.
+	\todo{~}
 \end{proof}
 
 
