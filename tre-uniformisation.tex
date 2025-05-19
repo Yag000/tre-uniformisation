@@ -168,6 +168,8 @@
 		a &\mapsto& \init_a \\
 		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
 	\end{eqnarray*}
+
+    On notera parfois cette interpretation $\delta(t)$.
 \end{definition}
 
 \begin{remark}
@@ -626,6 +628,13 @@ We are interested in finding an automaton that, if it is universal, then $\phi$ 
 the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\Psi$ but modifying
 the "transition function".
 
+
+\begin{notation}
+    We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and 
+    $\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
+    \todo{improve this notation}
+\end{notation}
+
 \begin{definition}
 	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$
 	the "unifier automaton" of $\phi$, where
@@ -633,19 +642,17 @@ the "transition function".
 	\begin{itemize}
 		\item$\begin{aligned}[t]
 				      \init' : \Sigma & \to      \parts Q \times \parts {Q}                                                          \\
-				      a               & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init(a,b) } {b \in \set{0,1}})
+				      a               & \mapsto  ( \init(a,*), \init(a,*))
 			      \end{aligned}$
 		\item$\begin{aligned}[t]
 				      \intro*\deltauu : {\parts Q}^2 \times {\parts {Q}}^2 \times \Sigma & \to    {\parts {Q}}^2                                                                             \\
-				      ((X,X'),(Y,Y'),a)                                                  & \mapsto (\{ \delta(X,Y,(a,b)) \}  \mid  \{x \in X, y \in Y, b \in \set{0,1}\}, \deltau (X',Y',a)) \\
+				      ((X,X'),(Y,Y'),a)                                                  & \mapsto (\delta(X,Y,(a,*)), \deltau (X',Y',a)) \\
 			      \end{aligned}$
-		      \todo{introduce notation $\delta(X,Y,(a,*))$}
-		      \todo{rename to $\delta_{U_2}$}
 		\item $ \begin{aligned}[t]
 				      \intro*\deltau : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                                              \\
 				      (X', Y', a)                                             & \mapsto \begin{cases}
-					                                                                        \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1}, p = q\} & \text{ if } X' = Y' \\
-					                                                                        \{\delta(p,q,(a,b))\}     \mid \{p \in X', q \in Y', a \in \Sigma, b \in \set{0,1} \}       & \text{ otherwise}
+					                                                                        \{\delta(p,p,(a,b))\}     \mid p \in X', a \in \Sigma, b \in \set{0,1}\} & \text{ if } X' = Y' \\
+					                                                                        \delta(X',Y',(a,*)) & \text{ otherwise}
 				                                                                        \end{cases}
 			      \end{aligned}$
 		\item $F' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F \neq \emptyset)}$
@@ -661,11 +668,6 @@ the "transition function".
 	We consider $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$, and
 	$A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the automaton for $\phi(X)$.
 
-	Given a set of "states" $P$, from \zcref{lem:MSO-aut} there exists a formula $\ustate_P(x)$ such that
-	\todo{fix ref}
-	\[ t \models \ustate_(x) \text{ if and only if } \deltau(\subtree t x) = P .\]
-
-	\todo{Explain somewhere the notation $\delta(t)$}
 
 	We first introduce a choice function $\intro*\choice : \parts Q \times \parts Q \times Q \times \Sigma \to Q \times Q \times \set{0,1}$
 	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltauu(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
@@ -675,7 +677,7 @@ the "transition function".
 	$\choice$ returns an arbitrary value.
 	\todo{3 different functions instead of one overloaded}
 
-	We define the set $X_U$ ant the "run" $\intro*\rhou$ over the "tree" $(t,X)$ by induction on the depth of the node as follows:
+	We define the set $X_U$ and the "run" $\intro*\rhou$ over the "tree" $(t,X)$ by induction on the depth of the node as follows:
 	\todo{introduce notation for annotated trees}
 	\begin{itemize}
 		\item For the root, we define $\rhou(\varepsilon) = \choice(\deltauu(t))$.
@@ -700,6 +702,11 @@ the "transition function".
 	This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, \ie,
 	\[  t \models \unif(X) \text{ \tiff } X=X_U \]
 
+
+	Given a set of "states" $P$, from \zcref{lem:MSO-aut} there exists a formula $\intro* \ustate_P(x)$ such that
+	\todo{fix ustate ref}
+	\[ t \models \ustate_P(x) \text{ if and only if } \deltau(\subtree t x) = P .\]
+
 	Let $k = \abs Q$.
 	We define 3 subformulas :
 	\begin{eqnarray*}
@@ -710,8 +717,6 @@ the "transition function".
 	\begin{equation*}
 		\text{root\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x, \treeroot(x) \ra (\bigvee_{p_i \in \choose \deltau(\varepsilon)} X_{p_i}(x))
 	\end{equation*}
-
-
 
 	\begin{eqnarray*}
 		\text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)  &=& \forall x \forall y, \forall z, \children (x,y,z) \ra \\
