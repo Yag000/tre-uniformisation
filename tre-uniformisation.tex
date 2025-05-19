@@ -363,7 +363,7 @@
 \begin{definition}
 	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
 
-	\[\intro* t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
+	\[\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
 
 	where : $a(x) \tiff \tlabel t x = a$
 
@@ -604,19 +604,23 @@ is satisfiable for all "trees". We will build a "DBUA" than can decide if a "tre
 Thanks to the construction from \zcref{lem:MSO-aut}, we can build a "DBUA" $A = (\Sigma \times \set{0,1}, Q, \init, \delta, F)$ for $\phi(X)$
 and another one $A' = (\Sigma' \times \set{0,1}, Q', \init', \delta', F')$ for $\psi(Y)$.
 
+
+\begin{notation}
+    We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and 
+    $\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
+    \todo{improve this notation}
+\end{notation}
+
 We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init'', \delta'', F'')$ where
 \begin{itemize}
 	\item$\begin{aligned}[t]
 			      \init'' : \Sigma & \to      \parts Q \times \parts {Q'}                                                          \\
-			      a                & \mapsto  ( \setdef{ \init(a,b) } {b \in \set{0,1}}, \setdef{ \init'(a,b) } {b \in \set{0,1}})
+			      a                & \mapsto  ( \init(a,*) , \init'(a,*))
 		      \end{aligned}$
 
 	\item$\begin{aligned}[t]
 			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                 \\
-			      ((X,X'),(Y,Y'),a)                                        & \mapsto \begin{aligned}
-				                                                                         (\{ \delta(x,y,(a,b)) \}  & \mid  \{x \in X, y \in Y, b \in \set{0,1}\},     \\
-				                                                                         \{ \delta'(x',y',(a,b))\} & \mid  \{x' \in X', y' \in Y', b \in \set{0,1}\})
-			                                                                         \end{aligned}
+			      ((X,X'),(Y,Y'),a)                                        & \mapsto (\delta(X,Y,(a,*)), \delta'(X',Y',(a,*))
 		      \end{aligned}$
 
 	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
@@ -629,15 +633,10 @@ the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it 
 the "transition function".
 
 
-\begin{notation}
-    We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and 
-    $\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
-    \todo{improve this notation}
-\end{notation}
 
 \begin{definition}
 	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$
-	the "unifier automaton" of $\phi$, where
+	the ""unifier automaton"" of $\phi$, where
 	\todo{$\phi$ should be a NBUA and not a DBUA}
 	\begin{itemize}
 		\item$\begin{aligned}[t]
@@ -735,7 +734,7 @@ the "transition function".
 	\end{eqnarray*}
 
 	\todo{Prove that $\unif$ satisfies the main property}
-	\item The last thing we have to prove is that there is a unique $\rhou, X$ that satisfy the formula.
+	\item The last thing we have to prove is that there is a unique $\rhou, X$ that satisfies the formula.
 	\todo{~}
 \end{proof}
 
