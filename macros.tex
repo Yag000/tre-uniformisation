@@ -132,25 +132,21 @@
 
 %% Environments
 
-\numberwithin{equation}{section}
+\theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
-\newcommand{\addtheorem}[2]{%
-  \AddToHook{env/#1/begin}{%
-    \zcsetup{countertype={theorem=#1}}%
-  }%
-  \zcRefTypeSetup{#1}{Name-sg=#2}%
-  \newtheorem{#1}[theorem]{#2}%
-}
+\newtheorem{coro}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{prop}[theorem]{Proposition}
 
-\addtheorem{coro}{Corollary}
-\addtheorem{lemma}{Lemma}
-\addtheorem{proposition}{Proposition}
 \theoremstyle{definition}
-\addtheorem{definition}{Definition}
-\addtheorem{assumption}{Assumption}
-\addtheorem{remark}{Remark}
-\addtheorem{example}{Example}
-\addtheorem{notation}{Notation}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{example}{Example}[subsection]
+\newtheorem{exercice}{Exercice}[subsection]
+
+\theoremstyle{plain}
+\newtheorem{remark}{Remark}[subsection]
+
 
 \theoremstyle{plain}
 \newtheorem{problem}{Problem}
