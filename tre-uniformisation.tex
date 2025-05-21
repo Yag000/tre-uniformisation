@@ -43,8 +43,8 @@
 		\item $a$, where $a \in \Sigma$.
 		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are "trees".
 	\end{itemize}
-
-	The set of all "trees" over $\Sigma$ is $\tree_{\Sigma}$
+	We call the ""root"" of a "tree" the first node of the definition.
+	The set of all "trees" over $\Sigma$ is $\tree_{\Sigma}$.
 \end{definition}
 
 \begin{definition}[Nodes]
@@ -72,7 +72,7 @@
 \end{definition}
 
 \begin{remark}
-	$\Leaves t \subseteq \Nodes t$
+	$\Leaves t \subseteq \Nodes t$.
 \end{remark}
 
 \begin{definition}
@@ -168,7 +168,7 @@
 		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
 	\end{eqnarray*}
 
-    On notera parfois cette interpretation $\delta(t)$.
+	On notera parfois cette interpretation $\delta(t)$.
 \end{definition}
 
 \begin{remark}
@@ -366,7 +366,7 @@
 
 	where : $a(x) \tiff \tlabel t x = a$
 
-    We will note $t \models \phi$ for $t \models \phi$. \todo{better formulate this}
+	We will note $t \models \phi$ for $\Model t \models \phi$. \todo{better formulate this}
 \end{definition}
 
 
@@ -592,10 +592,10 @@ Can we find a "uniformiser" for every MSO formula $\phi(X)$ ?
 \end{problem}
 
 
-In an intuitive way, the above problem is equivalent to asking if the following "formula" (it is not a real MSO formula
+In an intuitive way, the above problem is equivalent to asking if the following ''formula'' (it is not a real MSO formula
 because we are quantifying over a formula) holds for every $\phi$ :
-\[ (\exists X.\, \phi(X)) \ra (\exists \psi(\_).\, \phi(\setdef x {\psi(x)} ) \]
-which can be read as : if there exists a set of solutions for $\phi$ then we can define a formula $\psi$ such that the set of 
+\[ (\exists X.\, \phi(X)) \ra (\exists \psi(\_).\, \phi(\setdef x {\psi(x)} )) \]
+which can be read as : if there exists a set of solutions for $\phi$ then we can define a formula $\psi$ such that the set of
 its solutions is a solution of $\phi$.
 
 We will start by studying how we can decide for two formulas $\phi(X)$ and $\psi(X)$ if the formula $\Psi = \exists X. \phi (X) \ra \exists Y. \phi' (Y)$
@@ -605,20 +605,20 @@ and another one $A' = (\Sigma' \times \set{0,1}, Q', \init', \delta', F')$ for $
 
 
 \begin{notation}
-    We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and 
-    $\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
-    \todo{improve this notation}
+	We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and
+	$\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
+	\todo{improve this notation}
 \end{notation}
 
 We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init'', \delta'', F'')$ where
 \begin{itemize}
 	\item$\begin{aligned}[t]
-			      \init'' : \Sigma & \to      \parts Q \times \parts {Q'}                                                          \\
+			      \init'' : \Sigma & \to      \parts Q \times \parts {Q'} \\
 			      a                & \mapsto  ( \init(a,*) , \init'(a,*))
 		      \end{aligned}$
 
 	\item$\begin{aligned}[t]
-			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}                                                 \\
+			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}             \\
 			      ((X,X'),(Y,Y'),a)                                        & \mapsto (\delta(X,Y,(a,*)), \delta'(X',Y',(a,*))
 		      \end{aligned}$
 
@@ -628,29 +628,29 @@ This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Ps
 from \Cref{coro:univeral-Sa} we can decide if $\Psi$ is satisfied by all models.
 
 We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
-the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\Psi$ but modifying
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is ''definable''. We will use the same construction as for $\Psi$ but modifying
 the "transition function".
 
 
 
 \begin{definition}
-	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$
+	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,\init', \deltauu, F')$
 	the ""unifier automaton"" of $\phi$, where
 	\todo{$\phi$ should be a NBUA and not a DBUA}
 	\begin{itemize}
 		\item$\begin{aligned}[t]
-				      \init' : \Sigma & \to      \parts Q \times \parts {Q}                                                          \\
+				      \init' : \Sigma & \to      \parts Q \times \parts {Q} \\
 				      a               & \mapsto  ( \init(a,*), \init(a,*))
 			      \end{aligned}$
 		\item$\begin{aligned}[t]
-				      \intro*\deltauu : {\parts Q}^2 \times {\parts {Q}}^2 \times \Sigma & \to    {\parts {Q}}^2                                                                             \\
+				      \intro*\deltauu : {\parts Q}^2 \times {\parts {Q}}^2 \times \Sigma & \to    {\parts {Q}}^2                          \\
 				      ((X,X'),(Y,Y'),a)                                                  & \mapsto (\delta(X,Y,(a,*)), \deltau (X',Y',a)) \\
 			      \end{aligned}$
 		\item $ \begin{aligned}[t]
-				      \intro*\deltau : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                                              \\
+				      \intro*\deltau : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                           \\
 				      (X', Y', a)                                             & \mapsto \begin{cases}
 					                                                                        \{\delta(p,p,(a,b))\}     \mid p \in X', a \in \Sigma, b \in \set{0,1}\} & \text{ if } X' = Y' \\
-					                                                                        \delta(X',Y',(a,*)) & \text{ otherwise}
+					                                                                        \delta(X',Y',(a,*))                                                      & \text{ otherwise}
 				                                                                        \end{cases}
 			      \end{aligned}$
 		\item $F' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F \neq \emptyset)}$
@@ -662,42 +662,40 @@ the "transition function".
 \end{lemma}
 
 \begin{proof}
-	We need to exhibit a $\psi$ that is a "uniformiser" for $\phi(X)$.
-	We consider $U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$, and
-	$A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the automaton for $\phi(X)$.
-
+	Let 	$A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
+	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is universal.
+	We need to exhibit a "uniformiser" for $\phi(X)$.
 
 	We first introduce a choice function $\intro*\choiceN : \parts Q \times \parts Q \times Q \times \Sigma \to Q \times Q \times \set{0,1}$
-	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltauu(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
-	and if $X' = Y'$ then $p = q$. 
-    We also introduce $\intro* \choiceL : Q \times \Sigma \to \set{0,1} $, which chooses
-	$b$ such that $p = \init((a,b))$. 
-    Finally, we need to choose from a final state: $\intro* \choiceF : \parts Q \to  Q$ where
+	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltau(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
+	and if $X' = Y'$ then $p = q$.
+	We also introduce $\intro* \choiceL : Q \times \Sigma \to \set{0,1} $, which chooses
+	$b$ such that $p = \init((a,b))$.
+	Finally, we need to choose from a final state: $\intro* \choiceF : \parts Q \to  Q$ where
 	$\choiceF (X) = q$ such that if $X \cap F \neq \emptyset$ then $q \in X \cap F$. If the premises are not satisfied in any of the cases, then
-    these choice functions return an arbitrary value.
+	these choice functions return an arbitrary value.
 
-	We define the set $X_U$ and the "run" $\intro*\rhou$ over the annotated "tree" $(t,X_U)$ by induction on the depth of the node as follows:
-	\todo{introduce notation for annotated trees}
+	We define the set $X_U$ and the "run" $\intro*\rhou$  by induction on the depth of the node as follows:
 	\begin{itemize}
-		\item For the root, we define $\rhou(\varepsilon) = \choiceF(\deltauu(t))$.
-		\item For all inner nodes $x$ with children $y$ and $z$. Let $(p,q,v)$ be~$\choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), \rhou(x), \tlabel t x)$, we define
+		\item For the root, we define $\rhou(\varepsilon) = \choiceF(\deltau(t))$.
+		\item For all inner nodes $x$ with children $y$ and $z$. Let $(p,q,v)$ be~$\choiceN(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x)$, we define
 		      $\rhou(y)=p$, $\rhou(z)=q$, and $x \in X_U$ if and only if $b = 1$.
 		\item For all "leaves" $x$, let $b$ be ~$b = \choiceL(p, \tlabel t x)$ we define $\rhou (x) = p$, where $x \in X_U$ if and only if $b = 1$.
 	\end{itemize}
 
-	We claim now that the $\rhou$ is well defined, unique, and indeed a "run" of $A$ over $(t,X_U)$. The proof procedes by top-down induction.
+	We claim now that the $\rhou$ is well defined, unique, and a "run" of $A$ over $(t,X_U)$. The proof procedes by top-down induction.
 	\begin{itemize}
-		\item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choiceF(\deltauu(t))$, since $\choiceF$ is deterministic, $\rhou(\varepsilon)$ is unique.
+		\item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choiceF(\deltau(t))$, since $\choiceF$ is deterministic, $\rhou(\varepsilon)$ is unique.
 		\item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then,
-		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), r, \tlabel t x)$.
+		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choiceN(\deltau(\subtree t y), \deltau(\subtree t z), r, \tlabel t x)$.
 		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\delta(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ \tiff $b = 1$. This is then a valid "run"
 		      of $A$ over $(t,X_U)$
-		\item For the "leaves" $x$ of "label" $a$, by the induction hypothesis we have that $b = \choiceL(a, \rhou(x))$ which is well defined since $a \in \Sigma$ and unique.
+		\item For a "leaf" $x$ of "label" $a$, by the induction hypothesis we have that $b = \choiceL(a, \rhou(x))$ which is well defined since $a \in \Sigma$ and unique.
 		      We also have that $x \in X$ \tiff $b = 1$ and $\rho(x) = \init ((a,b))$.
 	\end{itemize}
-	The claim is proved.
+	The claim is proved. In particular, this run satisfies the restrictions of $\deltau$ and it's a run over the second projection of $U$.
 
-	We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\Phi$ is "uniformisable".
+	We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\phi$ is "uniformisable".
 	This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, \ie,
 	\[  t \models \unif(X) \text{ \tiff } X=X_U \]
 
@@ -707,7 +705,7 @@ the "transition function".
 	\[ t \models \ustate_P(x) \text{ if and only if } \deltau(\subtree t x) = P .\]
 
 	Let $k = \abs Q$.
-	We define 3 subformulas :
+	We define 5 subformulas :
 	\begin{eqnarray*}
 		\text{single\_state} (X_{p_1}, \ldots, X_{p_k})  &=& \forall x, \bigvee_{p_i \in \Nodes t} X_{p_i} (x)\\
 		&\land& \forall x, \bigwedge_{p_i, p_j \in \Nodes t, i \neq j} \lnot(X_{p_i} (x) \land X_{p_j}(x))
@@ -717,24 +715,36 @@ the "transition function".
 		\text{root\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x, \treeroot(x) \ra (\bigvee_{p_i \in \choose \deltau(\varepsilon)} X_{p_i}(x))
 	\end{equation*}
 
+	\begin{equation*}
+		\text{in\_set} (X, x, b)  = (\bigwedge_{b = 1}  X(x)) \land (\bigwedge_{b = 0}  \lnot X(x))
+	\end{equation*}
+
+	\begin{equation*}
+		\text{leaf\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x \left( \leaf(x) \rightarrow \bigvee_{\substack{(a, q) \in \init,\\ \choiceL(a,q) = b}} X_i(x) \land  \text{in\_set}(X,x,b)  \right)
+	\end{equation*}
+
 	\begin{eqnarray*}
 		\text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)  &=& \forall x \forall y, \forall z, \children (x,y,z) \ra \\
-		&& \bigvee_{ \substack{(P',Q',a,R')\in \deltau   \\ r \in R' \\ \choiceN(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
-		&& \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \\
-		&& \qquad \land (\bigwedge_{b = 1}  X(x)) \land (\bigwedge_{b = 0}  \lnot X(x)) \Big)
+		&& \bigvee_{ \substack{(P',Q',a,R')\in \deltau, \, r \in R', \\ \choiceN(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
+		&& \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \land  \text{in\_set}(X,x,b)\Big)
 	\end{eqnarray*}
-	\todo{Leaves, but I'll do it when $\init$ becomes $\delta$.}
+
 
 	We can now define $\unif(X)$:
 	\begin{eqnarray*}
 		\unif (X) &=& \exists X_{p_1}, \ldots, \exists X_{p_k}, \text{single\_state} (X_{p_1}, \ldots, X_{p_k}) \\
+		&\land& \text{leaf\_node} (X_{p_1}, \ldots, X_{p_k})\\
 		&\land& \text{root\_node} (X_{p_1}, \ldots, X_{p_k})\\
 		&\land& \text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)
 	\end{eqnarray*}
+	$\unif(X)$ describes the run $\rhou$ over $(t,X_U)$ and has a unique solution, $X_U$.
 
-	\todo{Prove that $\unif$ satisfies the main property}
-	\item The last thing we have to prove is that there is a unique $\rhou, X$ that satisfies the formula.
-	\todo{~}
+	Let's show that $\unif(X)$ is a "uniformiser" for $\phi(X)$.
+	If $U$ is universal the we have that, whenever $\phi(X)$ has a solution for a tree $t$, then there exists an accepting "run" $\rho$ of $U$ over $t$
+	such that $\rho(\varepsilon) = (X,X')$ and such that $X \cap F \neq \emptyset$. Since the run is accepting $X' \cap F \neq \emptyset$, and we have that
+	$\rhou$ is then well defined and $\unif(X)$ has a solution. Since $\rhou$ is a run of $A$, then we have that $X_U$ is also a solution of $\phi(X)$, so
+	$\unif(X)$ is indeed a "uniformiser" for $\phi(X)$.
+
 \end{proof}
 
 
@@ -748,11 +758,9 @@ the "transition function".
 \end{proof}
 
 
-
 \iffalse
 	\bibliographystyle{alpha}
 	\bibliography{tre-uniformisation}
 \fi
-
 
 \end{document}

@@ -19,28 +19,28 @@
     | nodes
 
 \knowledge{notion}
-| transition relation
-| transition@relation
-| transitions@relation
+    | transition relation
+    | transition@relation
+    | transitions@relation
 
 \knowledge{notion}
-| transition map
-| transition function
+    | transition map
+    | transition function
 
 \knowledge{notion}
-| state
-| states
+    | state
+    | states
 
 \knowledge{notion}
-| cartesian product automata
+    | cartesian product automata
 
 \knowledge{notion}
-| final state
-| final states
+    | final state
+    | final states
 
 
 \knowledge{notion}
-| power set automaton
+    | power set automaton
 
 \knowledge{notion}
     | leaves
@@ -55,9 +55,6 @@
 \knowledge{notion}
     | run
     | runs
-
-
-\knowledge{init}{notion}
 
 \knowledge{notion}
     | order-insensitive
@@ -80,3 +77,7 @@
 
 \knowledge{notion}
     | unifier automaton
+
+
+\knowledge{notion}
+    | root
