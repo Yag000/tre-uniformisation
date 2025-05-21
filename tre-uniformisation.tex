@@ -634,12 +634,12 @@ the "transition function".
 
 
 \begin{definition}
-	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,\init', \deltauu, F')$
+	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,init_U, \deltauu, F')$
 	the ""unifier automaton"" of $\phi$, where
 	\todo{$\phi$ should be a NBUA and not a DBUA}
 	\begin{itemize}
 		\item$\begin{aligned}[t]
-				      \init' : \Sigma & \to      \parts Q \times \parts {Q} \\
+				      init_U : \Sigma & \to      \parts Q \times \parts {Q} \\
 				      a               & \mapsto  ( \init(a,*), \init(a,*))
 			      \end{aligned}$
 		\item$\begin{aligned}[t]
@@ -662,7 +662,7 @@ the "transition function".
 \end{lemma}
 
 \begin{proof}
-	Let 	$A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
+	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
 	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is universal.
 	We need to exhibit a "uniformiser" for $\phi(X)$.
 
@@ -749,12 +749,31 @@ the "transition function".
 
 
 \begin{lemma}
-	Let $\phi(X)$ be and MSO formula, if $\phi$ is "uniformisable" then the "unifier automaton" $U$ of $\phi$ is "universal".
+	Let $\phi(X)$ be and MSO formula, if $\phi(X)$ is "uniformisable" then the "unifier automaton" $U$ of $\phi(X)$ is "universal".
 \end{lemma}
 
 \begin{proof}
 	We will prove it by contraposition.
-	\todo{~}
+    
+	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
+	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is not universal.
+	We will show that $\phi(X)$ is not "uniformisable".
+
+    Since $U$ is not "universal", there exists $(P,P') \in \Sa U$, such that $P \cap F \neq \emptyset$ and $P' \cap F = \emptyset$.
+    We want to define $t_{P,P'}$ such that 
+    \begin{enumerate}
+        \item There exists $X$ such that $t \models \phi(X)$.
+        \item For all $X$ such that $t \models \phi(X)$, there exists $\sigma \in \Aut (t)$ such that $\sigma (X) \neq X$.
+    \end{enumerate}
+
+    We want to find a "tree" $t_{P,P'}$ such that $P = \{ \delta_A (t_{P,P'},X) : X \subset \Nodes {t_{P,P'}}\}$ and $P' =  \{ \delta_A (t_{P,P'},X) : X \ \text{definable}\}$.
+
+    Lets prove that  $\phi(X)$ is not "uniformisable" by contradiction.
+
+    Lets suppose $X$ definable such that $t \models \phi(X)$.
+
+    Since $X$ is definable, $\sigma_A(t,X) \in P'$. Since $t \models \phi(X)$,  $\sigma_A(t,X) \in F$. So $\sigma_A(t,X) \in F \cap P'$, which
+    contradicts $P' \cap F = \emptyset$
 \end{proof}
 
 
