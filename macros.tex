@@ -157,8 +157,7 @@
 
 \newcommand{\app}[1]{\ifx#1~ \else \left( #1 \right)\fi}
 
-\newcommand{\tree}{\text{\kl[tree]{Tree}}}
-
+\knowledgenewrobustcmd \tree {\cmdkl {\text{tree}}}
 
 \knowledgenewrobustcmd \Nodes [1] {\cmdkl {\text{Nodes}} \app {#1}}
 \knowledgenewrobustcmd \Leaves [1] {\cmdkl {\text{Leaves}} \app {#1}}
