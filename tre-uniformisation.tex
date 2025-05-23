@@ -292,38 +292,38 @@
 \end{proof}
 
 \begin{definition}
-	Let $A = \DBUA$ a "DBUA", let $\intro* \Sa A \subseteq Q$ be the smallest set such that
+	Let $A = \DBUA$ a "DBUA", let $\intro* \Reach A \subseteq Q$ be the smallest set such that
 	\begin{enumerate}
-		\item $\init (a) \in \Sa A$ for all $a \in \Sigma$,
-		\item $\delta (p,q,a) \in \Sa A$ for all $p,q \in \Sa A$ and $a \in \Sigma$.
+		\item $\init (a) \in \Reach A$ for all $a \in \Sigma$,
+		\item $\delta (p,q,a) \in \Reach A$ for all $p,q \in \Reach A$ and $a \in \Sigma$.
 	\end{enumerate}
 \end{definition}
 
 
 \begin{lemma}
 	Let $A$ a "DBUA", then
-	\[\Sa A = \setdef {\interpret A t} {t \in \tree_\Sigma} \]
+	\[\Reach A = \setdef {\interpret A t} {t \in \tree_\Sigma} \]
 \end{lemma}
 
 
 \begin{proofI}
 	\begin{itemize}
 		\item $\bsubLR$\vspace{0.15cm}\\
-		      We will prove by induction that $q \in \Sa A \implies$ there exists $t \in \tree_\Sigma$ such that
+		      We will prove by induction that $q \in \Reach A \implies$ there exists $t \in \tree_\Sigma$ such that
 		      $\interpret A t = q$.
 
 		      \begin{itemize}
-			      \item If $q = \init(a) \in \Sa A$, then the "tree" $a$ works : $\interpret A a = \init (a) = q$.
-			      \item If $q = \delta (p,q,a) \in \Sa A$ where $p,q \in \Sa A$ and $a \in \Sigma$. Then by the induction hypothesis
+			      \item If $q = \init(a) \in \Reach A$, then the "tree" $a$ works : $\interpret A a = \init (a) = q$.
+			      \item If $q = \delta (p,q,a) \in \Reach A$ where $p,q \in \Reach A$ and $a \in \Sigma$. Then by the induction hypothesis
 			            there exists $t'$ such that $\interpret A {t'} = p$ and $t''$ such that $\interpret A {t''} = q$.
 			            Then we have that $t = a(t',t'')$ verifies $\interpret A t = q$.
 		      \end{itemize}
 		\item $\bsubRL$\vspace{0.15cm}\\
 		      We will prove it by induction on the structure of a "tree" $t$. We proceed by case distinction.
 		      \begin{itemize}
-			      \item If $t = a$, then we have $ \interpret A a = \init (a) \in \Sa A$
-			      \item If $t = a(t',t'')$, we have $ \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Sa A$
-			            because by the induction hypothesis $\interpret A {t'} \in \Sa A$  and $\interpret A {t''} \in \Sa A$.
+			      \item If $t = a$, then we have $ \interpret A a = \init (a) \in \Reach A$
+			      \item If $t = a(t',t'')$, we have $ \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A$
+			            because by the induction hypothesis $\interpret A {t'} \in \Reach A$  and $\interpret A {t''} \in \Reach A$.
 		      \end{itemize}
 	\end{itemize}
 \end{proofI}
@@ -336,24 +336,24 @@
 
 
 \begin{theorem}
-	$A = \DBUA$ is "universal" if and only if $\Sa A \subseteq F$.
+	$A = \DBUA$ is "universal" if and only if $\Reach A \subseteq F$.
 \end{theorem}
 
 \begin{proofI}
 	\begin{itemize}
 		\item $\bimpLR$\\
 		      We suppose $A$ "universal", then for all $t \in \tree_\Sigma$ we have that $\interpret A t \in F$, because $A$ "accepts" $t$.
-		      Since $\Sa A = \setdef {\interpret A t} {t\in \tree_\Sigma}$ we have that $\Sa A \subseteq F$.
+		      Since $\Reach A = \setdef {\interpret A t} {t\in \tree_\Sigma}$ we have that $\Reach A \subseteq F$.
 
 		\item $\bimpRL$\\
-		      We suppose $\Sa A \subseteq F$. Let $t$ be a "tree", then $\interpret A t \in \Sa A \subseteq F$, so $\interpret A t \in F$ and $A$
+		      We suppose $\Reach A \subseteq F$. Let $t$ be a "tree", then $\interpret A t \in \Reach A \subseteq F$, so $\interpret A t \in F$ and $A$
 		      "accepts" $t$. We have proven that $A$ is "universal".
 	\end{itemize}
 \end{proofI}
 
 
-\begin{coro}\label{coro:univeral-Sa}
-	A saturation algorithm based on $\Sa A$ decides "universality".
+\begin{coro}\label{coro:univeral-Reach}
+	A saturation algorithm based on $\Reach A$ decides "universality".
 \end{coro}
 
 
@@ -625,7 +625,7 @@ We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init
 	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
 \end{itemize}
 This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Psi$. In particular, using the decision procedure
-from \Cref{coro:univeral-Sa} we can decide if $\Psi$ is satisfied by all models.
+from \Cref{coro:univeral-Reach} we can decide if $\Psi$ is satisfied by all models.
 
 We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
 the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is ''definable''. We will use the same construction as for $\Psi$ but modifying
@@ -754,26 +754,24 @@ the "transition function".
 
 \begin{proof}
 	We will prove it by contraposition.
-    
+
 	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
 	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is not universal.
 	We will show that $\phi(X)$ is not "uniformisable".
 
-    Since $U$ is not "universal", there exists $(P,P') \in \Sa U$, such that $P \cap F \neq \emptyset$ and $P' \cap F = \emptyset$.
-    We want to define $t_{P,P'}$ such that 
-    \begin{enumerate}
-        \item There exists $X$ such that $t \models \phi(X)$.
-        \item For all $X$ such that $t \models \phi(X)$, there exists $\sigma \in \Aut (t)$ such that $\sigma (X) \neq X$.
-    \end{enumerate}
+	Since $U$ is not "universal", there exists $(P,P') \in \Reach U$, such that $P \cap F \neq \emptyset$ and $P' \cap F = \emptyset$.
+	We want to define a "tree" $t_{P,P'}$ such that
+	\begin{enumerate}
+		\item $P \subseteq \{ \delta_A (t_{P,P'},X) : X \subset \Nodes {t_{P,P'}}\}$ \label{lem:prop1}
+		\item $P' \supseteq \{ \delta_A (t_{P,P'},X) : X \ \text{definable}\}$\label{lem:prop2}
+		\item $\interpret U {t_{P,P'}} = (P,P')$\label{lem:prop2}
+	\end{enumerate}
 
-    We want to find a "tree" $t_{P,P'}$ such that $P = \{ \delta_A (t_{P,P'},X) : X \subset \Nodes {t_{P,P'}}\}$ and $P' =  \{ \delta_A (t_{P,P'},X) : X \ \text{definable}\}$.
-
-    Lets prove that  $\phi(X)$ is not "uniformisable" by contradiction.
-
-    Lets suppose $X$ definable such that $t \models \phi(X)$.
-
-    Since $X$ is definable, $\sigma_A(t,X) \in P'$. Since $t \models \phi(X)$,  $\sigma_A(t,X) \in F$. So $\sigma_A(t,X) \in F \cap P'$, which
-    contradicts $P' \cap F = \emptyset$
+	Lets prove that  $\phi(X)$ is not "uniformisable".
+	Let $X \in F \cap \{ \delta_A (t_{P,P'},X) : X \subset \Nodes {t_{P,P'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}.
+	We also know that $P' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{P,P'},X) : X \ \text{definable}\} \cap F = \emptyset$
+	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{P,P'},X) : X \ \text{definable}\} \cap F = \emptyset$ which means that no
+	$X$ satisfying $t_{P,P'} \models \phi(X)$ is definable. We decide that $\phi(X)$ is not "uniformisable".
 \end{proof}
 
 
