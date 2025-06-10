@@ -34,6 +34,11 @@
 
 \maketitle
 
+\begin{abstract}
+    Something here \todo{Write abstract}.
+\end{abstract}
+
+\section{Introduction}
 
 \section{Trees}
 
@@ -44,7 +49,7 @@
 		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are "trees".
 	\end{itemize}
 	We call the ""root"" of a "tree" the first node of the definition.
-	The set of all "trees" over $\Sigma$ is $\tree_{\Sigma}$.
+	The set of all "trees" over $\Sigma$ is $\intro* \tree_{\Sigma}$.
 \end{definition}
 
 \begin{definition}[Nodes]
@@ -309,14 +314,14 @@
 \begin{proofI}
 	\begin{itemize}
 		\item $\bsubLR$\vspace{0.15cm}\\
-		      We will prove by induction that $q \in \Reach A \implies$ there exists $t \in \tree_\Sigma$ such that
-		      $\interpret A t = q$.
+		      We will prove by induction that $r \in \Reach A \implies$ there exists $t \in \tree_\Sigma$ such that
+		      $\interpret A t = r$.
 
 		      \begin{itemize}
-			      \item If $q = \init(a) \in \Reach A$, then the "tree" $a$ works : $\interpret A a = \init (a) = q$.
-			      \item If $q = \delta (p,q,a) \in \Reach A$ where $p,q \in \Reach A$ and $a \in \Sigma$. Then by the induction hypothesis
+			      \item If $r = \init(a) \in \Reach A$, then the "tree" $a$ works : $\interpret A a = \init (a) = r$.
+			      \item If $r = \delta (p,q,a) \in \Reach A$ where $p,q \in \Reach A$ and $a \in \Sigma$. Then by the induction hypothesis
 			            there exists $t'$ such that $\interpret A {t'} = p$ and $t''$ such that $\interpret A {t''} = q$.
-			            Then we have that $t = a(t',t'')$ verifies $\interpret A t = q$.
+			            Then we have that $t = a(t',t'')$ verifies $\interpret A t = r$.
 		      \end{itemize}
 		\item $\bsubRL$\vspace{0.15cm}\\
 		      We will prove it by induction on the structure of a "tree" $t$. We proceed by case distinction.
@@ -400,7 +405,7 @@ We will discuss some examples of MSO formulas.
 
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
-	\[ t \models \phi \tiff t \in \lang A \]
+    \[ t \models \phi \tiff t \in \lang A \]\todo{verify that all remains order-insensitive}
 \end{lemma}
 
 \begin{proof}
@@ -507,8 +512,8 @@ We will discuss some examples of MSO formulas.
 
 
 \begin{lemma} \label{lem:MSO-aut}
-	If $\phi$ is a MSO formula there exists $A$ a "NBUA" such that for all $t \in \tree_{\Sigma}$,
-	\[ t \models \phi \tiff t \in \lang A \]
+	If $\phi$ is a MSO formula there exists $A$ an "order-insensitive" "NBUA" such that for all $t \in \tree_{\Sigma}$,
+	\[ t \models \phi \tiff t \in \lang A \]\todo{verify that all remains order-insensitive}
 \end{lemma}
 
 
@@ -559,6 +564,8 @@ We will discuss some examples of MSO formulas.
 		\item There exists at most one set $X$ such that $t \models \psi(X)$.
 		\item If there exists a set $X$ such that $t \models \phi(X)$, then there exists a set $Y$ such that $t \models \psi(Y) \land \phi(Y)$.
 	\end{enumerate}
+
+	We say that a formula is ""uniformisable"" if there exists a "uniformiser" for said formula.
 \end{definition}
 
 \begin{lemma}
@@ -587,6 +594,27 @@ We will discuss some examples of MSO formulas.
 	\end{enumerate}
 \end{proof}
 
+\begin{definition}
+	Let $t$ a "tree". We say that $X \subseteq \Nodes t$ is ""definable"" if there exists an MSO formula $\phi(x)$ such that $ X = \setdef{x} {t \models \phi(x)}$.
+\end{definition}
+
+\begin{lemma}
+	An MSO formula $\phi(X)$ is "uniformisable" if for all "trees" $t$ there exists a "definable" $X_d$ such that $t \models \phi(X_d)$.
+\end{lemma}
+
+\begin{proof}
+	\todo{~}
+\end{proof}
+
+\begin{lemma}\label{lem:def-aut}
+	If $X$ is "definable" over a "tree" $t$, then for all $\sigma \in \Aut(t)$, $\sigma(X) = X$.
+\end{lemma}
+
+\begin{proof}
+	\todo{~}
+
+\end{proof}
+
 \begin{problem}
 Can we find a "uniformiser" for every MSO formula $\phi(X)$ ?
 \end{problem}
@@ -594,9 +622,8 @@ Can we find a "uniformiser" for every MSO formula $\phi(X)$ ?
 
 In an intuitive way, the above problem is equivalent to asking if the following ''formula'' (it is not a real MSO formula
 because we are quantifying over a formula) holds for every $\phi$ :
-\[ (\exists X.\, \phi(X)) \ra (\exists \psi(\_).\, \phi(\setdef x {\psi(x)} )) \]
-which can be read as : if there exists a set of solutions for $\phi$ then we can define a formula $\psi$ such that the set of
-its solutions is a solution of $\phi$.
+\[ (\exists X.\, \phi(X)) \ra (\exists X, \phi(X) \text{ and $X$ is "uniformisable"})\]
+which can be read as : if there exists a set of solutions for $\phi$ then we can find one that is "definable".
 
 We will start by studying how we can decide for two formulas $\phi(X)$ and $\psi(X)$ if the formula $\Psi = \exists X. \phi (X) \ra \exists Y. \phi' (Y)$
 is satisfiable for all "trees". We will build a "DBUA" than can decide if a "tree" satisfies $\Psi$.
@@ -631,10 +658,8 @@ We are interested in finding an automaton that, if it is universal, then $\phi$ 
 the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is ''definable''. We will use the same construction as for $\Psi$ but modifying
 the "transition function".
 
-
-
 \begin{definition}
-	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,init_U, \deltauu, F')$
+	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,init_U, \deltau, F')$
 	the ""unifier automaton"" of $\phi$, where
 	\todo{$\phi$ should be a NBUA and not a DBUA}
 	\begin{itemize}
@@ -643,15 +668,15 @@ the "transition function".
 				      a               & \mapsto  ( \init(a,*), \init(a,*))
 			      \end{aligned}$
 		\item$\begin{aligned}[t]
-				      \intro*\deltauu : {\parts Q}^2 \times {\parts {Q}}^2 \times \Sigma & \to    {\parts {Q}}^2                          \\
-				      ((X,X'),(Y,Y'),a)                                                  & \mapsto (\delta(X,Y,(a,*)), \deltau (X',Y',a)) \\
+				      \intro*\deltau : {\parts Q}^2 \times {\parts {Q}}^2 \times \Sigma & \to    {\parts {Q}}^2                           \\
+				      ((X,X'),(Y,Y'),a)                                                 & \mapsto (\delta(X,Y,(a,*)), \deltauu (X',Y',a)) \\
 			      \end{aligned}$
 		\item $ \begin{aligned}[t]
-				      \intro*\deltau : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                           \\
-				      (X', Y', a)                                             & \mapsto \begin{cases}
-					                                                                        \{\delta(p,p,(a,b))\}     \mid p \in X', a \in \Sigma, b \in \set{0,1}\} & \text{ if } X' = Y' \\
-					                                                                        \delta(X',Y',(a,*))                                                      & \text{ otherwise}
-				                                                                        \end{cases}
+				      \intro*\deltauu : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                           \\
+				      (X', Y', a)                                              & \mapsto \begin{cases}
+					                                                                         \{\delta(p,p,(a,b))\}     \mid p \in X', a \in \Sigma, b \in \set{0,1}\} & \text{ if } X' = Y' \\
+					                                                                         \delta(X',Y',(a,*))                                                      & \text{ otherwise}
+				                                                                         \end{cases}
 			      \end{aligned}$
 		\item $F' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F \neq \emptyset)}$
 	\end{itemize}
@@ -667,7 +692,7 @@ the "transition function".
 	We need to exhibit a "uniformiser" for $\phi(X)$.
 
 	We first introduce a choice function $\intro*\choiceN : \parts Q \times \parts Q \times Q \times \Sigma \to Q \times Q \times \set{0,1}$
-	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltau(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
+	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltauu(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
 	and if $X' = Y'$ then $p = q$.
 	We also introduce $\intro* \choiceL : Q \times \Sigma \to \set{0,1} $, which chooses
 	$b$ such that $p = \init((a,b))$.
@@ -677,23 +702,23 @@ the "transition function".
 
 	We define the set $X_U$ and the "run" $\intro*\rhou$  by induction on the depth of the node as follows:
 	\begin{itemize}
-		\item For the root, we define $\rhou(\varepsilon) = \choiceF(\deltau(t))$.
-		\item For all inner nodes $x$ with children $y$ and $z$. Let $(p,q,v)$ be~$\choiceN(\deltau(\subtree t y), \deltau(\subtree t z), \rhou(x), \tlabel t x)$, we define
+		\item For the root, we define $\rhou(\varepsilon) = \choiceF(\deltauu(t))$.
+		\item For all inner nodes $x$ with children $y$ and $z$. Let $(p,q,v)$ be~$\choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), \rhou(x), \tlabel t x)$, we define
 		      $\rhou(y)=p$, $\rhou(z)=q$, and $x \in X_U$ if and only if $b = 1$.
 		\item For all "leaves" $x$, let $b$ be ~$b = \choiceL(p, \tlabel t x)$ we define $\rhou (x) = p$, where $x \in X_U$ if and only if $b = 1$.
 	\end{itemize}
 
 	We claim now that the $\rhou$ is well defined, unique, and a "run" of $A$ over $(t,X_U)$. The proof procedes by top-down induction.
 	\begin{itemize}
-		\item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choiceF(\deltau(t))$, since $\choiceF$ is deterministic, $\rhou(\varepsilon)$ is unique.
+		\item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choiceF(\deltauu(t))$, since $\choiceF$ is deterministic, $\rhou(\varepsilon)$ is unique.
 		\item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then,
-		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choiceN(\deltau(\subtree t y), \deltau(\subtree t z), r, \tlabel t x)$.
+		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that $(p,q,b) = \choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), r, \tlabel t x)$.
 		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\delta(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ \tiff $b = 1$. This is then a valid "run"
 		      of $A$ over $(t,X_U)$
 		\item For a "leaf" $x$ of "label" $a$, by the induction hypothesis we have that $b = \choiceL(a, \rhou(x))$ which is well defined since $a \in \Sigma$ and unique.
 		      We also have that $x \in X$ \tiff $b = 1$ and $\rho(x) = \init ((a,b))$.
 	\end{itemize}
-	The claim is proved. In particular, this run satisfies the restrictions of $\deltau$ and it's a run over the second projection of $U$.
+	The claim is proved. In particular, this run satisfies the restrictions of $\deltauu$ and it's a run over the second projection of $U$.
 
 	We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\phi$ is "uniformisable".
 	This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, \ie,
@@ -702,7 +727,7 @@ the "transition function".
 
 	Given a set of "states" $P$, from \Cref{lem:MSO-aut} there exists a formula $\intro* \ustate_P(x)$ such that
 	\todo{fix ustate ref}
-	\[ t \models \ustate_P(x) \text{ if and only if } \deltau(\subtree t x) = P .\]
+	\[ t \models \ustate_P(x) \text{ if and only if } \deltauu(\subtree t x) = P .\]
 
 	Let $k = \abs Q$.
 	We define 5 subformulas :
@@ -712,7 +737,7 @@ the "transition function".
 	\end{eqnarray*}
 
 	\begin{equation*}
-		\text{root\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x, \treeroot(x) \ra (\bigvee_{p_i \in \choose \deltau(\varepsilon)} X_{p_i}(x))
+		\text{root\_node} (X_{p_1}, \ldots, X_{p_k})  = \forall x, \treeroot(x) \ra (\bigvee_{p_i \in \choose \deltauu(\varepsilon)} X_{p_i}(x))
 	\end{equation*}
 
 	\begin{equation*}
@@ -725,7 +750,7 @@ the "transition function".
 
 	\begin{eqnarray*}
 		\text{inner\_nodes} (X_{p_1}, \ldots, X_{p_k}, X)  &=& \forall x \forall y, \forall z, \children (x,y,z) \ra \\
-		&& \bigvee_{ \substack{(P',Q',a,R')\in \deltau, \, r \in R', \\ \choiceN(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
+		&& \bigvee_{ \substack{(P',Q',a,R')\in \deltauu, \, r \in R', \\ \choiceN(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
 		&& \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \land  \text{in\_set}(X,x,b)\Big)
 	\end{eqnarray*}
 
@@ -759,19 +784,67 @@ the "transition function".
 	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is not universal.
 	We will show that $\phi(X)$ is not "uniformisable".
 
-	Since $U$ is not "universal", there exists $(P,P') \in \Reach U$, such that $P \cap F \neq \emptyset$ and $P' \cap F = \emptyset$.
-	We want to define a "tree" $t_{P,P'}$ such that
+	Since $U$ is not "universal", there exists $(R,R') \in \Reach U$, such that $R \cap F \neq \emptyset$ and $R' \cap F = \emptyset$.
+	We want to define a "tree" $t_{R,R'}$ such that
 	\begin{enumerate}
-		\item $P \subseteq \{ \delta_A (t_{P,P'},X) : X \subset \Nodes {t_{P,P'}}\}$ \label{lem:prop1}
-		\item $P' \supseteq \{ \delta_A (t_{P,P'},X) : X \ \text{definable}\}$\label{lem:prop2}
-		\item $\interpret U {t_{P,P'}} = (P,P')$\label{lem:prop2}
+		\item $R \subseteq \{ \delta_A (t_{R,R'},X) : X \subseteq \Nodes {t_{R,R'}}\}$ \label{lem:prop1}
+		\item $\{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \subseteq R'$\label{lem:prop2}
+		\item $\interpret U {t_{R,R'}} = (R,R')$\label{lem:prop3}
 	\end{enumerate}
 
-	Lets prove that  $\phi(X)$ is not "uniformisable".
-	Let $X \in F \cap \{ \delta_A (t_{P,P'},X) : X \subset \Nodes {t_{P,P'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}.
-	We also know that $P' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{P,P'},X) : X \ \text{definable}\} \cap F = \emptyset$
-	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{P,P'},X) : X \ \text{definable}\} \cap F = \emptyset$ which means that no
-	$X$ satisfying $t_{P,P'} \models \phi(X)$ is definable. We decide that $\phi(X)$ is not "uniformisable".
+	Using \Cref{lem:def-aut}, if we prove that $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'$ we also
+	satisfy \ref{lem:prop2}.
+
+
+	We prove by induction that $(T,T') \in \Reach U$ implies all of the three conditions.
+
+	If $(T,T') = (\init(a,*). \init (a, *))$ for $a \in \Sigma$, then \ref{lem:prop1} and \ref{lem:prop3} are trivially satisfied and we have that
+	$\Aut (a) = \{\text{id}\}$, so \ref{lem:prop2} is also satisfied.
+
+
+	If $(T,T') = \delta_U((P,P'),(Q,Q'),a)$ for $a \in \Sigma$ and $P,P',Q,Q' \in \Reach U$, then by the induction hypothesis there exists
+	$t_{P,P'}$ and $t_{Q,Q'}$ that verify the hypothesis. We can construct $t_{T,T'} = a(t_{P,P'},t_{Q,Q'})$. Lets prove that it satisfies the
+	three properties.
+
+    Lets begin by proving \ref{lem:prop3}.
+    By definition of $\interpret U {\cdot}$,
+    $\interpret U {t_{T,T'}} = \delta_U (\interpret U {t_{P,P'}}, \interpret U {t_{Q,Q'}}, a)$.
+    If we use the induction hypothesis we deduce that 
+    $\delta_U (\interpret U {t_{P,P'}}, \interpret U {t_{Q,Q'}}, a) = \delta_U ((P,P'), (Q,Q'), a)$
+    And by definition of $(T,T')$, $\delta_U ((P,P'), (Q,Q'), a) = (T,T')$.
+    \ref{lem:prop3} is then verified.
+
+	By definition, $T = \delta_A(P,Q,(a,*))$. Since by the induction hypothesis $P \subseteq \{ \delta_A (t_{P,P'},X) : X \subseteq \Nodes {t_{P,P'}}\}$
+	and $Q \subseteq \{ \delta_A (t_{Q,Q'},X) : X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
+	$T = \delta_A(P,Q,(a,*)) \subseteq \{ \delta_A (t_{T,T'},X) : X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \ref{lem:prop1}.
+
+
+	We will prove \ref{lem:prop2} by case distinction. 
+    Let $X \subseteq \Nodes {t_{P,P'}}$ such that $\forall \sigma \in \Aut (t_{T,T'}), \sigma(X) = X$, we introduce the
+    sets $X_1 = X \cap \Nodes {t_{P,P'}}$ and $X_2 = X \cap \Nodes {t_{Q,Q'}}$. 
+    \begin{itemize}
+        \item Lets suppose $P = Q$ and $P' = Q'$, in this case $t_{P,P'} \cong t_{Q,Q'}$. \todo{explain that it's because interpret is a function}
+            Let $\sigma$ be the automorphism over $\Nodes{T,T'}$ that swaps  $t_{P,P'}$ and $t_{Q,Q'}$.
+            We have that $\sigma (X) = X$. Since $\delta(X) = X$, $\delta$ must map $X_1$ to $X_2$, and the same is true for 
+            $X_2$. So we have that $X_1 = X_2$ which means that $\delta(X_1) = X_1$. By construction we have that $p := \delta_A(t_{P,P'}, X_1) =  \delta_A(t_{Q,Q'}, X_2)$.
+            Using the induction hypothesis, we find that $p \in P'$ \todo{detail this}. So 
+            $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$. \todo{define $X(\treeroot)$.}
+
+        \item Lets suppose $P' \neq Q'$, then $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,*))$. We have to prove that
+            $\{ \delta_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$. 
+            Let $\sigma \in \Aut(t_{T,T'})$. Since $t_{P,P'} \ncong t_{Q,Q'}$, $\sigma$ cannot swap $t_{P,P'}$ and
+            $t_{P,P'}$ \todo{explain why}. Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and 
+            $\sigma(X_2) = X_2$ \todo{more details ?}. Let $p := \delta_A (t_{P,P'}, X_1)$ and $q := \delta_A (t_{Q,Q'}, X_2)$.
+            Using the induction hypothesis we deduce that $p \in P'$ and $q \in Q'$ \todo{Like in the previous case detail this?}.
+            So $\delta_A (t_{T,T'}, X) = \delta_A(p,q,(a, X(\treeroot))) \in T'$.
+    \end{itemize}
+    We have proved the three properties.
+
+	Lets prove that  $\phi(X)$ is not "uniformisable" by exhibiting that no $X$ verifying $t_{R,R'} \models \phi(X)$ is "definable".
+    Let $X \in F \cap \{ \delta_A (t_{R,R'},X) : X \subset \Nodes {t_{R,R'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}. \todo{more details}
+	We also know that $R' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \cap F = \emptyset$
+	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \cap F = \emptyset$ which means that no
+	$X$ satisfying $t_{P,P'} \models \phi(X)$ is "definable". We deduce that $\phi(X)$ is not "uniformisable".
 \end{proof}
 
 
