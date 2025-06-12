@@ -672,9 +672,9 @@ the "transition function".
 				      ((X,X'),(Y,Y'),a)                                                 & \mapsto (\delta(X,Y,(a,*)), \deltauu (X',Y',a)) \\
 			      \end{aligned}$
 		\item $ \begin{aligned}[t]
-				      \intro*\deltauu : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                           \\
+				      \intro*\deltauu : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                                                                               \\
 				      (X', Y', a)                                              & \mapsto \begin{cases}
-					                                                                         \{\delta(p,p,(a,b))\}     \mid p \in X', a \in \Sigma, b \in \set{0,1}\} & \text{ if } X' = Y' \\
+					                                                                         \{\delta(p,p,(a,b))\}     \mid p \in X', a \in \Sigma, b \in \set{0,1}\} & \text{ if }  X = Y \text{ and } X' = Y' \\
 					                                                                         \delta(X',Y',(a,*))                                                      & \text{ otherwise}
 				                                                                         \end{cases}
 			      \end{aligned}$
@@ -830,7 +830,7 @@ the "transition function".
 		      Using the induction hypothesis, we find that $p \in P'$ \todo{detail this}. So
 		      $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$. \todo{define $X(\treeroot)$.}
 
-		\item Lets suppose $P' \neq Q'$, then $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,*))$. We have to prove that
+		\item Lets suppose $P' \neq Q'$ or $P \neq Q$, then $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,*))$. We have to prove that
 		      $\{ \delta_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$.
 		      Let $\sigma \in \Aut(t_{T,T'})$. Since $t_{P,P'} \ncong t_{Q,Q'}$, $\sigma$ cannot swap $t_{P,P'}$ and
 		      $t_{P,P'}$ \todo{explain why}. Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and
