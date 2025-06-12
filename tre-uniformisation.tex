@@ -35,7 +35,7 @@
 \maketitle
 
 \begin{abstract}
-    Something here \todo{Write abstract}.
+	Something here \todo{Write abstract}.
 \end{abstract}
 
 \section{Introduction}
@@ -405,7 +405,7 @@ We will discuss some examples of MSO formulas.
 
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
-    \[ t \models \phi \tiff t \in \lang A \]\todo{verify that all remains order-insensitive}
+	\[ t \models \phi \tiff t \in \lang A \]\todo{verify that all remains order-insensitive}
 \end{lemma}
 
 \begin{proof}
@@ -806,42 +806,42 @@ the "transition function".
 	$t_{P,P'}$ and $t_{Q,Q'}$ that verify the hypothesis. We can construct $t_{T,T'} = a(t_{P,P'},t_{Q,Q'})$. Lets prove that it satisfies the
 	three properties.
 
-    Lets begin by proving \ref{lem:prop3}.
-    By definition of $\interpret U {\cdot}$,
-    $\interpret U {t_{T,T'}} = \delta_U (\interpret U {t_{P,P'}}, \interpret U {t_{Q,Q'}}, a)$.
-    If we use the induction hypothesis we deduce that 
-    $\delta_U (\interpret U {t_{P,P'}}, \interpret U {t_{Q,Q'}}, a) = \delta_U ((P,P'), (Q,Q'), a)$
-    And by definition of $(T,T')$, $\delta_U ((P,P'), (Q,Q'), a) = (T,T')$.
-    \ref{lem:prop3} is then verified.
+	Lets begin by proving \ref{lem:prop3}.
+	By definition of $\interpret U {\cdot}$,
+	$\interpret U {t_{T,T'}} = \delta_U (\interpret U {t_{P,P'}}, \interpret U {t_{Q,Q'}}, a)$.
+	If we use the induction hypothesis we deduce that
+	$\delta_U (\interpret U {t_{P,P'}}, \interpret U {t_{Q,Q'}}, a) = \delta_U ((P,P'), (Q,Q'), a)$
+	And by definition of $(T,T')$, $\delta_U ((P,P'), (Q,Q'), a) = (T,T')$.
+	\ref{lem:prop3} is then verified.
 
 	By definition, $T = \delta_A(P,Q,(a,*))$. Since by the induction hypothesis $P \subseteq \{ \delta_A (t_{P,P'},X) : X \subseteq \Nodes {t_{P,P'}}\}$
 	and $Q \subseteq \{ \delta_A (t_{Q,Q'},X) : X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
 	$T = \delta_A(P,Q,(a,*)) \subseteq \{ \delta_A (t_{T,T'},X) : X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \ref{lem:prop1}.
 
 
-	We will prove \ref{lem:prop2} by case distinction. 
-    Let $X \subseteq \Nodes {t_{P,P'}}$ such that $\forall \sigma \in \Aut (t_{T,T'}), \sigma(X) = X$, we introduce the
-    sets $X_1 = X \cap \Nodes {t_{P,P'}}$ and $X_2 = X \cap \Nodes {t_{Q,Q'}}$. 
-    \begin{itemize}
-        \item Lets suppose $P = Q$ and $P' = Q'$, in this case $t_{P,P'} \cong t_{Q,Q'}$. \todo{explain that it's because interpret is a function}
-            Let $\sigma$ be the automorphism over $\Nodes{T,T'}$ that swaps  $t_{P,P'}$ and $t_{Q,Q'}$.
-            We have that $\sigma (X) = X$. Since $\delta(X) = X$, $\delta$ must map $X_1$ to $X_2$, and the same is true for 
-            $X_2$. So we have that $X_1 = X_2$ which means that $\delta(X_1) = X_1$. By construction we have that $p := \delta_A(t_{P,P'}, X_1) =  \delta_A(t_{Q,Q'}, X_2)$.
-            Using the induction hypothesis, we find that $p \in P'$ \todo{detail this}. So 
-            $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$. \todo{define $X(\treeroot)$.}
+	We will prove \ref{lem:prop2} by case distinction.
+	Let $X \subseteq \Nodes {t_{P,P'}}$ such that $\forall \sigma \in \Aut (t_{T,T'}), \sigma(X) = X$, we introduce the
+	sets $X_1 = X \cap \Nodes {t_{P,P'}}$ and $X_2 = X \cap \Nodes {t_{Q,Q'}}$.
+	\begin{itemize}
+		\item Lets suppose $P = Q$ and $P' = Q'$, in this case $t_{P,P'} \cong t_{Q,Q'}$. \todo{explain that it's because interpret is a function}
+		      Let $\sigma$ be the automorphism over $\Nodes{T,T'}$ that swaps  $t_{P,P'}$ and $t_{Q,Q'}$.
+		      We have that $\sigma (X) = X$. Since $\delta(X) = X$, $\delta$ must map $X_1$ to $X_2$, and the same is true for
+		      $X_2$. So we have that $X_1 = X_2$ which means that $\delta(X_1) = X_1$. By construction we have that $p := \delta_A(t_{P,P'}, X_1) =  \delta_A(t_{Q,Q'}, X_2)$.
+		      Using the induction hypothesis, we find that $p \in P'$ \todo{detail this}. So
+		      $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$. \todo{define $X(\treeroot)$.}
 
-        \item Lets suppose $P' \neq Q'$, then $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,*))$. We have to prove that
-            $\{ \delta_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$. 
-            Let $\sigma \in \Aut(t_{T,T'})$. Since $t_{P,P'} \ncong t_{Q,Q'}$, $\sigma$ cannot swap $t_{P,P'}$ and
-            $t_{P,P'}$ \todo{explain why}. Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and 
-            $\sigma(X_2) = X_2$ \todo{more details ?}. Let $p := \delta_A (t_{P,P'}, X_1)$ and $q := \delta_A (t_{Q,Q'}, X_2)$.
-            Using the induction hypothesis we deduce that $p \in P'$ and $q \in Q'$ \todo{Like in the previous case detail this?}.
-            So $\delta_A (t_{T,T'}, X) = \delta_A(p,q,(a, X(\treeroot))) \in T'$.
-    \end{itemize}
-    We have proved the three properties.
+		\item Lets suppose $P' \neq Q'$, then $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,*))$. We have to prove that
+		      $\{ \delta_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$.
+		      Let $\sigma \in \Aut(t_{T,T'})$. Since $t_{P,P'} \ncong t_{Q,Q'}$, $\sigma$ cannot swap $t_{P,P'}$ and
+		      $t_{P,P'}$ \todo{explain why}. Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and
+		      $\sigma(X_2) = X_2$ \todo{more details ?}. Let $p := \delta_A (t_{P,P'}, X_1)$ and $q := \delta_A (t_{Q,Q'}, X_2)$.
+		      Using the induction hypothesis we deduce that $p \in P'$ and $q \in Q'$ \todo{Like in the previous case detail this?}.
+		      So $\delta_A (t_{T,T'}, X) = \delta_A(p,q,(a, X(\treeroot))) \in T'$.
+	\end{itemize}
+	We have proved the three properties.
 
 	Lets prove that  $\phi(X)$ is not "uniformisable" by exhibiting that no $X$ verifying $t_{R,R'} \models \phi(X)$ is "definable".
-    Let $X \in F \cap \{ \delta_A (t_{R,R'},X) : X \subset \Nodes {t_{R,R'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}. \todo{more details}
+	Let $X \in F \cap \{ \delta_A (t_{R,R'},X) : X \subset \Nodes {t_{R,R'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}. \todo{more details}
 	We also know that $R' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \cap F = \emptyset$
 	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \cap F = \emptyset$ which means that no
 	$X$ satisfying $t_{P,P'} \models \phi(X)$ is "definable". We deduce that $\phi(X)$ is not "uniformisable".
