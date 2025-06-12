@@ -1,77 +1,190 @@
-\documentclass{article}
+\documentclass[twoside]{article}
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
-\usepackage{amsmath}
-\usepackage{amssymb} 
-\usepackage{amsthm}  
+\usepackage{amsmath, amssymb, amsthm, mathtools}
 \usepackage{dsfont}
 \usepackage{mathrsfs}
-\usepackage{mathtools}
 \usepackage{thmtools}
 \usepackage{stmaryrd}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,automata,positioning,calc}
 \usepackage{tikz-cd}
-\usepackage{geometry}
+\usepackage{graphicx}
 
-\usepackage{hyperref}     
-\usepackage{cleveref}
-
-\usepackage[shortlabels]{enumitem}
-
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
 \usepackage{fancyhdr}
+\usepackage{titling}
+\usepackage{authblk}
+\usepackage{datetime}
+\usepackage[shortlabels]{enumitem}
+\usepackage{caption}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
 
 \usepackage[hyperref]{knowledge}
 \knowledgeconfigure{label scope=false, notion, quotation, protect quotation={tikzcd, automata}}
 
 \input{macros}
-
 \input{tre-uniformisation.kl}
+
+\newcommand{\papertitle}{Decidable MSO Uniformisation on Order-Insensitive Binary Trees}
+\newcommand{\paperauthorone}{Thomas Colcombet}
+\newcommand{\paperaffiliationone}{CNRS, IRIF, Université Paris Cité, France}
+\newcommand{\paperauthortwo}{Yago Iglesias Vázquez}
+\newcommand{\paperaffiliationtwo}{Université Paris Cité, France}
+\newcommand{\paperdate}{\today}
+
+\hypersetup{
+    pdftitle={\papertitle},
+    pdfauthor={\paperauthorone, \paperauthortwo},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\fancyhf{}
+\fancyhead[LO]{\textit{\papertitle}}
+\fancyhead[RE]{\textit{\paperauthorone, \paperauthortwo}}
+\fancyhead[RO]{\thepage}
+\fancyhead[LE]{\thepage}
+
+\pagestyle{fancy}
+
+\newdateformat{monthyeardate}{\monthname[\THEMONTH], \THEYEAR}
+
+\onehalfspacing
 
 \begin{document}
 
-\title{MSO uniformisation over trees}
+\begin{titlingpage}
+	\begin{center}
+		{\LARGE \bfseries Decidable MSO Uniformisation on \\ Order-Insensitive Binary Trees \par}
 
-\maketitle
+		\vspace{2em}
 
-\begin{abstract}
-	Something here \todo{Write abstract}.
-\end{abstract}
+		{\bfseries \paperauthorone \par}
+		{\itshape \paperaffiliationone \par}
+		\vspace{1em}
+
+		{\bfseries \paperauthortwo \par}
+		{\itshape \paperaffiliationtwo \par}
+
+		\vspace{3em}
+
+		\begin{minipage}{0.8\textwidth}
+			\noindent
+			\textbf{Abstract:}
+			\small
+			We study uniformisation for MSO formulas over finite binary trees. A formula $\psi(X)$ uniformises $\phi(X)$
+			if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that, when
+			restricting to the case of symmetry-preserving trees (order-insensitive trees), it is decidable whether a
+			given $\phi$ admits such a uniformiser, and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
+			an order-insensitive nondeterministic bottom-up tree automaton, checks whether that automaton accepts every tree, and—when
+			it does—extracts from its transition relation an MSO formula that uniformly selects a witness. This reduces MSO uniformisation
+			on unordered trees to a simple automata universality test and a formula extraction step.
+		\end{minipage}
+
+		\vfill
+
+		\includegraphics[height=2.5cm]{images/logo-paris-cite.png}
+
+		\vspace{1em}
+
+		{\large \monthyeardate\today \par}
+	\end{center}
+\end{titlingpage}
 
 \section{Introduction}
 
-\section{Trees}
+Monadic second‐order (MSO) logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
+In particular, its deep connection with automata theory has been extensively explored. It is well known that MSO over finite words is equivalent in expressive power to
+finite-state automata~\cite{buchi60}.
 
-\begin{definition}[Tree]
-	A ""tree"" over an alphabet $\Sigma$ is recursively defined as follows:
+This correspondence extends beyond words: automata can also be defined to run on trees. Over finite trees, MSO logic remains equivalent in expressive power to finite-state
+tree automata~\cite{TW68, Don70}. This connection enables the use of automata-theoretic techniques to reason about trees, one of the most fundamental and widely studied data
+structures.
+
+A central challenge in this context is the \emph{uniformisation problem}: given an MSO formula $\phi(X)$ that asserts the existence of a set $X$ satisfying a certain property,
+is it possible to define another MSO formula $\psi(Y)$ that selects \emph{at most one} such set for each tree, in a way that agrees with $\phi$ whenever it is satisfiable? We
+formalize this notion in \Cref{sec:uniformisation}.
+
+This problem has been studied in various settings. A comprehensive survey is provided in~\cite{Cara15}. Positive results are known for infinite words, where every MSO-definable
+relation admits an MSO-definable uniformising function~\cite{Siefkes1975, Choffrut1999, Rabin07}. In contrast, uniformisation is not possible in general for infinite binary
+trees~\cite{GS83}.
+In this work, we study MSO uniformisation over a different class of structures: \emph{finite, unordered, labeled binary trees}. These trees preserve structural symmetry, and
+introduce unique challenges for definable choice, particularly due to the inability to distinguish between left and right subtrees.
+
+The central question addressed in this paper is:
+
+\begin{problem}\label{prob:central-problem}
+Given an MSO formula $\phi(X)$, does there exist a uniformiser $\psi(X)$?
+\end{problem}
+
+Our main result is that this question is \emph{decidable}, and in the positive case, a uniformiser $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
+nondeterministic bottom‐up tree automaton whose transition relation is \emph{order‐insensitive} (i.e., closed under sibling swaps). We then perform a universality check on this
+automaton—does it accept every tree?—and, when it does, we extract from its transitions an MSO formula that uniformly selects a witness.
+
+This paper makes three main contributions:
+\begin{itemize}
+	\item Extending the decidability of MSO uniformisation to unordered binary trees,
+	\item Providing a constructive method to extract a uniformiser via automata universality, and
+	\item Demonstrating how to handle sibling‐permutation symmetry in tree transformations.
+\end{itemize}
+
+These contributions shed new light on how the symmetries inherent in tree structures affect definability in MSO.
+
+The remainder of the paper is structured as follows:
+\Cref{sec:trees} introduces our notation for trees and MSO logic.
+\Cref{sec:automata} reviews bottom‐up tree automata, presents the order‐insensitive variant, and defines the universality test.
+\Cref{sec:MSO} shows how to translate between MSO formulas and automata while preserving order insensitivity.
+\Cref{sec:uniformisation} brings these elements together to decide MSO uniformisation and construct a uniformiser where possible.
+We conclude with related work and future research directions.
+
+
+\section{Trees}\label{sec:trees}
+
+This first section contains the definition of the "trees" we are working with. Other equivalent definitions of "trees" and
+automata are possible~\cite{Thomas1997, tata}, but we have chosen this one because it is more intuitive, without adding much complexity to the proofs.
+
+\begin{definition}["Tree"]
+	A "tree" over an alphabet $\Sigma$ is recursively defined as follows:
 	\begin{itemize}
-		\item $a$, where $a \in \Sigma$.
+		\item $a$, where $a \in \Sigma$;
 		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are "trees".
 	\end{itemize}
-	We call the ""root"" of a "tree" the first node of the definition.
-	The set of all "trees" over $\Sigma$ is $\intro* \tree_{\Sigma}$.
+	We call the "root" of a "tree" the first node in its definition.
+	The set of all "trees" over $\Sigma$ is denoted $\intro* \tree_{\Sigma}$.
 \end{definition}
 
-\begin{definition}[Nodes]
-	The ""nodes"" of a "tree" are defined as follows:
+This recursive structure induces a natural notion of position within a "tree". We now define the set of "nodes", represented as words over $\{0,1\}$ indicating a path from the root.
+
+\begin{definition}["Nodes"]
+	The "nodes" of a "tree" are defined as follows:
 	\[
 		\intro* \Nodes t =
 		\begin{cases}
-			\varepsilon                             & \text{ if } t = a         \\
+			\varepsilon                             & \text{if } t = a         \\
 			\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
-			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{ if } t = a(t',t'')
+			\cup \setdef {1u} {u \in \Nodes {t''} } & \text{if } t = a(t',t'')
 		\end{cases}
 	\]
 \end{definition}
 
+Among the "nodes", some are distinguished as "leaves" — those without any children. We define them below.
 
-\begin{definition}[Leaves]
-	The ""leaves"" of a "tree" are defined as follows:
+\begin{definition}["Leaves"]
+	The "leaves" of a "tree" are defined as follows:
 	\[
 		\intro* \Leaves t = \begin{cases}
-			\varepsilon                              & \text{ if } t = a         \\
+			\varepsilon                              & \text{if } t = a         \\
 			\setdef {0u} {u \in \Leaves {t'}}
-			\cup \setdef {1u} {u \in \Leaves {t''} } & \text{ if } t = a(t',t'')
+			\cup \setdef {1u} {u \in \Leaves {t''} } & \text{if } t = a(t',t'')
 		\end{cases}
 	\]
 \end{definition}
@@ -80,38 +193,49 @@
 	$\Leaves t \subseteq \Nodes t$.
 \end{remark}
 
+Each "node" in a "tree" carries a symbol from the alphabet. The following definition formalizes how to access the "label" at a given "node".
+
 \begin{definition}
-	We note $\intro* \tlabel t n$ the ""label"" of the node $n$ in the "tree" $t$ :
+	We note $\intro* \tlabel t n$ the "label" of the "node" $n$ in the "tree" $t$:
 	\[
 		\tlabel t n =   \begin{cases}
-			a               & \text{ if } t = a \text{ and } n = \varepsilon         \\
-			a               & \text{ if } t = a(t',t'') \text{ and } n = \varepsilon \\
-			\tlabel {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m          \\
-			\tlabel {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
+			a               & \text{if } t = a \text{ and } n = \varepsilon         \\
+			a               & \text{if } t = a(t',t'') \text{ and } n = \varepsilon \\
+			\tlabel {t'} m  & \text{if } t = a(t',t'') \text{ and } n = 0m          \\
+			\tlabel {t''} m & \text{if } t = a(t',t'') \text{ and } n = 1m
 		\end{cases}
 	\]
 \end{definition}
 
-\begin{definition}
-	Let $t$ be a "tree" and $x, y \in \Nodes t$, we define the ""ancestor"" relation as
-	\[  x \intro* \ancestor y \tiff \exists z \in \Nodes t, y = xz \]
-\end{definition}
-
+We often need to refer to the "subtree" rooted at a particular "node". The next definition allows us to extract such a "subtree" from a given "tree".
 
 \begin{definition}
-	We note $\intro* \subtree t n$ the ""subtree"" corresponding to the "node" $n$ on the "tree" $t$ :
+	We note $\intro* \subtree t n$ the "subtree" corresponding to the "node" $n$ in the "tree" $t$:
 	\[
 		\subtree t n =   \begin{cases}
-			t                & \text{ if }  n = \varepsilon                  \\
-			\subtree {t'} m  & \text{ if } t = a(t',t'') \text{ and } n = 0m \\
-			\subtree {t''} m & \text{ if } t = a(t',t'') \text{ and } n = 1m
+			t                & \text{if }  n = \varepsilon                  \\
+			\subtree {t'} m  & \text{if } t = a(t',t'') \text{ and } n = 0m \\
+			\subtree {t''} m & \text{if } t = a(t',t'') \text{ and } n = 1m
 		\end{cases}
 	\]
 \end{definition}
 
+The "ancestor" relation captures the natural hierarchical structure of a "tree": a "node" $x$ is an "ancestor" of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 
-\section{Tree Automata}
-\subsection{Non-Deterministic Bottom-Up Tree automata}
+\begin{definition}
+	Let $t$ be a "tree" and $x, y \in \Nodes t$. We define the "ancestor" relation as:
+	\[
+		x \intro* \ancestor y \tiff \exists z \in \Nodes t,\, y = xz
+	\]
+\end{definition}
+
+\begin{remark}
+	Note that this order does not depend on the left or right position of the children, \ie it preserves "order-insensitiveness".
+\end{remark}
+
+
+\section{Tree Automata}\label{sec:automata}
+\subsection{Non-Deterministic Bottom-Up Tree automata}\label{sec:NBUAautomata}
 
 \begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
 	A Non-Deterministic Bottom-Up Tree automaton (NBUA) is defined as a tuple
@@ -144,7 +268,7 @@
 	\[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
-\subsection{Deterministic Bottom-Up Tree automata}
+\subsection{Deterministic Bottom-Up Tree automata}\label{sec:DBUAautomata}
 
 \begin{definition}[""Deterministic Bottom-Up Tree automaton""]
 	A Deterministic Bottom-Up Tree automaton (DBUA) is "NBUA" that that verifies
@@ -272,7 +396,7 @@
 \end{proof}
 
 
-\subsection{Order-insensitive}
+\subsection{Order-insensitive}\label{sec:OrderAutomata}
 
 \begin{definition}
 	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
@@ -333,7 +457,7 @@
 	\end{itemize}
 \end{proofI}
 
-\subsection{Universality}
+\subsection{Universality}\label{sec:UniversalityAutomata}
 
 \begin{definition}
 	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every tree.
@@ -362,7 +486,7 @@
 \end{coro}
 
 
-\section{MSO}
+\section{MSO}\label{sec:MSO}
 
 \begin{definition}
 	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
@@ -401,7 +525,7 @@ We will discuss some examples of MSO formulas.
 \end{example}
 
 
-\subsection{Automaton $\ra$ MSO}
+\subsection{Automaton $\ra$ MSO}\label{sec:Aut-MSO}
 
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
@@ -435,7 +559,7 @@ We will discuss some examples of MSO formulas.
 \end{proof}
 
 
-\subsection{MSO $\ra$ automaton}
+\subsection{MSO $\ra$ automaton}\label{sec:MSO-Aut}
 
 \begin{lemma}
 	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "NBUA", then
@@ -556,9 +680,9 @@ We will discuss some examples of MSO formulas.
 	in the transition function, we look at all the variables within the given set.
 \end{proof}
 
-\section{Uniformisation}
+\section{Uniformisation}\label{sec:uniformisation}
 
-\begin{definition}[Uniformiser]
+\begin{definition}[Uniformiser]\label{def:uniformiser}
 	We say that a formula $\psi(X)$ is a ""uniformiser"" of $\phi(X)$ if for all "trees" $t$, the following conditions hold:
 	\begin{enumerate}
 		\item There exists at most one set $X$ such that $t \models \psi(X)$.
@@ -594,7 +718,7 @@ We will discuss some examples of MSO formulas.
 	\end{enumerate}
 \end{proof}
 
-\begin{definition}
+\begin{definition}\label{def:definable}
 	Let $t$ a "tree". We say that $X \subseteq \Nodes t$ is ""definable"" if there exists an MSO formula $\phi(x)$ such that $ X = \setdef{x} {t \models \phi(x)}$.
 \end{definition}
 
@@ -615,9 +739,6 @@ We will discuss some examples of MSO formulas.
 
 \end{proof}
 
-\begin{problem}
-Can we find a "uniformiser" for every MSO formula $\phi(X)$ ?
-\end{problem}
 
 
 In an intuitive way, the above problem is equivalent to asking if the following ''formula'' (it is not a real MSO formula
@@ -848,9 +969,7 @@ the "transition function".
 \end{proof}
 
 
-\iffalse
-	\bibliographystyle{alpha}
-	\bibliography{tre-uniformisation}
-\fi
+\bibliographystyle{alpha}
+\bibliography{tre-uniformisation}
 
 \end{document}
