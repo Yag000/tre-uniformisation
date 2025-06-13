@@ -10,7 +10,7 @@
 \usepackage{stmaryrd}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,automata,positioning,calc}
+\usetikzlibrary{arrows.meta,automata,positioning,calc,trees}
 \usepackage{tikz-cd}
 \usepackage{graphicx}
 
@@ -110,7 +110,7 @@ This correspondence extends beyond words: automata can also be defined to run on
 tree automata~\cite{TW68, Don70}. This connection enables the use of automata-theoretic techniques to reason about trees, one of the most fundamental and widely studied data
 structures.
 
-A central challenge in this context is the \emph{uniformisation problem}: given an MSO formula $\phi(X)$ that asserts the existence of a set $X$ satisfying a certain property,
+A classical challenge in this context is the \emph{uniformisation problem}: given an MSO formula $\phi(X)$ that asserts the existence of a set $X$ satisfying a certain property,
 is it possible to define another MSO formula $\psi(Y)$ that selects \emph{at most one} such set for each tree, in a way that agrees with $\phi$ whenever it is satisfiable? We
 formalize this notion in \Cref{sec:uniformisation}.
 
@@ -153,19 +153,40 @@ This first section contains the definition of the "trees" we are working with. O
 automata are possible~\cite{Thomas1997, tata}, but we have chosen this one because it is more intuitive, without adding much complexity to the proofs.
 
 \begin{definition}["Tree"]
-	A "tree" over an alphabet $\Sigma$ is recursively defined as follows:
+	\AP A ""tree"" over an alphabet $\Sigma$ is recursively defined as follows:
 	\begin{itemize}
 		\item $a$, where $a \in \Sigma$;
 		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are "trees".
 	\end{itemize}
-	We call the "root" of a "tree" the first node in its definition.
+	We call the ""root"" of a "tree" the first node in its definition.
 	The set of all "trees" over $\Sigma$ is denoted $\intro* \tree_{\Sigma}$.
 \end{definition}
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[
+			level distance=2.5cm,
+			sibling distance=3.5cm,
+			every node/.style = {draw, circle}
+		]
+
+		\node {a}
+		child { node {b} }
+		child { node {c}
+				child { node {d} }
+				child { node {e} }
+			};
+
+	\end{tikzpicture}
+
+	\caption{Concrete tree corresponding to $a(b, c(d, e))$.}
+\end{figure}
 
 This recursive structure induces a natural notion of position within a "tree". We now define the set of "nodes", represented as words over $\{0,1\}$ indicating a path from the root.
 
 \begin{definition}["Nodes"]
-	The "nodes" of a "tree" are defined as follows:
+	\AP The ""nodes"" of a "tree" are defined as follows:
 	\[
 		\intro* \Nodes t =
 		\begin{cases}
@@ -176,10 +197,20 @@ This recursive structure induces a natural notion of position within a "tree". W
 	\]
 \end{definition}
 
-Among the "nodes", some are distinguished as "leaves" — those without any children. We define them below.
+\begin{example}
+	Let $ t := a(b, c(d, e)) $. We compute:
+	\[
+		\Nodes b  = \{\varepsilon\}, \quad \Nodes {c(d, e)} = \{\varepsilon, 0, 1\}
+	\]
+	\[
+		\Nodes t = \{\varepsilon\} \cup \{0\} \cup \{1, 10, 11\} = \{\varepsilon, 0, 1, 10, 11\}
+	\]
+\end{example}
+
+Among the "nodes", some are distinguished as "leaves", "nodes" without children.
 
 \begin{definition}["Leaves"]
-	The "leaves" of a "tree" are defined as follows:
+	\AP The ""leaves"" of a "tree" are defined as follows:
 	\[
 		\intro* \Leaves t = \begin{cases}
 			\varepsilon                              & \text{if } t = a         \\
@@ -196,7 +227,7 @@ Among the "nodes", some are distinguished as "leaves" — those without any chil
 Each "node" in a "tree" carries a symbol from the alphabet. The following definition formalizes how to access the "label" at a given "node".
 
 \begin{definition}
-	We note $\intro* \tlabel t n$ the "label" of the "node" $n$ in the "tree" $t$:
+	\AP We note $\intro* \tlabel t n$ the ""label"" of the "node" $n$ in the "tree" $t$:
 	\[
 		\tlabel t n =   \begin{cases}
 			a               & \text{if } t = a \text{ and } n = \varepsilon         \\
@@ -210,7 +241,7 @@ Each "node" in a "tree" carries a symbol from the alphabet. The following defini
 We often need to refer to the "subtree" rooted at a particular "node". The next definition allows us to extract such a "subtree" from a given "tree".
 
 \begin{definition}
-	We note $\intro* \subtree t n$ the "subtree" corresponding to the "node" $n$ in the "tree" $t$:
+	\AP We note $\intro* \subtree t n$ the ""subtree"" corresponding to the "node" $n$ in the "tree" $t$:
 	\[
 		\subtree t n =   \begin{cases}
 			t                & \text{if }  n = \varepsilon                  \\
@@ -223,22 +254,22 @@ We often need to refer to the "subtree" rooted at a particular "node". The next 
 The "ancestor" relation captures the natural hierarchical structure of a "tree": a "node" $x$ is an "ancestor" of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 
 \begin{definition}
-	Let $t$ be a "tree" and $x, y \in \Nodes t$. We define the "ancestor" relation as:
+	\AP Let $t$ be a "tree" and $x, y \in \Nodes t$. We define the ""ancestor"" relation as:
 	\[
 		x \intro* \ancestor y \tiff \exists z \in \Nodes t,\, y = xz
 	\]
 \end{definition}
 
 \begin{remark}
-	Note that this order does not depend on the left or right position of the children, \ie it preserves "order-insensitiveness".
+	Note that this order does not depend on the left or right position of the children, \ie it preserves "order-insensitiveness", this will be explored in the following sections.
 \end{remark}
 
 
 \section{Tree Automata}\label{sec:automata}
 \subsection{Non-Deterministic Bottom-Up Tree automata}\label{sec:NBUAautomata}
 
-\begin{definition}[""Non-Deterministic Bottom-Up Tree automaton""]
-	A Non-Deterministic Bottom-Up Tree automaton (NBUA) is defined as a tuple
+\begin{definition}["Non-Deterministic Bottom-Up Tree automaton"]
+	\AP A ""Non-Deterministic Bottom-Up Tree automaton"" (NBUA) is defined as a tuple
 	$(\Sigma, Q, I, \Delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
@@ -250,7 +281,7 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 \end{definition}
 
 \begin{definition}[Run of an automaton]
-	A ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
+	\AP A ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
 		\exec : \Nodes t &\to& Q \\
@@ -739,14 +770,12 @@ We will discuss some examples of MSO formulas.
 
 \end{proof}
 
-
-
 In an intuitive way, the above problem is equivalent to asking if the following ''formula'' (it is not a real MSO formula
-because we are quantifying over a formula) holds for every $\phi$ :
-\[ (\exists X.\, \phi(X)) \ra (\exists X, \phi(X) \text{ and $X$ is "uniformisable"})\]
+because we are quantifying over a formula) holds for every "tree":
+\[ (\exists X.\, \phi(X)) \ra (\exists X, \phi(X) \text{ and $X$ is "definable"})\]
 which can be read as : if there exists a set of solutions for $\phi$ then we can find one that is "definable".
 
-We will start by studying how we can decide for two formulas $\phi(X)$ and $\psi(X)$ if the formula $\Psi = \exists X. \phi (X) \ra \exists Y. \phi' (Y)$
+We will start by studying how we can decide for two formulas $\phi(X)$ and $\psi(X)$ if the formula $\Psi := \exists X. \phi (X) \ra \exists Y. \phi' (Y)$
 is satisfiable for all "trees". We will build a "DBUA" than can decide if a "tree" satisfies $\Psi$.
 Thanks to the construction from \Cref{lem:MSO-aut}, we can build a "DBUA" $A = (\Sigma \times \set{0,1}, Q, \init, \delta, F)$ for $\phi(X)$
 and another one $A' = (\Sigma' \times \set{0,1}, Q', \init', \delta', F')$ for $\psi(Y)$.
@@ -776,13 +805,12 @@ This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Ps
 from \Cref{coro:univeral-Reach} we can decide if $\Psi$ is satisfied by all models.
 
 We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
-the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is ''definable''. We will use the same construction as for $\Psi$ but modifying
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\Psi$ but modifying
 the "transition function".
 
 \begin{definition}
 	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,init_U, \deltau, F')$
-	the ""unifier automaton"" of $\phi$, where
-	\todo{$\phi$ should be a NBUA and not a DBUA}
+	the ""uniformiser automaton"" of $\phi$, where
 	\begin{itemize}
 		\item$\begin{aligned}[t]
 				      init_U : \Sigma & \to      \parts Q \times \parts {Q} \\
@@ -804,12 +832,12 @@ the "transition function".
 \end{definition}
 
 \begin{lemma}
-	Let $\phi(X)$ be and MSO formula, if the "unifier automaton" $U$ of $\phi$ is "universal" then $\phi$ is "uniformisable".
+	Let $\phi(X)$ be an MSO formula, if the "uniformiser automaton" $U$ of $\phi$ is "universal" then $\phi$ is "uniformisable".
 \end{lemma}
 
 \begin{proof}
 	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
-	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is universal.
+	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is universal.
 	We need to exhibit a "uniformiser" for $\phi(X)$.
 
 	We first introduce a choice function $\intro*\choiceN : \parts Q \times \parts Q \times Q \times \Sigma \to Q \times Q \times \set{0,1}$
@@ -895,14 +923,14 @@ the "transition function".
 
 
 \begin{lemma}
-	Let $\phi(X)$ be and MSO formula, if $\phi(X)$ is "uniformisable" then the "unifier automaton" $U$ of $\phi(X)$ is "universal".
+	Let $\phi(X)$ be and MSO formula, if $\phi(X)$ is "uniformisable" then the "uniformiser automaton" $U$ of $\phi(X)$ is "universal".
 \end{lemma}
 
 \begin{proof}
 	We will prove it by contraposition.
 
 	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
-	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "unifier automaton" of $\phi$ is not universal.
+	$U = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is not universal.
 	We will show that $\phi(X)$ is not "uniformisable".
 
 	Since $U$ is not "universal", there exists $(R,R') \in \Reach U$, such that $R \cap F \neq \emptyset$ and $R' \cap F = \emptyset$.
@@ -916,12 +944,10 @@ the "transition function".
 	Using \Cref{lem:def-aut}, if we prove that $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'$ we also
 	satisfy \ref{lem:prop2}.
 
-
 	We prove by induction that $(T,T') \in \Reach U$ implies all of the three conditions.
 
 	If $(T,T') = (\init(a,*). \init (a, *))$ for $a \in \Sigma$, then \ref{lem:prop1} and \ref{lem:prop3} are trivially satisfied and we have that
 	$\Aut (a) = \{\text{id}\}$, so \ref{lem:prop2} is also satisfied.
-
 
 	If $(T,T') = \delta_U((P,P'),(Q,Q'),a)$ for $a \in \Sigma$ and $P,P',Q,Q' \in \Reach U$, then by the induction hypothesis there exists
 	$t_{P,P'}$ and $t_{Q,Q'}$ that verify the hypothesis. We can construct $t_{T,T'} = a(t_{P,P'},t_{Q,Q'})$. Lets prove that it satisfies the
@@ -968,6 +994,19 @@ the "transition function".
 	$X$ satisfying $t_{P,P'} \models \phi(X)$ is "definable". We deduce that $\phi(X)$ is not "uniformisable".
 \end{proof}
 
+
+\begin{theorem}
+	Let $\phi(X)$ be an MSO formula, $\phi(X)$ is "uniformisable" if and only if the "uniformiser automaton" $U$ of $\phi(X)$ is "universal".
+\end{theorem}
+
+\begin{coro}
+	\Cref{prob:central-problem} is decidable and we can construct its "uniformiser". \todo{reword this}
+\end{coro}
+
+\begin{proof}
+	We can check if the "uniformiser automaton" of $\phi(X)$ is universal using \Cref{coro:univeral-Reach}. If the test successes,
+	then we know that $\phi$ is "uniformisable" and its uniformiser is $\unif(X)$.
+\end{proof}
 
 \bibliographystyle{alpha}
 \bibliography{tre-uniformisation}

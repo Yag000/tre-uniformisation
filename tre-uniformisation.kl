@@ -74,10 +74,12 @@
 
 \knowledge{notion}
     | uniformiser
+
+\knowledge{notion}
     | uniformisable
 
 \knowledge{notion}
-    | unifier automaton
+    | uniformiser automaton
 
 
 \knowledge{notion}
