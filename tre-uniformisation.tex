@@ -81,11 +81,12 @@
 			\noindent
 			\textbf{Abstract:}
 			\small
+			\todo{knowledge all of this}
 			We study uniformisation for MSO formulas over finite binary trees. A formula $\psi(X)$ uniformises $\phi(X)$
 			if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that, when
 			restricting to the case of symmetry-preserving trees (order-insensitive trees), it is decidable whether a
 			given $\phi$ admits such a uniformiser, and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
-			an order-insensitive nondeterministic bottom-up tree automaton, checks whether that automaton accepts every tree, and—when
+			an order-insensitive deterministic bottom-up tree automaton, checks whether that automaton accepts every tree, and—when
 			it does—extracts from its transition relation an MSO formula that uniformly selects a witness. This reduces MSO uniformisation
 			on unordered trees to a simple automata universality test and a formula extraction step.
 		\end{minipage}
@@ -102,14 +103,12 @@
 
 \section{Introduction}
 
-\todo{knowledge all of this}
-
 Monadic second‐order (MSO) logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
 In particular, its deep connection with automata theory has been extensively explored. It is well known that MSO over finite words is equivalent in expressive power to
 finite-state automata~\cite{buchi60}.
 
-This correspondence extends beyond words: automata can also be defined to run on trees. Over finite trees, MSO logic remains equivalent in expressive power to finite-state
-tree automata~\cite{TW68, Don70}. This connection enables the use of automata-theoretic techniques to reason about trees, one of the most fundamental and widely studied data
+This correspondence extends beyond words: automata can also be defined to run on "trees". Over finite "trees", MSO logic remains equivalent in expressive power to finite-state
+tree automata~\cite{TW68, Don70}. This connection enables the use of automata-theoretic techniques to reason about "trees", one of the most fundamental and widely studied data
 structures.
 
 A classical challenge in this context is the \emph{uniformisation problem}: given an MSO formula $\phi(X)$ that asserts the existence of a set $X$ satisfying a certain property,
@@ -124,28 +123,26 @@ introduce unique challenges for definable choice, particularly due to the inabil
 
 The central question addressed in this paper is:
 
-\begin{problem}\label{prob:central-problem}
-Given an MSO formula $\phi(X)$, does there exist a uniformiser $\psi(X)$?
+\begin{problem}[The ""uniformisation"" problem]\label{prob:uniformisation-problem}
+\AP Given an MSO formula $\phi(X)$, does there exist a "uniformiser" $\psi(X)$?
 \end{problem}
 
-Our main result is that this question is \emph{decidable}, and in the positive case, a uniformiser $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
-nondeterministic bottom‐up tree automaton whose transition relation is \emph{order‐insensitive} (\ie closed under sibling swaps). We then perform a universality check on this
+Our main result is that this question is \emph{decidable}, and in the positive case, a "uniformiser" $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
+"deterministic bottom-up tree automaton" whose "transition map" is "order-insensitive" (\ie closed under sibling swaps). We then perform a "universality" check on this
 automaton—does it accept every tree?—and, when it does, we extract from its transitions an MSO formula that uniformly selects a witness.
 
 This paper makes three main contributions:
 \begin{itemize}
-	\item Extending the decidability of MSO uniformisation to unordered binary trees,
-	\item Providing a constructive method to extract a uniformiser via automata universality, and
-	\item Demonstrating how to handle sibling‐permutation symmetry in tree transformations.
+	\item Extending the decidability of MSO "uniformisation" to unordered binary "trees",
+	\item Providing a constructive method to extract a "uniformiser" via "automata universality", and
+	\item Demonstrating how to handle sibling‐permutation symmetry in "tree" transformations.
 \end{itemize}
-
-These contributions shed new light on how the symmetries inherent in tree structures affect definability in MSO.
 
 The remainder of the paper is structured as follows:
 \Cref{sec:trees} introduces our notation for trees and MSO logic.
 \Cref{sec:automata} reviews bottom‐up tree automata, presents the order‐insensitive variant, and defines the universality test.
 \Cref{sec:MSO} shows how to translate between MSO formulas and automata while preserving order insensitivity.
-\Cref{sec:uniformisation} brings these elements together to decide MSO uniformisation and construct a uniformiser where possible.
+\Cref{sec:uniformisation} brings these elements together to decide MSO "uniformisation" and construct a "uniformiser" where possible.
 We conclude with related work and future research directions.
 
 
@@ -334,10 +331,11 @@ We now state the formal definitions.
 	\end{itemize}
 
 	Intuitively, this automaton counts the number of "leaves" in the "tree", but caps the count at $2$ to detect when the number exceeds $1$.
+	\Cref{fig:count-leaves} illustrates the execution of this automaton over a particular input.
 \end{example}
 
 
-\begin{figure}[h]
+\begin{figure}[h]\label{fig:count-leaves}
 	\centering
 	\begin{tikzpicture}[
 			level distance=1.2cm,
@@ -1102,7 +1100,7 @@ the "transition function".
 \end{theorem}
 
 \begin{coro}
-	\Cref{prob:central-problem} is decidable and we can construct its "uniformiser". \todo{reword this}
+	\Cref{prob:uniformisation-problem} is decidable and we can construct its "uniformiser". \todo{reword this}
 \end{coro}
 
 \begin{proof}

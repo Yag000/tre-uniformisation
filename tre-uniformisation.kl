@@ -13,6 +13,7 @@
     | Deterministic Bottom-Up tree Automaton
     | deterministic bottom-up tree automaton
     | DBUA
+
 \knowledge{Non-Deterministic Bottom-Up Tree automaton}[NBUA]{notion}
 
 \knowledge{interpretation}{notion}
@@ -77,12 +78,16 @@
 \knowledge{notion}
     | universal
     | universality
+    | automata universality
 
 \knowledge{notion}
     | uniformiser
 
 \knowledge{notion}
     | uniformisable
+
+\knowledge{notion}
+    | uniformisation
 
 \knowledge{notion}
     | internal node
