@@ -102,6 +102,8 @@
 
 \section{Introduction}
 
+\todo{knowledge all of this}
+
 Monadic second‐order (MSO) logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
 In particular, its deep connection with automata theory has been extensively explored. It is well known that MSO over finite words is equivalent in expressive power to
 finite-state automata~\cite{buchi60}.
@@ -127,7 +129,7 @@ Given an MSO formula $\phi(X)$, does there exist a uniformiser $\psi(X)$?
 \end{problem}
 
 Our main result is that this question is \emph{decidable}, and in the positive case, a uniformiser $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
-nondeterministic bottom‐up tree automaton whose transition relation is \emph{order‐insensitive} (i.e., closed under sibling swaps). We then perform a universality check on this
+nondeterministic bottom‐up tree automaton whose transition relation is \emph{order‐insensitive} (\ie closed under sibling swaps). We then perform a universality check on this
 automaton—does it accept every tree?—and, when it does, we extract from its transitions an MSO formula that uniformly selects a witness.
 
 This paper makes three main contributions:
@@ -166,8 +168,8 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 	\centering
 
 	\begin{tikzpicture}[
-			level distance=2.5cm,
-			sibling distance=3.5cm,
+			level distance=1cm,
+			sibling distance=1.5cm,
 			every node/.style = {draw, circle}
 		]
 
@@ -224,6 +226,11 @@ Among the "nodes", some are distinguished as "leaves", "nodes" without children.
 	$\Leaves t \subseteq \Nodes t$.
 \end{remark}
 
+\begin{definition}
+	We call ""internal nodes"" the set $\Nodes t \cap \Leaves t$
+\end{definition}
+
+
 Each "node" in a "tree" carries a symbol from the alphabet. The following definition formalizes how to access the "label" at a given "node".
 
 \begin{definition}
@@ -265,18 +272,127 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 \end{remark}
 
 
-\section{Tree Automata}\label{sec:automata}
-\subsection{Non-Deterministic Bottom-Up Tree automata}\label{sec:NBUAautomata}
+\section{Automata over trees}\label{sec:automata}
 
-\begin{definition}["Non-Deterministic Bottom-Up Tree automaton"]
+In this section we aim to define the basics of tree automata in a comprehensive way adding as much detail as possible to the proofs. For reference,
+one can look at more advanced book on this topic \cite{tata,Thomas1997,bookautomata}.
+
+In classical automata theory, we analyze deterministic finite automaton (DFA), wich assign a unique state to each prefix of
+a word, updating this state at each step using a transition function, ussualy reading the input from left to right.
+
+A "deterministic bottom-up tree automaton" ("DBUA") generalizes this idea to "trees": instead of reading a linear word, it reads a
+a "tree" where each "node" carries a symbol from a fixed alphabet. Rather than scanning from left to right, it proceeds
+bottom-up, computing "states" at each "node" by combining the states of its children :
+the automaton aggregates the information from those "subtrees" to assign a "state" to the parent.
+
+The idea is to recursively assign a "state" to each "node" of the "tree":
+\begin{itemize}
+	\item At the "leaves", the "state" is determined directly from the symbol via a function init, just as a DFA starts in a particular initial state.
+	\item A DFA transitions based on the current letter and the state reached by the previous letters.
+	      When a "NBUA" reaches an "internal node", it transitions based on the "states" reached by its children and the "label" associated to the "node".
+	\item Finally, the "state" assigned to the "root" tells us whether the whole "tree" is "accepted",
+	      depending on whether it belongs to a set of "final states".
+\end{itemize}
+
+We now state the formal definitions.
+
+\begin{definition}
+	\AP A ""Deterministic Bottom-Up tree Automaton"" (DBUA) is defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
+	\begin{itemize}
+		\item $\Sigma$ is an alphabet.
+		      \itemAP $Q$ is a finite set of ""states"".
+		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
+		      \itemAP $\delta : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
+		      \itemAP $F \subseteq Q$ is the set of ""final states"".
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[Interpretation of an automaton]
+	\AP The ""interpretation"" of a "DBUA" $A = (\Sigma, Q, \text{init}, \delta, F)$  over an alphabet $\Sigma$ is defined as follows:
+	\begin{eqnarray*}
+		\intro* \interpret A ~: \tree_{\Sigma} &\to& Q \\
+		a &\mapsto& \init_a \\
+		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
+	\end{eqnarray*}
+
+	We say that $A$ ""accepts"" a "tree" $t$ if $\interpret A t \in F$.
+
+	We will sometimes use the notation $\delta(t)$ for the "interpretation" of $A$ over the "tree" $t$.
+\end{definition}
+
+\begin{example}[Trees with at most one leaf]\label{ex:count-leaves}
+	We define a "DBUA" $A = (\Sigma, Q, \init, \delta, F)$ that "accepts" exactly the "trees" with at most one "leaf". Let:
+	\begin{itemize}
+		\item $Q = \{0,1,2\}$, where $q=0$ means \textit{no leaves}, $q=1$ means \textit{exactly one leaf},
+		      and $q=2$ means \textit{more than one leaf}.
+		\item $F = \{0,1\}$.
+		\item For all $a \in \Sigma$, we define $\init_a = 1$.
+		\item The transition function is defined by:
+		      \[
+			      \delta_a(q_1, q_2) = \min(q_1 + q_2, 2)
+		      \]
+	\end{itemize}
+
+	Intuitively, this automaton counts the number of "leaves" in the "tree", but caps the count at $2$ to detect when the number exceeds $1$.
+\end{example}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[
+			level distance=1.2cm,
+			sibling distance=1.3cm,
+			every node/.style={circle,draw,minimum size=6mm,inner sep=1pt},
+			treenode/.style={circle,draw,minimum size=6mm,inner sep=1pt},
+			scale=1, transform shape,
+			state/.style={blue}
+		]
+
+		% TREE 1
+		\node (t1) at (0,0) {a}
+		child {node (t1b1) {b}}
+		child {node (t1a2) {a}
+				child {node (t1b3) {b}}
+				child {node (t1b4) {b}}};
+
+		\node at (2.2, -1) {$\Rightarrow$};
+
+		% TREE 2
+		\node (t2) at (4.5,0) {a}
+		child {node[state ](t2b1) {1}}
+		child {node (t2a2) {a}
+				child {node[state] (t2s2) {1}}
+				child {node[state] (t2s3) {1}}};
+
+		\node at (6.7, -1) {$\Rightarrow$};
+
+		% TREE 3 
+		\node (t3) at (9,0) {a}
+		child {node[state] (t3s4) {1}}
+		child {node[state] (t3a2) {2}};
+
+		\node at (11.2, -1) {$\Rightarrow$};
+
+		% TREE 4 
+		\node[state] (t4) at (13.5,0) {2};
+
+	\end{tikzpicture}
+	\caption{Execution of the automaton of \Cref{ex:count-leaves} over the input $a(b,a(b,b))$}
+\end{figure}
+
+
+In the same way that we can define a non-deterministic automaton over strings, the same can be done for
+tree automata using the same techniques. We will define them and give basic definitions on how to use them.
+
+\begin{definition}
 	\AP A ""Non-Deterministic Bottom-Up Tree automaton"" (NBUA) is defined as a tuple
 	$(\Sigma, Q, I, \Delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
-		\item $Q$ is a finite set of ""states"".
+		\item $Q$ is a finite set of "states".
 		\item $I \subseteq \Sigma \times Q$ correspond to the possible states of the "leaves".
-		\item $\Delta \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
-		\item $F \subseteq Q$ is the set of ""final states"".
+		      \itemAP $\Delta \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
+		\item $F \subseteq Q$ is the set of "final states".
 	\end{itemize}
 \end{definition}
 
@@ -289,47 +405,22 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 
-	We say that $\exec$ is ""acceptant"" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
+	We say that $\exec$ is "acceptant" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
 	$F \cap \setdef {\rho(\varepsilon)} {\text{$\rho$ "run" of~$A$ over~$t$}} \neq \emptyset$
 \end{definition}
 
 
 \begin{definition}[Language of an automaton]
-	Let $A$ be a "NBUA". Its ""associated language"" is defined as:
+	\AP Let $A$ be a "NBUA". Its ""associated language"" is defined as:
 	\[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
-\subsection{Deterministic Bottom-Up Tree automata}\label{sec:DBUAautomata}
-
-\begin{definition}[""Deterministic Bottom-Up Tree automaton""]
-	A Deterministic Bottom-Up Tree automaton (DBUA) is "NBUA" that that verifies
-	\[ \forall q,r,a,t,t' \ (q,r,a,t) \in \Delta \land   (q,r,a,t') \in \Delta  \implies t = t' \]
-\end{definition}
-
+We can easily see that "DBUA" are a particular case of "NBUA", just like in the classic theory.
 
 \begin{remark}
-	A "DBUA" can also be defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
-	\begin{itemize}
-		\item $\Sigma$ is an alphabet.
-		\item $Q$ is a finite set of "states".
-		\item $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
-		\item $\delta : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
-		\item $F \subseteq Q$ is the set of "final states".
-	\end{itemize}
-	\todo{$\init$ and $\delta$ should be the same}
-	We will show that the two definitions are equivalent.
+	A "DBUA" is a particular case of a "NBUA" , $A = (\Sigma, Q, I, \Delta, F)$ verifying that
+	\[ \text{for all } q,r,a,t,t' \ (q,r,a,t) \in \Delta \text{ and } (q,r,a,t') \in \Delta  \text{ implies } t = t' \]
 \end{remark}
-
-\begin{definition}[Interpretation of an automaton]
-	The ""interpretation"" of a "DBUA" $A$  over an alphabet $\Sigma$ is defined as follows:
-	\begin{eqnarray*}
-		\intro* \interpret A ~: \tree_{\Sigma} &\to& Q \\
-		a &\mapsto& \init_a \\
-		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
-	\end{eqnarray*}
-
-	On notera parfois cette interpretation $\delta(t)$.
-\end{definition}
 
 \begin{remark}
 	In the case of a "DBUA" there exists a unique "run" that corresponds to :
@@ -340,6 +431,8 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 \end{remark}
+
+The following lemma shows the equivalence of both definitions.
 
 \begin{lemma}
 	Let $A$ be a "DBUA",
@@ -362,6 +455,10 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 		      We have now $\rho(\varepsilon) = \delta_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon)) = \delta_{t(\varepsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
 \end{proof}
+
+
+We aim now to show that, like in the classical theory, both non-deterministic automata and deterministic ones have the same expressiveness power. Since "DBUA" is
+a particular case of "NBUA" it suffices to show that each language accepted by an "NBUA" can also be accepted by a "DBUA".
 
 \begin{definition}
 	Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
@@ -427,7 +524,11 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 \end{proof}
 
 
-\subsection{Order-insensitive}\label{sec:OrderAutomata}
+\subsection{Order-insensitiveness}\label{sec:OrderAutomata}
+
+We will interest ourselves in a particular kind of tree automata: the ones that do not distinguish between left and right children.
+That means that the state reached from the two children is the same if we swap them. These automata are
+interesting because they respect the symmetries of "trees".
 
 \begin{definition}
 	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
@@ -450,6 +551,9 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 		&=& \delta_a (Y,X)
 	\end{eqnarray*}
 \end{proof}
+
+
+\subsection{Universality}\label{sec:UniversalityAutomata}
 
 \begin{definition}
 	Let $A = \DBUA$ a "DBUA", let $\intro* \Reach A \subseteq Q$ be the smallest set such that
@@ -488,10 +592,8 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 	\end{itemize}
 \end{proofI}
 
-\subsection{Universality}\label{sec:UniversalityAutomata}
-
 \begin{definition}
-	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every tree.
+	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every "tree".
 \end{definition}
 
 

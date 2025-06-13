@@ -6,8 +6,13 @@
 
 \knowledge{notion}
     | subtree
+    | subtrees
 
-\knowledge{Deterministic Bottom-Up Tree automaton}[DBUA]{notion}
+\knowledge{notion}
+    | Deterministic Bottom-Up Tree automaton
+    | Deterministic Bottom-Up tree Automaton
+    | deterministic bottom-up tree automaton
+    | DBUA
 \knowledge{Non-Deterministic Bottom-Up Tree automaton}[NBUA]{notion}
 
 \knowledge{interpretation}{notion}
@@ -65,6 +70,7 @@
     | acceptant
     | accepting
     | accepts
+    | accepted
     | accepting run
 
 
@@ -77,6 +83,10 @@
 
 \knowledge{notion}
     | uniformisable
+
+\knowledge{notion}
+    | internal node
+    | internal nodes
 
 \knowledge{notion}
     | uniformiser automaton
