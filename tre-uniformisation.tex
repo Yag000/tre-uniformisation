@@ -703,7 +703,7 @@ We will discuss some examples of MSO formulas.
 
 \begin{lemma}
 	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
-	\[ t \models \phi \tiff t \in \lang A \]\todo{verify that all remains order-insensitive}
+	\[ t \models \phi \tiff t \in \lang A \].
 \end{lemma}
 
 \begin{proof}
@@ -732,29 +732,28 @@ We will discuss some examples of MSO formulas.
 	\[ t \models \phi \tiff t \in \lang A \]
 \end{proof}
 
-
 \subsection{MSO $\ra$ automaton}\label{sec:MSO-Aut}
 
 \begin{lemma}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "NBUA", then
+	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUA", then
 	$A_3 =  (\Sigma, Q_1 \times Q_2, I_1 \times I_2, \Delta , F_1 \times F_2)$, where
 	\[\Delta = \setdef {((q_1,q_2) , (p_1,p_2), (a_1,a_2), (r_1,r_2)}    { (q_1,p_1,a_1,r_1) \in \Delta_1, (q_2,p_2,a_2,r_2) \in \Delta_2}\]
-	verifies that $\lang {A_3} = \lang {A_1} \cap \lang {A_2}$
+    is "order-insensitive" and verifies that $\lang {A_3} = \lang {A_1} \cap \lang {A_2}$
 \end{lemma}
 
 \begin{lemma}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "NBUA", then
+	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUA", then
 	\[ A_3 = (\Sigma, Q_1 \uplus Q_2, I_1 \uplus I_2, \Delta_1 \uplus \Delta_2, F_1 \uplus F_2) \]
-	verifies that $\lang {A_3} = \lang {A_1} \cup \lang {A_2}$
+    is "order-insensitive" and verifies that $\lang {A_3} = \lang {A_1} \cup \lang {A_2}$
 \end{lemma}
 
 \begin{lemma}
-	Let $A = \NBUA$ the "NBUA" $A' = (\Sigma, Q, I, \Delta, Q \cap F)$
+	Let $A = \NBUA$ the "order-insensitive" "NBUA" $A' = (\Sigma, Q, I, \Delta, Q \cap F)$
 	verifies that $\lang {A'} = (\lang A )^{\complement}$
 \end{lemma}
 
 \begin{lemma}
-	Over the alphabet $\Sigma \times \set {0,1}$ the automaton $A$ described bellow can decide the formula $a (x)$,
+	Over the alphabet $\Sigma \times \set {0,1}$ the "order-insensitive" automaton $A$ described bellow can decide the formula $a (x)$,
 	where $a \in \Sigma$ and $x$ is a free variable.
 
 	\[A =   (\Sigma \times \set {0,1}, \set {\text {Yes, No}} ,  \init, \delta, \text{Yes})  \]
@@ -779,8 +778,8 @@ We will discuss some examples of MSO formulas.
 
 
 \begin{lemma}
-	Over the alphabet $\Sigma \times \set {0,1}^2$ the automaton $A$ described bellow can decide the formula $x  \ancestor y $,
-	where $x$ and $y$ are free variables.
+	Over the alphabet $\Sigma \times \set {0,1}^2$ the "order-insensitive" automaton $A$
+    described bellow can decide the formula $x  \ancestor y $, where $x$ and $y$ are free variables.
 
 	\[A = (\Sigma \times \set {0,1}^2, \set {\text {Yes, No, FoundY}},  \init, \delta, \text{Yes})\]
 
@@ -826,8 +825,8 @@ We will discuss some examples of MSO formulas.
 
 	If $\phi$ is of the form $\lnot \psi$ then we can compute the complement of the automaton corresponding to $\psi$.
 
-	We have to deal with the case $\phi = \exists x.\psi(x)$, where $\psi$ has $n-1$ free variables. We can find a "NBUA" $A = (\Sigma \times \set{0,1}^n, Q, I, \Delta, F)$
-	for $\psi$ where $x$ is treated as a free variable.
+	We have to deal with the case $\phi = \exists x.\psi(x)$, where $\psi$ has $n-1$ free variables. We can find
+    an "order-insensitive" "NBUA" $A = (\Sigma \times \set{0,1}^n, Q, I, \Delta, F)$ for $\psi$ where $x$ is treated as a free variable.
 
 	Then the automaton $A' = (\Sigma \times \set{0,1}^{n-1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$ where
 	\[
@@ -848,8 +847,7 @@ We will discuss some examples of MSO formulas.
 			\right\}.
 		\end{aligned}
 	\]
-	\todo{make sure this actually works\\}
-	and $i$ corresponds to the variable $x$, can decide $\phi$. If existential quantification is applied to a
+	and $i$ corresponds to the variable $x$, is "order-insensitive" and can decide $\phi$. If existential quantification is applied to a
 	second-order variable, the automaton remains unchanged. However, instead of considering a single variable
 	in the transition function, we look at all the variables within the given set.
 \end{proof}
