@@ -271,7 +271,7 @@ of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 
 \begin{remark}
 	Note that this order does not depend on the left or right position of the children, \ie it preserves
-	"order-insensitiveness", this will be explored in the following sections.
+	"order-insensitivity", this will be explored in the following sections.
 \end{remark}
 
 
@@ -385,6 +385,15 @@ We now state the formal definitions.
 \end{figure}
 
 
+In future sections, we will extensively use these notations.
+
+\begin{notation}
+	We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and
+	$\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
+	\todo{improve this notation}
+\end{notation}
+
+
 In the same way that we can define a non-deterministic automaton over strings, the same can be done for
 tree automata using the same techniques. We will define them and give basic definitions on how to use them.
 
@@ -464,7 +473,7 @@ The following lemma shows the equivalence of both definitions.
 
 
 We aim now to show that, like in the classical theory, both non-deterministic automata and deterministic ones have the same expressiveness power.
-Since "DBUA" is a particular case of "NBUA" it suffices to show that each language accepted by an "NBUA" can also be accepted by a "DBUA".
+Since "DBUA" is a particular case of "NBUA" it suffices to show that each "language" accepted by an "NBUA" can also be accepted by a "DBUA".
 
 \begin{definition}
 	Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
@@ -530,7 +539,7 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each langua
 \end{proof}
 
 
-\subsection{Order-insensitiveness}\label{sec:OrderAutomata}
+\subsection{Order-insensitivity}\label{sec:OrderAutomata}
 
 We will interest ourselves in a particular kind of tree automata: the ones that do not distinguish between left and right children.
 That means that the state reached from the two children is the same if we swap them. These automata are
@@ -660,54 +669,79 @@ interesting because they respect the symmetries of "trees".
 \end{coro}
 
 
-\section{MSO}\label{sec:MSO}
+\section{Tree Automata and MSO Logic}\label{sec:MSO}
+
+In this section, we introduce "Monadic Second-Order Logic" (MSO) over finite binary "trees",
+and examine its relationship with "non-deterministic bottom-up automata", in partivulat with "order-insensitive" automata.
+
+We will use this equivalence later to reason about "MSO" formulas using automata-theoretic techniques. In particular, this will allow us to:
+
+Our objective is to show that "MSO" and "order-insensitive" "automata@NBUA" have the same expressive power. This will allow to reason about
+properties of MSO using automata theory techniques, wich will be extensively use in \Cref{sec:uniformisation}.
+
+The proof follows the classical schema.
+
+We start by showing that every "automaton@NBUA" can be expressed as a formula. The proof itself is standard \cite{Buchi60, Thomas1997, bookautomata}.
 
 \begin{definition}
-	Let $t \in \tree_{\Sigma}$, we define a model of $t$ as :
+	Let $t \in \tree_{\Sigma}$. We define a ""model"" of $t$ as:
 
-	\[\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma}) \]
+	\[
+		\Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma})
+	\]
 
-	where : $a(x) \tiff \tlabel t x = a$
+	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a$.
 
-	We will note $t \models \phi$ for $\Model t \models \phi$. \todo{better formulate this}
+	We write $t \models \phi$ to mean that the formula $\phi$ holds in the "model" $\Model t$.
 \end{definition}
 
-
-We will discuss some examples of MSO formulas.
+We will discuss some examples of "MSO" formulas.
 
 \begin{example}
-	The formula $\intro* \leaf (x) = \forall y,  y \ancestor x$ encodes the fact that $x$ is a "leaf".
+	The formula
+	\[
+		\leaf(x) = \forall y,\, y \ancestor x
+	\]
+	expresses the fact that $x$ is a "leaf", a node without descendants.
 \end{example}
 
 \begin{example}
-	$x$ is the root of the "tree" is equivalent to :
-	\[\intro* \treeroot (x) = \forall y,  x \ancestor y \]
+	The formula
+	\[
+		\treeroot(x) = \forall y,\, x \ancestor y
+	\]
+	defines the "root" of the "tree", meaning a node that is an "ancestor" of every other node.
 \end{example}
 
 \begin{example}
-	The following formula encodes the fact that $x$ and $y$ are the immediate children of $z$:
-	\[\intro* \children (x,y,z) =
+	The following formula expresses that $x$ and $y$ are the immediate children of a node $z$:
+	\[
+		\children(x,y,z) =
 		x \neq y \land
-		z  \ancestor  x \land  z \ancestor y \land
+		z \ancestor x \land  z \ancestor y \land
 		\forall w
 		\left( \left(
 			z \ancestor w \land
 				(w \ancestor x \lor w \ancestor  y) \right) \rightarrow (
 			w = x \lor w = y
 			)
-		\right) \]
+		\right)
+	\]
 \end{example}
 
-
-\subsection{Automaton $\ra$ MSO}\label{sec:Aut-MSO}
+We now show how to simulate an "automaton@NBUA" by a formula. The idea is to encode the existence of a valid "run" of 
+the "automaton@NBUA" using second-order variables that assign "states" to "nodes".
 
 \begin{lemma}
-	If $A$ is a "order-insensitive" "NBUA"  then there exists a MSO formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
-	\[ t \models \phi \tiff t \in \lang A \].
+	If $A$ is an "order-insensitive" "NBUA", then there exists a "MSO" formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
+	\[
+		t \models \phi \tiff t \in \lang A.
+	\]
 \end{lemma}
 
-\begin{proof}
-	Let $A = \NBUA$ be a "NBUA", and $k = \abs Q$.
+\begin{proof}\label{lem:Aut-to-MSO}
+	Let $A = \NBUA$ be an "order-insensitive" "NBUA", and let $k = \abs Q$ be the number of "states".
+
 	\begin{align}
 		\phi =\  & \exists X_0 \ldots \exists X_{k-1} \ \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1}                                                                                    \\
 		         & \land\ \forall x \left( \bigwedge_{0 \leq i < j \leq k-1} \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2}                                                                               \\
@@ -716,141 +750,158 @@ We will discuss some examples of MSO formulas.
 		         & \land\ \forall x \left( \treeroot(x) \rightarrow \bigvee_{q \in F} X_q(x) \right) \label{lem:AMSO5}
 	\end{align}
 
-	The sets $X_j$ verify that $j \in X_i$ \tiff, for a given "run", the "state" $i$ is reached from the "node" $j$.
+	The sets $X_i$ encode the "run" of the automaton: $x \in X_i$ means that the "state" $i$ is assigned to the "node" $x$ in some valid accepting "run".
 
-	The formula $\phi$ encodes the following properties:
+	The formula ensures:
 
-	\begin{enumerate}
-		\item Every "node" has an associated "state".
-		\item A node cannot be in two "states" at the same time.
-		\item The "transitions@@relation" originate from the "leaves".
-		\item The "transitions@@relation" of inner nodes ensure that for every trio of nodes, where two are children of the third, there exists a transition from the children to the parent.
-		\item Finally, the word is accepted if and only if the state associated with the root node is a "final state".
-	\end{enumerate}
+	\begin{itemize}
+		\item[\ref{lem:AMSO1}] Every "node" is assigned some "state".
+		\item[\ref{lem:AMSO2}] No "node" is in more than one "state".
+		\item[\ref{lem:AMSO3}] "Leaf" nodes are assigned an initial "state".
+		\item[\ref{lem:AMSO4}] For each triple $(x,y,z)$ forming a parent and its two children,
+            there exists a transition in $\Delta$ from the children to the parent.
+		\item[\ref{lem:AMSO5}] The "root" is labeled with a final "state".
+	\end{itemize}
 
-	From this we deduce that
-	\[ t \models \phi \tiff t \in \lang A \]
+	Therefore, the formula defines the same "language" as the automaton:
+	\[
+		t \models \phi \iff t \in \lang A.
+	\]
 \end{proof}
 
-\subsection{MSO $\ra$ automaton}\label{sec:MSO-Aut}
+We now turn to the other direction. Our goal is to show that for every "MSO" formula over finite binary "trees", 
+there exists an equivalent "order-insensitive" "non-deterministic bottom-up automaton".
 
-\begin{lemma}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUA", then
-	$A_3 =  (\Sigma, Q_1 \times Q_2, I_1 \times I_2, \Delta , F_1 \times F_2)$, where
-	\[\Delta = \setdef {((q_1,q_2) , (p_1,p_2), (a_1,a_2), (r_1,r_2)}    { (q_1,p_1,a_1,r_1) \in \Delta_1, (q_2,p_2,a_2,r_2) \in \Delta_2}\]
-    is "order-insensitive" and verifies that $\lang {A_3} = \lang {A_1} \cap \lang {A_2}$
+The construction proceeds by induction on the structure of formulas, using standard constructions for closure and the atomic formulas.
+Throughout, we ensure that the resulting automata remain "order-insensitive".
+
+We begin with basic closure properties of such automata.
+
+\begin{lemma}[Intersection]\label{lem:intersection}
+	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUAs". Then the product automaton
+	\[
+		A_3 = (\Sigma, Q_1 \times Q_2, I_1 \times I_2, \Delta, F_1 \times F_2),
+	\]
+	where
+	\[
+		\Delta = \left\{ ((q_1,q_2), (p_1,p_2), (a_1,a_2), (r_1,r_2)) \,\middle|\, (q_1,p_1,a_1,r_1) \in \Delta_1,\ (q_2,p_2,a_2,r_2) \in \Delta_2 \right\},
+	\]
+	is "order-insensitive", and satisfies $\lang{A_3} = \lang{A_1} \cap \lang{A_2}$.
 \end{lemma}
 
-\begin{lemma}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_1 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUA", then
-	\[ A_3 = (\Sigma, Q_1 \uplus Q_2, I_1 \uplus I_2, \Delta_1 \uplus \Delta_2, F_1 \uplus F_2) \]
-    is "order-insensitive" and verifies that $\lang {A_3} = \lang {A_1} \cup \lang {A_2}$
+\begin{lemma}[Union]\label{lem:union}
+	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUAs". Then the disjoint union
+	\[
+		A_3 = (\Sigma, Q_1 \uplus Q_2, I_1 \uplus I_2, \Delta_1 \uplus \Delta_2, F_1 \uplus F_2)
+	\]
+	is also "order-insensitive", and it accepts precisely the union of the two languages: $\lang{A_3} = \lang{A_1} \cup \lang{A_2}$.
 \end{lemma}
 
-\begin{lemma}
-	Let $A = \NBUA$ the "order-insensitive" "NBUA" $A' = (\Sigma, Q, I, \Delta, Q \cap F)$
-	verifies that $\lang {A'} = (\lang A )^{\complement}$
+\begin{lemma}[Complement]\label{lem:complement}
+	Given an "order-insensitive" "NBUA" $A = (\Sigma, Q, I, \Delta, F)$, the automaton
+	\[
+		A' = (\Sigma, Q, I, \Delta, Q \setminus F)
+	\]
+	is also "order-insensitive", and recognizes the complement of $A$: $\lang{A'} = \lang{A}^\complement$.
 \end{lemma}
 
-\begin{lemma}
-	Over the alphabet $\Sigma \times \set {0,1}$ the "order-insensitive" automaton $A$ described bellow can decide the formula $a (x)$,
-	where $a \in \Sigma$ and $x$ is a free variable.
+We now turn to atomic formulas. These are handled by explicitly designed automata over expanded alphabets that encode variable assignments.
 
-	\[A =   (\Sigma \times \set {0,1}, \set {\text {Yes, No}} ,  \init, \delta, \text{Yes})  \]
-
-	The following function definitions should be interpreted as a pattern match, with priority for the first rule :
-
+\begin{lemma}\label{lem:atomic-a}
+	Let $a \in \Sigma$. Over the alphabet $\Sigma \times \{0,1\}$, there exists an "order-insensitive" automaton deciding the atomic predicate $a(x)$, where $x$ is a free first-order variable. Define:
+	\[
+		A = (\Sigma \times \{0,1\}, \{\text{Yes}, \text{No}\}, \init, \delta, \text{Yes}),
+	\]
+	where:
 	\begin{itemize}
-		\item $\begin{aligned}[t]
-				      \init      : \Sigma \times \set{0,1} & \to \parts Q       \\
-				      (a, 1)                               & \mapsto \text{Yes} \\
-				      \_                                   & \mapsto \text{No}
-			      \end{aligned} $
-
-		\item $\begin{aligned}[t]
-				      \delta               : Q \times Q \times (\Sigma \times \set {0,1}) & \to Q              \\
-				      (\_, \_, (a,1))                                                     & \mapsto \text{Yes} \\
-				      (\text{No}, \text{No},  \_)                                         & \mapsto \text{No}  \\
-				      \_                                                                  & \mapsto \text{Yes}
-			      \end{aligned}$
+		\item
+		      \[
+			      \init(a,1) = \text{Yes}, \quad \init(\_,\_) = \text{No}
+		      \]
+		\item
+		      \[
+			      \begin{aligned}
+				      \delta(\_, \_, (a,1))            & = \text{Yes} \\
+				      \delta(\text{No}, \text{No}, \_) & = \text{No}  \\
+				      \delta(\_, \_, \_)               & = \text{Yes}
+			      \end{aligned}
+		      \]
 	\end{itemize}
 \end{lemma}
 
-
-\begin{lemma}
-	Over the alphabet $\Sigma \times \set {0,1}^2$ the "order-insensitive" automaton $A$
-    described bellow can decide the formula $x  \ancestor y $, where $x$ and $y$ are free variables.
-
-	\[A = (\Sigma \times \set {0,1}^2, \set {\text {Yes, No, FoundY}},  \init, \delta, \text{Yes})\]
-
-	The following function definitions should be interpreted as a pattern match, with priority for the first rule :
-
+\begin{lemma}\label{lem:atomic-ancestor}
+	There exists an "order-insensitive" automaton over $\Sigma \times \{0,1\}^2$ that decides the formula $x \ancestor y$. We define:
+	\[
+		A = (\Sigma \times \{0,1\}^2, \{\text{Yes}, \text{No}, \text{FoundY}\}, \init, \delta, \text{Yes}),
+	\]
+	with the following behavior:
 	\begin{itemize}
-		\item $\begin{aligned}[t]
-				      \init      : \Sigma \times \set{0,1}^2 & \to \parts Q          \\
-				      (\_, \_, 1)                            & \mapsto \text{FoundY} \\
-				      \_                                     & \mapsto \text{No}
-			      \end{aligned} $
-
-		\item $\begin{aligned}[t]
-				      \delta               : Q \times Q \times (\Sigma \times \set {0,1}^2) & \to Q                 \\
-				      (\text{FoundY}, \_, (\_,1,0))                                         & \mapsto \text{Yes}    \\
-				      (\_, \text{FoundY}, (\_,1,0))                                         & \mapsto \text{Yes}    \\
-				      (\text{FoundY}, \_, (\_,0,0))                                         & \mapsto \text{FoundY} \\
-				      (\_, \text{FoundY}, (\_,0,0))                                         & \mapsto \text{FoundY} \\
-				      (\text{Yes}, \_, \_)                                                  & \mapsto \text{Yes}    \\
-				      (\_, \text{Yes}, \_)                                                  & \mapsto \text{Yes}    \\
-				      (\_, \_, (\_, 0, 1))                                                  & \mapsto \text{FoundY} \\
-				      \_                                                                    & \mapsto \text{No}
-			      \end{aligned}$
+		\item
+		      \[
+			      \init(\_,\_,1) = \text{FoundY}, \quad \init(\_,\_,0) = \text{No}
+		      \]
+		\item
+		      \[
+			      \begin{aligned}
+				      \delta(\text{FoundY}, \_, (\_,1,0)) & = \text{Yes}    \\
+				      \delta(\_, \text{FoundY}, (\_,1,0)) & = \text{Yes}    \\
+				      \delta(\text{FoundY}, \_, (\_,0,0)) & = \text{FoundY} \\
+				      \delta(\_, \text{FoundY}, (\_,0,0)) & = \text{FoundY} \\
+				      \delta(\text{Yes}, \_, \_)          & = \text{Yes}    \\
+				      \delta(\_, \text{Yes}, \_)          & = \text{Yes}    \\
+				      \delta(\_, \_, (\_,0,1))            & = \text{FoundY} \\
+				      \delta(\_, \_, \_)                  & = \text{No}
+			      \end{aligned}
+		      \]
 	\end{itemize}
 \end{lemma}
 
-
-
-\begin{lemma} \label{lem:MSO-aut}
-	If $\phi$ is a MSO formula there exists $A$ an "order-insensitive" "NBUA" such that for all $t \in \tree_{\Sigma}$,
-	\[ t \models \phi \tiff t \in \lang A \]\todo{verify that all remains order-insensitive}
+\begin{lemma}[MSO to Automaton]\label{lem:MSO-to-aut}
+	Let $\phi$ be an MSO formula. Then there exists an "order-insensitive" "NBUA" $A$ such that for every $t \in \tree_\Sigma$, we have:
+	\[
+		t \models \phi \quad \text{if and only if} \quad t \in \lang{A}.
+	\]
 \end{lemma}
-
 
 \begin{proof}
-	The proof procedes by induction on the structure of $\phi$.
+	The construction proceeds by structural induction on $\phi$.
 
-	If $\phi$ is an atomic formula, then the lemmas above decide it.
+	To begin with, atomic formulas $a(x)$ and $x \ancestor y$ are handled by the automata in \Cref{lem:atomic-a,lem:atomic-ancestor}.
 
-	If $\phi$ is of the form $\psi_1 \land \psi_2$ then we can compute the intersection between the automata
-	for $\psi_1$ and $\psi_2$, obtained using the induction hypothesis. We can deal with the disjuction using the
-	union instead of the intersection.
+	In the case of conjunction and disjunction, using the induction hypothesis we get automata for its components, and we
+	can build the automata for the whole expresión using \Cref{lem:intersection, lem:union}.
 
-	If $\phi$ is of the form $\lnot \psi$ then we can compute the complement of the automaton corresponding to $\psi$.
 
-	We have to deal with the case $\phi = \exists x.\psi(x)$, where $\psi$ has $n-1$ free variables. We can find
-    an "order-insensitive" "NBUA" $A = (\Sigma \times \set{0,1}^n, Q, I, \Delta, F)$ for $\psi$ where $x$ is treated as a free variable.
+	If $\phi = \lnot \psi$, the induction hypothesis gives us an automaton for $\psi$ and we can apply \Cref{lem:complement}
+	to get the desired one.
 
-	Then the automaton $A' = (\Sigma \times \set{0,1}^{n-1}, Q \times \set{0,1}, I \times \set 0, \Delta', F \times \set 1)$ where
+	The last step is the existential quantification. We strat by considering the first-order case: let $\phi = \exists x.\psi(x)$,
+	and assume $\psi$ has $n$ free variables. By the inductive hypothesis, we have an "order-insensitive" NBUA
+	\[
+		A = (\Sigma \times \{0,1\}^n, Q, I, \Delta, F)
+	\]
+	that decides $\psi$, treating $x$ as free. We now construct a new automaton
+	\[
+		A' = (\Sigma \times \{0,1\}^{n-1}, Q \times \{0,1\}, I \times \{0\}, \Delta', F \times \{1\})
+	\]
+	that existentially guesses the position of $x$. The transition relation $\Delta'$ is defined as follows:
 	\[
 		\begin{aligned}
-			\Delta' = & \left\{
-			\begin{aligned}
-				 & ((q,b), (q', b'), (a, X), (q'',b'')) \mid b, b' \in \{0,1\},               \\
-				 & \quad b'' = b \land b', \quad (q, q', (a, X'), q'') \in \Delta,            \\
-				 & \quad X' \text{ corresponds to $X$ where we add } 0 \text{ at position } i \\
-			\end{aligned}
-			\right\}                 \\
-			          & \cup \left\{
-			\begin{aligned}
-				 & ((q,0), (q', 0), (a, X), (q'',1)) \mid                         \\
-				 & \quad (q, q', (a, X'), q'') \in \Delta,                        \\
-				 & \quad X' \text{ is $X$ where we add } 1 \text{ at position } i
-			\end{aligned}
-			\right\}.
+			\Delta' =\  & \left\{ ((q,b), (q',b'), (a, X), (q'', b \land b')) \ \middle|\
+			(q, q', (a, X'), q'') \in \Delta,\ \text{$X'$ is $X$ with $0$ inserted at $x$} \right\} \\
+			            & \cup \left\{ ((q,0), (q',0), (a, X), (q'',1)) \ \middle|\
+			(q, q', (a, X'), q'') \in \Delta,\ \text{$X'$ is $X$ with $1$ inserted at $x$} \right\}.
 		\end{aligned}
 	\]
-	and $i$ corresponds to the variable $x$, is "order-insensitive" and can decide $\phi$. If existential quantification is applied to a
-	second-order variable, the automaton remains unchanged. However, instead of considering a single variable
-	in the transition function, we look at all the variables within the given set.
+
+	In other words, $A'$ non-deterministically chooses a node to mark as $x$, simulates $A$ accordingly, and accepts if that guess leads to acceptance.
+
+	If $\phi$ quantifies over a second-order variable, the automaton remains structurally unchanged. The interpretation shifts: instead of reading
+	a single bit at a position, the automaton considers whether the current node belongs to the set assigned to that variable.
+
+	Since each step in this construction preserves "order-insensitivity", the final automaton $A$ satisfies the desired equivalence.
 \end{proof}
+
 
 \section{Uniformisation}\label{sec:uniformisation}
 
@@ -864,31 +915,34 @@ We will discuss some examples of MSO formulas.
 	We say that a formula is ""uniformisable"" if there exists a "uniformiser" for said formula.
 \end{definition}
 
-\begin{lemma}
-	$\psi(X)$ is a "uniformiser" of $\phi(X)$ if and only if for all "trees" $t$, the following holds:
-	\begin{eqnarray*}
-		t \models &\quad &  \forall X \forall Y \, \Big((\psi(X) \land \psi(Y)) \rightarrow X = Y\Big) \\
-		& \land & (\exists X \, \phi(X)) \rightarrow (\exists X \, \psi(X)) \\
-		& \land& (\forall X \, \psi(X) \rightarrow \phi(X)).
-	\end{eqnarray*}
-\end{lemma}
 
-\begin{proof}
-	We analyze the conditions in the first formulation and show their correspondence to the logical constraints in the second formulation:
+\iffalse
+	\begin{lemma}
+		$\psi(X)$ is a "uniformiser" of $\phi(X)$ if and only if for all "trees" $t$, the following holds:
+		\begin{eqnarray*}
+			t \models &\quad &  \forall X \forall Y \, \Big((\psi(X) \land \psi(Y)) \rightarrow X = Y\Big) \\
+			& \land & (\exists X \, \phi(X)) \rightarrow (\exists X \, \psi(X)) \\
+			& \land& (\forall X \, \psi(X) \rightarrow \phi(X)).
+		\end{eqnarray*}
+	\end{lemma}
 
-	\begin{enumerate}
-		\item The formula $\forall X \forall Y \, (\psi(X) \land \psi(Y) \rightarrow X = Y)$ ensures that $\psi$ has at most one solution
-		      in $t$. This directly corresponds to the first condition in the original problem statement.
+	\begin{proof}
+		We analyze the conditions in the first formulation and show their correspondence to the logical constraints in the second formulation:
 
-		\item The formula $\exists X \, \phi(X) \rightarrow \exists X \, \psi(X)$ expresses that whenever $\phi$ has a solution, $\psi$ must also have a solution.
-		      However, this does not require $\psi$ to hold for the same one as $\phi$.
+		\begin{enumerate}
+			\item The formula $\forall X \forall Y \, (\psi(X) \land \psi(Y) \rightarrow X = Y)$ ensures that $\psi$ has at most one solution
+			      in $t$. This directly corresponds to the first condition in the original problem statement.
 
-		      The formula $\forall X \, (\psi(X) \rightarrow \phi(X))$ ensures that whenever $\psi$ holds for a set, $\phi$ must also hold for that same set.
+			\item The formula $\exists X \, \phi(X) \rightarrow \exists X \, \psi(X)$ expresses that whenever $\phi$ has a solution, $\psi$ must also have a solution.
+			      However, this does not require $\psi$ to hold for the same one as $\phi$.
 
-		      Combining the last two constraints, we obtain the second condition: whenever there exists a set satisfying $\phi$, there must exist a set
-		      satisfying both $\psi$ and $\phi$.
-	\end{enumerate}
-\end{proof}
+			      The formula $\forall X \, (\psi(X) \rightarrow \phi(X))$ ensures that whenever $\psi$ holds for a set, $\phi$ must also hold for that same set.
+
+			      Combining the last two constraints, we obtain the second condition: whenever there exists a set satisfying $\phi$, there must exist a set
+			      satisfying both $\psi$ and $\phi$.
+		\end{enumerate}
+	\end{proof}
+\fi
 
 \begin{definition}\label{def:definable}
 	Let $t$ a "tree". We say that $X \subseteq \Nodes t$ is ""definable"" if there exists an MSO formula $\phi(x)$ such that $ X = \setdef{x} {t \models \phi(x)}$.
@@ -908,46 +962,68 @@ We will discuss some examples of MSO formulas.
 
 \begin{proof}
 	\todo{~}
-
 \end{proof}
 
-In an intuitive way, the above problem is equivalent to asking if the following ''formula'' (it is not a real MSO formula
-because we are quantifying over a formula) holds for every "tree":
-\[ (\exists X.\, \phi(X)) \ra (\exists X, \phi(X) \text{ and $X$ is "definable"})\]
-which can be read as : if there exists a set of solutions for $\phi$ then we can find one that is "definable".
 
-We will start by studying how we can decide for two formulas $\phi(X)$ and $\psi(X)$ if the formula $\Psi := \exists X. \phi (X) \ra \exists Y. \phi' (Y)$
-is satisfiable for all "trees". We will build a "DBUA" than can decide if a "tree" satisfies $\Psi$.
-Thanks to the construction from \Cref{lem:MSO-aut}, we can build a "DBUA" $A = (\Sigma \times \set{0,1}, Q, \init, \delta, F)$ for $\phi(X)$
-and another one $A' = (\Sigma' \times \set{0,1}, Q', \init', \delta', F')$ for $\psi(Y)$.
+In an intuitive way, \Cref{prob:uniformisation-problem} is equivalent to asking whether,
+given a formula $\phi(X)$, the following ''formula'' holds for every "tree":
+
+\[
+	(\exists X.\, \phi(X)) \rightarrow (\exists X.\, \phi(X) \text{ and $X$ is "definable"})
+\]
+
+This can be interpreted as: if there exists a set of solutions for $\phi$, then there exists one that is "definable".
+
+Our objective is to construct an automaton that captures the semantics of this formula. If such an automaton is "universal",
+then it would mean that $\phi(X)$ is "uniformisable". To approach this, we begin by studying a simpler but related example.
+
+Let us consider two formulas, $\phi(X)$ and $\psi(Y)$. Define
+
+\[
+	\Psi := (\exists X.\, \phi(X)) \rightarrow (\exists Y.\, \psi(Y))
+\]
+
+This formula resembles the previous one, it is, in fact, a generalisation. Studying whether it is valid over all "trees" will
+help shed some light to the problem.
+
+Since $\Psi$ is an MSO formula, we know that there exists a "DBUA" that decides it. In particular, thanks to the
+construction from \Cref{lem:MSO-to-aut}, we can build a "DBUA"
+
+\[
+	A_{\phi} = (\Sigma \times \{0,1\}, Q_{\phi}, \init_{\phi}, \delta_{\phi}, F_{\phi})
+\]
+
+for $\phi(X)$, and another one
+
+\[
+	A_{\psi} = (\Sigma \times \{0,1\}, Q_{\psi}, \init_{\psi}, \delta_{\psi}, F_{\psi})
+\]
+
+for $\psi(Y)$.
 
 
-\begin{notation}
-	We note $\delta(X,Y, (a, *))$ for $\{ \delta(X,Y,(a,b)) \}  \mid  x \in X, y \in Y, b \in \set{0,1}\}$ and
-	$\init(a,*)$ for $\setdef{\init(a,b)} {b \in \set{0,1}}$
-	\todo{improve this notation}
-\end{notation}
+We can now build a new "DBUA" $A = (\Sigma, \parts {Q_{\phi}} \times \parts {Q_{\psi}}, \init, \delta, F)$ where
 
-We can now build a new "DBUA" $A'' = (\Sigma, \parts Q \times \parts {Q'}, \init'', \delta'', F'')$ where
 \begin{itemize}
 	\item$\begin{aligned}[t]
-			      \init'' : \Sigma & \to      \parts Q \times \parts {Q'} \\
-			      a                & \mapsto  ( \init(a,*) , \init'(a,*))
+			      \init : \Sigma & \to      \parts {Q_{\phi}} \times \parts {Q_{\psi}} \\
+			      a              & \mapsto  ( \init_{\phi}(a,*) , \init_{\psi}(a,*))
 		      \end{aligned}$
 
 	\item$\begin{aligned}[t]
-			      \delta'' : (\parts Q \times \parts {Q'})^2 \times \Sigma & \to      \parts Q \times \parts {Q'}             \\
-			      ((X,X'),(Y,Y'),a)                                        & \mapsto (\delta(X,Y,(a,*)), \delta'(X',Y',(a,*))
+			      \delta : (\parts {Q_{\phi}} \times \parts {Q_{\psi}})^2 \times \Sigma & \to      \parts {Q_{\phi}} \times \parts {Q_{\psi}}           \\
+			      ((X,X'),(Y,Y'),a)                                                     & \mapsto (\delta_{\phi}(X,Y,(a,*)), \delta_{\psi}(X',Y',(a,*))
 		      \end{aligned}$
 
-	\item $F'' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F' \neq \emptyset)}$
+	\item $F = \setdef {(X,X')} {(X \cap F_{\phi} \neq \emptyset) \ra (X' \cap F_{\psi} \neq \emptyset)}$
 \end{itemize}
-This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Psi$. In particular, using the decision procedure
-from \Cref{coro:univeral-Reach} we can decide if $\Psi$ is satisfied by all models.
 
-We are interested in finding an automaton that, if it is universal, then $\phi$ is "uniformisable". The approach we use consists on slightly modifying
-the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable". We will use the same construction as for $\Psi$ but modifying
-the "transition function".
+This automaton "accepts" a "tree" if and only if that "tree" is a model for $\Psi$. In particular, using the decision procedure
+from \Cref{coro:univeral-Reach} we can decide if $\Psi$ is satisfied by all models, by checking  is $A$ is universal.
+
+We are interested in finding an automaton that it is universal if and only if $\phi$ is "uniformisable". The approach we use consists on slightly modifying
+the automaton for $\exists X. \phi(X) \ra \exists Y. \phi (Y)$ in a way that it guarantees that $Y$ is "definable".
+`We will use the same construction as for $\Psi$ but modifying the "transition function".
 
 \begin{definition}
 	Let $\phi(X)$ a MSO formula, and $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ the "DBUA" for $\phi(X)$, we call $U = (\Sigma, \parts Q \times \parts Q,init_U, \deltau, F')$
@@ -971,6 +1047,15 @@ the "transition function".
 		\item $F' = \setdef {(X,X')} {(X \cap F \neq \emptyset) \ra (X' \cap F \neq \emptyset)}$
 	\end{itemize}
 \end{definition}
+
+
+Intuitively, we want this automaton to check on the left if $\phi(X)$ is satisfiable and then build on the right side a
+solution that is "definable". The way we ensure that the right side builds a "definable" solution is by restrictions its actions.
+It will always build a solution for $\phi$, since it follows the transition of its automaton but, whenever it finds itself unable to
+distinguish the left and the right trees, then it forces the state to be the same on on both sides, ensuring that there is no way of differentiating both sides on the
+solution. On any other case, a solution would be "definable" since one can distinguish the left and the right by the shape of the tree.
+Lets see a few examples: \todo{add examples}
+\todo{add figures to better explain all of this}.
 
 \begin{lemma}
 	Let $\phi(X)$ be an MSO formula, if the "uniformiser automaton" $U$ of $\phi$ is "universal" then $\phi$ is "uniformisable".
@@ -1148,6 +1233,11 @@ the "transition function".
 	We can check if the "uniformiser automaton" of $\phi(X)$ is universal using \Cref{coro:univeral-Reach}. If the test successes,
 	then we know that $\phi$ is "uniformisable" and its uniformiser is $\unif(X)$.
 \end{proof}
+
+\section{Conclusion}
+
+
+\paragraph{Future work}
 
 \bibliographystyle{alpha}
 \bibliography{tre-uniformisation}

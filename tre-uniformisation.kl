@@ -12,12 +12,28 @@
     | Deterministic Bottom-Up Tree automaton
     | Deterministic Bottom-Up tree Automaton
     | deterministic bottom-up tree automaton
+    | deterministic bottom-up automaton
+    | deterministic bottom-up automata
+    | automaton@DBUA
+    | automata@DBUA
     | DBUA
+    | DBUAs
 
-\knowledge{Non-Deterministic Bottom-Up Tree automaton}[NBUA]{notion}
+\knowledge{notion}
+    | Non-Deterministic Bottom-Up Tree automaton
+    | non-deterministic bottom-up tree automaton
+    | non-deterministic bottom-up tree automata
+    | non-deterministic bottom-up automaton
+    | non-deterministic bottom-up automata
+    | automaton@NBUA
+    | automata@NBUA
+    | NBUA
+    | NBUAs
 
 \knowledge{interpretation}{notion}
-\knowledge{associated language}[lang]{notion}
+\knowledge{notion}
+    | associated language
+    | language
 
 \knowledge{notion}
     | Nodes
@@ -52,6 +68,7 @@
     | leaves
     | Leaves
     | leaf
+    | Leaf
 
 \knowledge{notion}
     | label
@@ -65,7 +82,7 @@
 
 \knowledge{notion}
     | order-insensitive
-    | order-insensitiveness
+    | order-insensitivity
 
 \knowledge{notion}
     | acceptant
@@ -102,3 +119,7 @@
 
 \knowledge{notion}
     | definable
+
+
+\knowledge{notion}
+    | model
