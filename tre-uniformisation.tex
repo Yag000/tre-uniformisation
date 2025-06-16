@@ -32,7 +32,7 @@
 \input{macros}
 \input{tre-uniformisation.kl}
 
-\newcommand{\papertitle}{Decidable MSO Uniformisation on Order-Insensitive Binary Trees}
+\newcommand{\papertitle}{Decidable MSO Uniformisation on Binary Trees via Order-Insensitive Automata}
 \newcommand{\paperauthorone}{Thomas Colcombet}
 \newcommand{\paperaffiliationone}{CNRS, IRIF, Université Paris Cité, France}
 \newcommand{\paperauthortwo}{Yago Iglesias Vázquez}
@@ -64,7 +64,7 @@
 
 \begin{titlingpage}
 	\begin{center}
-		{\LARGE \bfseries Decidable MSO Uniformisation on \\ Order-Insensitive Binary Trees \par}
+		{\LARGE \bfseries Decidable MSO Uniformisation on Binary Trees\\ via Order-Insensitive Automata\par}
 
 		\vspace{2em}
 
@@ -83,8 +83,8 @@
 			\small
 			\todo{knowledge all of this}
 			We study uniformisation for MSO formulas over finite binary trees. A formula $\psi(X)$ uniformises $\phi(X)$
-			if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that, when
-			restricting to the case of symmetry-preserving trees (order-insensitive trees), it is decidable whether a
+			if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that,
+			using symmetry-preserving automata (order-insensitive automata), it is decidable whether a
 			given $\phi$ admits such a uniformiser, and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
 			an order-insensitive deterministic bottom-up tree automaton, checks whether that automaton accepts every tree, and—when
 			it does—extracts from its transition relation an MSO formula that uniformly selects a witness. This reduces MSO uniformisation
@@ -118,8 +118,9 @@ formalize this notion in \Cref{sec:uniformisation}.
 This problem has been studied in various settings. A comprehensive survey is provided in~\cite{Cara15}. Positive results are known for infinite words, where every MSO-definable
 relation admits an MSO-definable uniformising function~\cite{Siefkes1975, Choffrut1999, Rabin07}. In contrast, uniformisation is not possible in general for infinite binary
 trees~\cite{GS83}.
-In this work, we study MSO uniformisation over a different class of structures: \emph{finite, unordered, labeled binary trees}. These trees preserve structural symmetry, and
-introduce unique challenges for definable choice, particularly due to the inability to distinguish between left and right subtrees.
+In this work, we study MSO uniformisation over a different class of structures: \emph{finite, labeled binary trees}.
+All of the technical work is performed using only automata that preserve structural symmetry,
+\ie they are unable to distinguish between left and right subtrees.
 
 The central question addressed in this paper is:
 
@@ -133,7 +134,7 @@ automaton—does it accept every tree?—and, when it does, we extract from its 
 
 This paper makes three main contributions:
 \begin{itemize}
-	\item Extending the decidability of MSO "uniformisation" to unordered binary "trees",
+	\item Extending the decidability of MSO "uniformisation" to finite binary "trees" using only symmetry preserving automata,
 	\item Providing a constructive method to extract a "uniformiser" via "automata universality", and
 	\item Demonstrating how to handle sibling‐permutation symmetry in "tree" transformations.
 \end{itemize}
@@ -182,7 +183,8 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 	\caption{Concrete tree corresponding to $a(b, c(d, e))$.}
 \end{figure}
 
-This recursive structure induces a natural notion of position within a "tree". We now define the set of "nodes", represented as words over $\{0,1\}$ indicating a path from the root.
+This recursive structure induces a natural notion of position within a "tree". We now define the set of "nodes",
+represented as words over $\{0,1\}$ indicating a path from the root.
 
 \begin{definition}["Nodes"]
 	\AP The ""nodes"" of a "tree" are defined as follows:
@@ -228,7 +230,8 @@ Among the "nodes", some are distinguished as "leaves", "nodes" without children.
 \end{definition}
 
 
-Each "node" in a "tree" carries a symbol from the alphabet. The following definition formalizes how to access the "label" at a given "node".
+Each "node" in a "tree" carries a symbol from the alphabet. The following definition formalizes how to
+access the "label" at a given "node".
 
 \begin{definition}
 	\AP We note $\intro* \tlabel t n$ the ""label"" of the "node" $n$ in the "tree" $t$:
@@ -242,7 +245,8 @@ Each "node" in a "tree" carries a symbol from the alphabet. The following defini
 	\]
 \end{definition}
 
-We often need to refer to the "subtree" rooted at a particular "node". The next definition allows us to extract such a "subtree" from a given "tree".
+We often need to refer to the "subtree" rooted at a particular "node". The next definition allows us to
+extract such a "subtree" from a given "tree".
 
 \begin{definition}
 	\AP We note $\intro* \subtree t n$ the ""subtree"" corresponding to the "node" $n$ in the "tree" $t$:
@@ -255,7 +259,8 @@ We often need to refer to the "subtree" rooted at a particular "node". The next 
 	\]
 \end{definition}
 
-The "ancestor" relation captures the natural hierarchical structure of a "tree": a "node" $x$ is an "ancestor" of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
+The "ancestor" relation captures the natural hierarchical structure of a "tree": a "node" $x$ is an "ancestor"
+of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 
 \begin{definition}
 	\AP Let $t$ be a "tree" and $x, y \in \Nodes t$. We define the ""ancestor"" relation as:
@@ -265,7 +270,8 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 \end{definition}
 
 \begin{remark}
-	Note that this order does not depend on the left or right position of the children, \ie it preserves "order-insensitiveness", this will be explored in the following sections.
+	Note that this order does not depend on the left or right position of the children, \ie it preserves
+	"order-insensitiveness", this will be explored in the following sections.
 \end{remark}
 
 
@@ -416,12 +422,14 @@ tree automata using the same techniques. We will define them and give basic defi
 We can easily see that "DBUA" are a particular case of "NBUA", just like in the classic theory.
 
 \begin{remark}
-	A "DBUA" is a particular case of a "NBUA" , $A = (\Sigma, Q, I, \Delta, F)$ verifying that
-	\[ \text{for all } q,r,a,t,t' \ (q,r,a,t) \in \Delta \text{ and } (q,r,a,t') \in \Delta  \text{ implies } t = t' \]
-\end{remark}
+	Every "DBUA" $A = (\Sigma, Q, \init, \delta, F)$ can be seen as a special case of a "NBUA"
+	$A' = (\Sigma, Q, I, \Delta, F)$ where:
+	\begin{itemize}
+		\item $I = \setdef{(a, \init_a)}{a \in \Sigma}$,
+		\item $\Delta = \setdef{(q_1, q_2, a, \delta_a(q_1, q_2))}{q_1, q_2 \in Q, a \in \Sigma}$.
+	\end{itemize}
 
-\begin{remark}
-	In the case of a "DBUA" there exists a unique "run" that corresponds to :
+	In this case, $A'$ has exactly one possible "run" on each "tree" :
 
 	\begin{eqnarray*}
 		\exec : \Nodes t &\to & Q \\
@@ -455,8 +463,8 @@ The following lemma shows the equivalence of both definitions.
 \end{proof}
 
 
-We aim now to show that, like in the classical theory, both non-deterministic automata and deterministic ones have the same expressiveness power. Since "DBUA" is
-a particular case of "NBUA" it suffices to show that each language accepted by an "NBUA" can also be accepted by a "DBUA".
+We aim now to show that, like in the classical theory, both non-deterministic automata and deterministic ones have the same expressiveness power.
+Since "DBUA" is a particular case of "NBUA" it suffices to show that each language accepted by an "NBUA" can also be accepted by a "DBUA".
 
 \begin{definition}
 	Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
@@ -533,10 +541,45 @@ interesting because they respect the symmetries of "trees".
 	$(q,p,a,r) \in \Delta$.
 \end{definition}
 
-\begin{remark}
+\begin{remark}\label{def:order-insensitive}
 	For a "DBUA" of "transition map"~$\delta$, it is "order-insensitive" if and only if
 	$\delta_a (p,q) = \delta_a (q,p)$ for all "states"~$p,q$ and letter~$a$.
 \end{remark}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[
+			level distance=1.2cm,
+			level 1/.style={sibling distance=1.5cm},
+			every node/.style={draw, circle},
+			baseline={(current bounding box.center)}
+		]
+
+		% Left Tree
+		\node (root1) {$a$}
+		child {node {$t_1$}}
+		child {node {$t_2$}};
+
+		% Right Tree
+		\node (root2) at (6,0) {$a$}
+		child {node {$t_2$}}
+		child {node {$t_1$}};
+
+		% State s
+		\node[draw=blue] (s) at (3, -0.5) {$s$};
+
+		% Arrows
+		\draw[->, thick, draw=blue] (root1) to[out=0, in=180] node[draw=none, midway, below] {\(\delta_a\)} (s);
+		\draw[->, thick, draw=blue] (root2) to[out=180, in=0] node[draw=none, midway, below] {\(\delta_a\)} (s);
+
+	\end{tikzpicture}
+	\caption{Illustration of "order-insensitivity" in a "DBUA" (see \Cref{def:order-insensitive}).
+		Both trees yield the same state $s$ under the transition map $\delta_a$.}
+	\label{fig:order-insensitivity}
+\end{figure}
+
+
 
 \begin{lemma}
 	If $N = \NBUA$ a "NBUA" is "order-insensitive", then $\Det N$ is also "order-insensitive".
