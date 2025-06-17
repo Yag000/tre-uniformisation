@@ -1,4 +1,4 @@
-\documentclass[twoside]{article}
+\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2021}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -14,12 +14,6 @@
 \usepackage{tikz-cd}
 \usepackage{graphicx}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{setspace}
-\usepackage{fancyhdr}
-\usepackage{titling}
-\usepackage{authblk}
-\usepackage{datetime}
 \usepackage[shortlabels]{enumitem}
 \usepackage{caption}
 
@@ -29,59 +23,61 @@
 \usepackage[hyperref]{knowledge}
 \knowledgeconfigure{label scope=false, notion, quotation, protect quotation={tikzcd, automata}}
 
+\bibliographystyle{plainurl}
+
+
 \input{macros}
 \input{tre-uniformisation.kl}
 
-\newcommand{\papertitle}{Decidable MSO Uniformisation on Binary Trees via Order-Insensitive Automata}
-\newcommand{\paperauthorone}{Thomas Colcombet}
-\newcommand{\paperaffiliationone}{CNRS, IRIF, Université Paris Cité, France}
-\newcommand{\paperauthortwo}{Yago Iglesias Vázquez}
-\newcommand{\paperaffiliationtwo}{Université Paris Cité, France}
-\newcommand{\paperdate}{\today}
+%\hypersetup{
+%    pdftitle={\papertitle},
+%    pdfauthor={\paperauthorone, \paperauthortwo},
+%    colorlinks=true,
+%    linkcolor=blue,
+%    citecolor=blue,
+%    urlcolor=blue
+%}
 
-\hypersetup{
-    pdftitle={\papertitle},
-    pdfauthor={\paperauthorone, \paperauthortwo},
-    colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue,
-    urlcolor=blue
-}
+%\fancyhf{}
+%\fancyhead[LO]{\textit{\papertitle}}
+%\fancyhead[RE]{\textit{\paperauthorone, \paperauthortwo}}
+%\fancyhead[RO]{\thepage}
+%\fancyhead[LE]{\thepage}
 
-\fancyhf{}
-\fancyhead[LO]{\textit{\papertitle}}
-\fancyhead[RE]{\textit{\paperauthorone, \paperauthortwo}}
-\fancyhead[RO]{\thepage}
-\fancyhead[LE]{\thepage}
+%\pagestyle{fancy}
 
-\pagestyle{fancy}
 
-\newdateformat{monthyeardate}{\monthname[\THEMONTH], \THEYEAR}
 
-\onehalfspacing
+\title{Decidability of MSO Uniformisation on Finite Trees}
+
+\author{Thomas Colcombet}
+	{CNRS, IRIF, Universit\'e Paris Diderot, France}
+	{thomas.colcombet@irif.fr}
+	{https://orcid.org/0000-0001-6529-6963}
+	{}
+
+\author{Yago Iglesias Vázquez}{Universit\'e Paris Diderot, France}{...}{}{}
+
+
+\authorrunning{T. Colcombet, Y. Iglesias Vázquez} 
+
+\Copyright{Thomas Colcombet, Yago Iglesias Vázquez} 
+
+\ccsdesc[500]{Theory of computation~Finite Model Theory}
+\ccsdesc[500]{Theory of computation~Algebraic language theory}
+\ccsdesc[500]{Theory of computation~Regular languages}
+
+\keywords{MSO, uniformization, finite state automata, trees} 
+
+\category{Rapport de stage} 
+
+\relatedversion{} 
 
 \begin{document}
 
-\begin{titlingpage}
-	\begin{center}
-		{\LARGE \bfseries Decidable MSO Uniformisation on Binary Trees\\ via Order-Insensitive Automata\par}
+\maketitle
 
-		\vspace{2em}
-
-		{\bfseries \paperauthorone \par}
-		{\itshape \paperaffiliationone \par}
-		\vspace{1em}
-
-		{\bfseries \paperauthortwo \par}
-		{\itshape \paperaffiliationtwo \par}
-
-		\vspace{3em}
-
-		\begin{minipage}{0.8\textwidth}
-			\noindent
-			\textbf{Abstract:}
-			\small
-			\todo{knowledge all of this}
+\begin{abstract}			\todo{knowledge all of this}
 			We study uniformisation for MSO formulas over finite binary trees. A formula $\psi(X)$ uniformises $\phi(X)$
 			if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that,
 			using symmetry-preserving automata (order-insensitive automata), it is decidable whether a
@@ -89,17 +85,7 @@
 			an order-insensitive deterministic bottom-up tree automaton, checks whether that automaton accepts every tree, and—when
 			it does—extracts from its transition relation an MSO formula that uniformly selects a witness. This reduces MSO uniformisation
 			on unordered trees to a simple automata universality test and a formula extraction step.
-		\end{minipage}
-
-		\vfill
-
-		\includegraphics[height=2.5cm]{images/logo-paris-cite.png}
-
-		\vspace{1em}
-
-		{\large \monthyeardate\today \par}
-	\end{center}
-\end{titlingpage}
+\end{abstract}
 
 \section{Introduction}
 
