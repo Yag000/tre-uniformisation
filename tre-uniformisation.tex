@@ -18,14 +18,16 @@
 
 \usepackage{hyperref}
 
+\usepackage{color}
+\usepackage{xcolor}
+
 \usepackage[hyperref]{knowledge}
 \knowledgeconfigure{label scope=false, notion, quotation, protect quotation={tikzcd, automata}}
-
-\bibliographystyle{plainurl}
 
 
 \input{macros}
 \input{tre-uniformisation.kl}
+
 
 \title{Decidability of MSO Uniformisation on Finite Trees}
 
@@ -103,6 +105,10 @@ This paper makes three main contributions:
 	\item Providing a constructive method to extract a "uniformiser" via "automata universality", and
 	\item Demonstrating how to handle sibling‐permutation symmetry in "tree" transformations.
 \end{itemize}
+
+
+\todo{make this work with new sections}
+
 
 The remainder of the paper is structured as follows:
 \Cref{sec:trees} introduces our notation for trees and MSO logic.
@@ -411,6 +417,7 @@ We can easily see that "DBUA" are a particular case of "NBUA", just like in the 
 		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 \end{remark}
+
 
 The following lemma shows the equivalence of both definitions.
 
@@ -918,8 +925,11 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 \end{lemma}
 
 \begin{proof}
-	\todo{~}
+	\todo{True after the proof}
 \end{proof}
+
+
+\todo{define automorphism}
 
 \begin{lemma}\label{lem:def-aut}
 	If $X$ is "definable" over a "tree" $t$, then for all $\sigma \in \Aut(t)$, $\sigma(X) = X$.
@@ -927,6 +937,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 
 \begin{proof}
 	\todo{~}
+    The idea is that MSO cannot distinguish between symetries.
 \end{proof}
 
 
@@ -1156,7 +1167,6 @@ Lets see a few examples: \todo{add examples}
 	and $Q \subseteq \{ \delta_A (t_{Q,Q'},X) : X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
 	$T = \delta_A(P,Q,(a,*)) \subseteq \{ \delta_A (t_{T,T'},X) : X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \ref{lem:prop1}.
 
-
 	We will prove \ref{lem:prop2} by case distinction.
 	Let $X \subseteq \Nodes {t_{P,P'}}$ such that $\forall \sigma \in \Aut (t_{T,T'}), \sigma(X) = X$, we introduce the
 	sets $X_1 = X \cap \Nodes {t_{P,P'}}$ and $X_2 = X \cap \Nodes {t_{Q,Q'}}$.
@@ -1204,7 +1214,7 @@ Lets see a few examples: \todo{add examples}
 
 \paragraph{Future work}
 
-\bibliographystyle{alpha}
+\bibliographystyle{plainurl}
 \bibliography{tre-uniformisation}
 
 \end{document}

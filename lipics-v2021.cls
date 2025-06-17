@@ -595,7 +595,7 @@
         backgroundcolor=\color{lipicsLightGray},%
         frame=single,framerule=0pt,xleftmargin=\fboxsep,xrightmargin=\fboxsep}
 \RequirePackage[left,mathlines]{lineno}
-%\linenumbers
+\linenumbers
 \renewcommand\linenumberfont{\normalfont\tiny\sffamily}
 %%%% patch to cope with amsmath
 %%%% http://phaseportrait.blogspot.de/2007/08/lineno-and-amsmath-compatibility.html
