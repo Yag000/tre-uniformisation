@@ -57,6 +57,7 @@
 	{}
 
 \author{Yago Iglesias Vázquez}{Universit\'e Paris Diderot, France}{...}{}{}
+\nolinenumbers %uncomment to disable line numbering
 
 
 \authorrunning{T. Colcombet, Y. Iglesias Vázquez} 
@@ -87,6 +88,8 @@
 			on unordered trees to a simple automata universality test and a formula extraction step.
 \end{abstract}
 
+\tableofcontents
+\newpage
 \section{Introduction}
 
 Monadic second‐order (MSO) logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
@@ -125,15 +128,20 @@ This paper makes three main contributions:
 	\item Demonstrating how to handle sibling‐permutation symmetry in "tree" transformations.
 \end{itemize}
 
-The remainder of the paper is structured as follows:
-\Cref{sec:trees} introduces our notation for trees and MSO logic.
-\Cref{sec:automata} reviews bottom‐up tree automata, presents the order‐insensitive variant, and defines the universality test.
-\Cref{sec:MSO} shows how to translate between MSO formulas and automata while preserving order insensitivity.
+\paragraph*{Structure of the paper.} The remainder of the paper is structured as follows:
 \Cref{sec:uniformisation} brings these elements together to decide MSO "uniformisation" and construct a "uniformiser" where possible.
 We conclude with related work and future research directions.
 
+\section{Definitions}
+\label{sec:definitions}
 
-\section{Trees}\label{sec:trees}
+In this section, we present classical notions of trees, automata and logic.
+\Cref{sec:trees} introduces our notation for trees and MSO logic.
+\Cref{sec:automata} reviews bottom‐up tree automata, presents the order‐insensitive variant, and defines the universality test.
+\Cref{sec:MSO} shows how to translate between MSO formulas and automata while preserving order insensitivity.
+
+
+\subsection{Trees}\label{sec:trees}
 
 This first section contains the definition of the "trees" we are working with. Other equivalent definitions of "trees" and
 automata are possible~\cite{Thomas1997, tata}, but we have chosen this one because it is more intuitive, without adding much complexity to the proofs.
@@ -261,7 +269,7 @@ of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 \end{remark}
 
 
-\section{Automata over trees}\label{sec:automata}
+\subsection{Automata over trees}\label{sec:automata}
 
 In this section we aim to define the basics of tree automata in a comprehensive way adding as much detail as possible to the proofs. For reference,
 one can look at more advanced book on this topic \cite{tata,Thomas1997,bookautomata}.
@@ -286,7 +294,7 @@ The idea is to recursively assign a "state" to each "node" of the "tree":
 We now state the formal definitions.
 
 \begin{definition}
-	\AP A ""Deterministic Bottom-Up tree Automaton"" (DBUA) is defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
+	\AP A ""deterministic bottom-up tree automaton"" (\reintro*"DBUA") is a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		      \itemAP $Q$ is a finite set of ""states"".
@@ -297,7 +305,7 @@ We now state the formal definitions.
 \end{definition}
 
 \begin{definition}[Interpretation of an automaton]
-	\AP The ""interpretation"" of a "DBUA" $A = (\Sigma, Q, \text{init}, \delta, F)$  over an alphabet $\Sigma$ is defined as follows:
+	\AP The ""interpretation"" of a "DBUA" $A = (\Sigma, Q, \init, \delta, F)$  over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\intro* \interpret A ~: \tree_{\Sigma} &\to& Q \\
 		a &\mapsto& \init_a \\
@@ -655,7 +663,7 @@ interesting because they respect the symmetries of "trees".
 \end{coro}
 
 
-\section{Tree Automata and MSO Logic}\label{sec:MSO}
+\subsection{Monadic second-order logic}\label{sec:MSO}
 
 In this section, we introduce "Monadic Second-Order Logic" (MSO) over finite binary "trees",
 and examine its relationship with "non-deterministic bottom-up automata", in partivulat with "order-insensitive" automata.
@@ -842,7 +850,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 	\end{itemize}
 \end{lemma}
 
-\begin{lemma}[MSO to Automaton]\label{lem:MSO-to-aut}
+\begin{lemma}[from MSO to automata]\label{lem:MSO-to-aut}
 	Let $\phi$ be an MSO formula. Then there exists an "order-insensitive" "NBUA" $A$ such that for every $t \in \tree_\Sigma$, we have:
 	\[
 		t \models \phi \quad \text{if and only if} \quad t \in \lang{A}.
@@ -890,6 +898,8 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 
 
 \section{Uniformisation}\label{sec:uniformisation}
+
+\subsection{Definition of uniformisation}
 
 \begin{definition}[Uniformiser]\label{def:uniformiser}
 	We say that a formula $\psi(X)$ is a ""uniformiser"" of $\phi(X)$ if for all "trees" $t$, the following conditions hold:
@@ -1223,7 +1233,6 @@ Lets see a few examples: \todo{add examples}
 \section{Conclusion}
 
 
-\paragraph{Future work}
 
 \bibliographystyle{alpha}
 \bibliography{tre-uniformisation}
