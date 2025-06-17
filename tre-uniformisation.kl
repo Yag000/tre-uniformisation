@@ -9,8 +9,7 @@
     | subtrees
 
 \knowledge{notion}
-    | Deterministic Bottom-Up Tree automaton
-    | Deterministic Bottom-Up tree Automaton
+    | Deterministic bottom-up tree automaton
     | deterministic bottom-up tree automaton
     | deterministic bottom-up automaton
     | deterministic bottom-up automata
@@ -20,7 +19,7 @@
     | DBUAs
 
 \knowledge{notion}
-    | Non-Deterministic Bottom-Up Tree automaton
+    | Non-deterministic bottom-up tree automaton
     | non-deterministic bottom-up tree automaton
     | non-deterministic bottom-up tree automata
     | non-deterministic bottom-up automaton
@@ -30,7 +29,9 @@
     | NBUA
     | NBUAs
 
-\knowledge{interpretation}{notion}
+\knowledge{notion}
+    | interpretation
+
 \knowledge{notion}
     | associated language
     | language
@@ -54,12 +55,8 @@
     | states
 
 \knowledge{notion}
-    | cartesian product automata
-
-\knowledge{notion}
     | final state
     | final states
-
 
 \knowledge{notion}
     | power set automaton
@@ -74,7 +71,8 @@
     | label
     | labels
 
-\knowledge{ancestor}{notion}
+\knowledge{notion}
+    | ancestor
 
 \knowledge{notion}
     | run
@@ -90,7 +88,6 @@
     | accepts
     | accepted
     | accepting run
-
 
 \knowledge{notion}
     | universal
@@ -113,13 +110,11 @@
 \knowledge{notion}
     | uniformiser automaton
 
-
 \knowledge{notion}
     | root
 
 \knowledge{notion}
     | definable
-
 
 \knowledge{notion}
     | model

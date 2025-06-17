@@ -56,19 +56,19 @@
 
 \maketitle
 
-\begin{abstract}			\todo{knowledge all of this}
-			We study uniformisation for MSO formulas over finite binary trees. A formula $\psi(X)$ uniformises $\phi(X)$
+\begin{abstract}
+			We study "uniformisation" for "MSO" formulas over finite binary "trees". A formula $\psi(X)$ "uniformises" $\phi(X)$
 			if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that,
-			using symmetry-preserving automata (order-insensitive automata), it is decidable whether a
-			given $\phi$ admits such a uniformiser, and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
-			an order-insensitive deterministic bottom-up tree automaton, checks whether that automaton accepts every tree, and—when
-			it does—extracts from its transition relation an MSO formula that uniformly selects a witness. This reduces MSO uniformisation
-			on unordered trees to a simple automata universality test and a formula extraction step.
+			using symmetry-preserving automata ("order-insensitive" automata), it is decidable whether a
+			given $\phi$ admits such a "uniformiser", and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
+			an "order-insensitive" "deterministic bottom-up tree automaton", checks whether that "automaton@DBUA" "accepts" every "tree", and, when
+			it does, extracts from its "transition relation" an "MSO" formula that uniformly selects a witness. This reduces "MSO" "uniformisation"
+			on finite "trees" to a simple "automata universality" test and a formula extraction step.
 \end{abstract}
 
 \section{Introduction}
 
-Monadic second‐order (MSO) logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
+"Monadic second‐order" ("MSO") logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
 In particular, its deep connection with automata theory has been extensively explored. It is well known that MSO over finite words is equivalent in expressive power to
 finite-state automata~\cite{buchi60}.
 
@@ -265,7 +265,7 @@ The idea is to recursively assign a "state" to each "node" of the "tree":
 We now state the formal definitions.
 
 \begin{definition}
-	\AP A ""Deterministic Bottom-Up tree Automaton"" (DBUA) is defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
+	\AP A ""deterministic bottom-up tree automaton"" (DBUA) is defined as as a tuple $(\Sigma, Q, \text{init}, \delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		      \itemAP $Q$ is a finite set of ""states"".
@@ -363,7 +363,7 @@ In the same way that we can define a non-deterministic automaton over strings, t
 tree automata using the same techniques. We will define them and give basic definitions on how to use them.
 
 \begin{definition}
-	\AP A ""Non-Deterministic Bottom-Up Tree automaton"" (NBUA) is defined as a tuple
+	\AP A ""non-deterministic bottom-up tree automaton"" (NBUA) is defined as a tuple
 	$(\Sigma, Q, I, \Delta, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
@@ -441,7 +441,7 @@ We aim now to show that, like in the classical theory, both non-deterministic au
 Since "DBUA" is a particular case of "NBUA" it suffices to show that each "language" accepted by an "NBUA" can also be accepted by a "DBUA".
 
 \begin{definition}
-	Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
+    \AP Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
 	$\Det A = (\Sigma, \parts Q, \text{init}, \delta, F')$ where:
 
 	\begin{itemize}
@@ -511,7 +511,7 @@ That means that the state reached from the two children is the same if we swap t
 interesting because they respect the symmetries of "trees".
 
 \begin{definition}
-	An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
+    \AP An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
 	$(q,p,a,r) \in \Delta$.
 \end{definition}
 
@@ -571,7 +571,7 @@ interesting because they respect the symmetries of "trees".
 \subsection{Universality}\label{sec:UniversalityAutomata}
 
 \begin{definition}
-	Let $A = \DBUA$ a "DBUA", let $\intro* \Reach A \subseteq Q$ be the smallest set such that
+    \AP Let $A = \DBUA$ a "DBUA", let $\intro* \Reach A \subseteq Q$ be the smallest set such that
 	\begin{enumerate}
 		\item $\init (a) \in \Reach A$ for all $a \in \Sigma$,
 		\item $\delta (p,q,a) \in \Reach A$ for all $p,q \in \Reach A$ and $a \in \Sigma$.
@@ -608,7 +608,7 @@ interesting because they respect the symmetries of "trees".
 \end{proofI}
 
 \begin{definition}
-	Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every "tree".
+    \AP Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every "tree".
 \end{definition}
 
 
@@ -636,7 +636,7 @@ interesting because they respect the symmetries of "trees".
 
 \section{Tree Automata and MSO Logic}\label{sec:MSO}
 
-In this section, we introduce "Monadic Second-Order Logic" (MSO) over finite binary "trees",
+In this section, we introduce "Monadic second-order logic" ("MSO") over finite binary "trees",
 and examine its relationship with "non-deterministic bottom-up automata", in partivulat with "order-insensitive" automata.
 
 We will use this equivalence later to reason about "MSO" formulas using automata-theoretic techniques. In particular, this will allow us to:
@@ -649,10 +649,10 @@ The proof follows the classical schema.
 We start by showing that every "automaton@NBUA" can be expressed as a formula. The proof itself is standard \cite{Buchi60, Thomas1997, bookautomata}.
 
 \begin{definition}
-	Let $t \in \tree_{\Sigma}$. We define a ""model"" of $t$ as:
+    \AP Let $t \in \tree_{\Sigma}$. We define a ""model"" of $t$ as:
 
 	\[
-		\Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma})
+		\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma})
 	\]
 
 	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a$.
@@ -663,25 +663,25 @@ We start by showing that every "automaton@NBUA" can be expressed as a formula. T
 We will discuss some examples of "MSO" formulas.
 
 \begin{example}
-	The formula
+    \AP The formula
 	\[
-		\leaf(x) = \forall y,\, y \ancestor x
+		\intro* \leaf(x) = \forall y,\, y \ancestor x
 	\]
 	expresses the fact that $x$ is a "leaf", a node without descendants.
 \end{example}
 
 \begin{example}
-	The formula
+    \AP The formula
 	\[
-		\treeroot(x) = \forall y,\, x \ancestor y
+		\intro* \treeroot(x) = \forall y,\, x \ancestor y
 	\]
 	defines the "root" of the "tree", meaning a node that is an "ancestor" of every other node.
 \end{example}
 
 \begin{example}
-	The following formula expresses that $x$ and $y$ are the immediate children of a node $z$:
+    \AP The following formula expresses that $x$ and $y$ are the immediate children of a node $z$:
 	\[
-		\children(x,y,z) =
+		\intro* \children(x,y,z) =
 		x \neq y \land
 		z \ancestor x \land  z \ancestor y \land
 		\forall w
