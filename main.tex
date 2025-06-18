@@ -72,7 +72,6 @@
 \todo{remove table of contents}
 \todo{change knowledge mode}
 \todo{an vs a}
-\todo{verify that the AP are all there}
 \newpage
 \section{Introduction}
 
@@ -774,7 +773,8 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 \todo{maybe move these automata to the annex}
 
 \begin{lemma}\label{lem:atomic-a}
-	Let $a \in \Sigma$. Over the alphabet $\Sigma \times \{0,1\}$, there exists an "order-insensitive" automaton deciding the atomic predicate $a(x)$, where $x$ is a free first-order variable. Define:
+	Let $a \in \Sigma$. Over the alphabet $\Sigma \times \{0,1\}$, there exists an "order-insensitive" automaton deciding 
+    the atomic predicate $a(x)$, where $x$ is a free first-order variable. Define:
 	\[
 		A = (\Sigma \times \{0,1\}, \{\text{Yes}, \text{No}\}, \init, \delta, \text{Yes}),
 	\]
@@ -889,7 +889,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 
 
 \section{Uniformisation}\label{sec:uniformisation}
- 2
+
 In this section we are going to formally define what "uniformisation" is, give some intuition about it,
 propose an algorithm that decides "uniformization" on finite binary trees and prove its correctness and soundness.
 The main result is \Cref{thm:uniformisability-decision}.
