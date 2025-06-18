@@ -115,19 +115,20 @@ This paper makes three main contributions:
 \end{itemize}
 
 
-\todo{make this work with new sections}
 \paragraph*{Structure of the paper.} The remainder of the paper is structured as follows:
+\Cref{sec:definitions} introduces the necessary definitions, notations and classical results on "trees", "automata@DBUA", and "MSO logic", with an emphasis on the "order-insensitive"
+variant of tree automata.
+In \Cref{sec:uniformisation}, we define the uniformisation problem and present our main result, showing that it is decidable for finite binary trees.
+We conclude in \Cref{sec:conclusion} with a discussion of the implications of our results and potential future work.
 
-\section{Definitions}
-\label{sec:definitions}
+\section{Definitions} \label{sec:definitions}
 
-\todo{work on this}
-In this section, we present classical notions of trees, automata and logic.
-\Cref{sec:trees} introduces our notation for trees.
-\Cref{sec:automata} reviews bottom‐up tree automata, \Cref{sec:OrderAutomata} presents the order‐insensitive variant,
-and \Cref{sec:UniversalityAutomata} defines the universality test.
-\Cref{sec:MSO} shows how to translate between MSO formulas and automata while preserving order insensitivity.
-
+In this section, we review classical concepts related to trees, automata, and logic.
+\Cref{sec:trees} establishes our notation for trees.
+\Cref{sec:automata} provides a brief overview of bottom-up tree automata.
+\Cref{sec:OrderAutomata} introduces an order-insensitive variant of these automata, and
+\Cref{sec:UniversalityAutomata} defines a corresponding universality test.
+Finally, \Cref{sec:MSO} describes how to translate MSO formulas into automata while preserving order insensitivity.
 
 \subsection{Trees}\label{sec:trees}
 
@@ -559,74 +560,76 @@ interesting because they respect the symmetries of "trees".
 	\end{eqnarray*}
 \end{proof}
 
-
 \subsection{Universality}\label{sec:UniversalityAutomata}
 
-\todo{write intro here}
+In this section, we define the "reachability set" of a "DBUA" and show that it can be used to decide the "universality" of the automaton.
 
-\begin{definition}
-	\AP Let $A = \DBUA$ a "DBUA", let $\intro* \Reach A \subseteq Q$ be the smallest set such that
+\begin{definition}["Reachability set"]
+	\AP Let $A = \DBUA$ a "DBUA", and let $\intro* \Reach A \subseteq Q$ be the smallest set such that:
 	\begin{enumerate}
-		\item $\init (a) \in \Reach A$ for all $a \in \Sigma$,
-		\item $\delta (p,q,a) \in \Reach A$ for all $p,q \in \Reach A$ and $a \in \Sigma$.
+		\item $\init(a) \in \Reach A$ for all $a \in \Sigma$,
+		\item $\delta(p, q, a) \in \Reach A$ for all $p, q \in \Reach A$ and $a \in \Sigma$.
 	\end{enumerate}
 \end{definition}
 
+This set captures all "states" that can be reached by the automaton starting from the "leaves" and combining them using the transition function.
+In particular, it represents the set of all "states" that can be reached when the automaton processes all possible "trees", motivating the following lemma.
 
 \begin{lemma}
-	Let $A$ a "DBUA", then
-	\[\Reach A = \setdef {\interpret A t} {t \in \tree_\Sigma} \]
+	Let $A$ be a "DBUA", then:
+	\[
+	\Reach A = \setdef {\interpret A t} {t \in \tree_\Sigma}.
+	\]
 \end{lemma}
 
-
 \begin{proofI}
+	We prove the equality by showing both inclusions.
 	\begin{itemize}
-		\item $\bsubLR$\vspace{0.15cm}\\
-		      We will prove by induction that $r \in \Reach A \implies$ there exists $t \in \tree_\Sigma$ such that
-		      $\interpret A t = r$.
-
+		\item For the direction $\Reach A \subseteq \setdef {\interpret A t} {t \in \tree_\Sigma}$, we proceed by induction over the construction of elements in $\Reach A$:
 		      \begin{itemize}
-			      \item If $r = \init(a) \in \Reach A$, then the "tree" $a$ works : $\interpret A a = \init (a) = r$.
-			      \item If $r = \delta (p,q,a) \in \Reach A$ where $p,q \in \Reach A$ and $a \in \Sigma$. Then by the induction hypothesis
-			            there exists $t'$ such that $\interpret A {t'} = p$ and $t''$ such that $\interpret A {t''} = q$.
-			            Then we have that $t = a(t',t'')$ verifies $\interpret A t = r$.
+			      \item If $r = \init(a)$ for some $a \in \Sigma$, then the "tree" $a$ satisfies $\interpret A a = \init(a) = r$.
+			      \item If $r = \delta(p, q, a)$ where $p, q \in \Reach A$, then by the induction hypothesis there exist 
+                      $t', t'' \in \tree_\Sigma$ such that $\interpret A {t'} = p$ and $\interpret A {t''} = q$. Then the "tree" $t = a(t', t'')$ satisfies $\interpret A t = r$.
 		      \end{itemize}
-		\item $\bsubRL$\vspace{0.15cm}\\
-		      We will prove it by induction on the structure of a "tree" $t$. We proceed by case distinction.
+
+		\item For the direction $\setdef {\interpret A t} {t \in \tree_\Sigma} \subseteq \Reach A$, we use structural induction on the "tree" $t$:
 		      \begin{itemize}
-			      \item If $t = a$, then we have $ \interpret A a = \init (a) \in \Reach A$
-			      \item If $t = a(t',t'')$, we have $ \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A$
-			            because by the induction hypothesis $\interpret A {t'} \in \Reach A$  and $\interpret A {t''} \in \Reach A$.
+			      \item If $t = a$, then $\interpret A a = \init(a) \in \Reach A$.
+			      \item If $t = a(t', t'')$, then by the induction hypothesis $\interpret A {t'}, \interpret A {t''} \in \Reach A$, so
+			            \[
+			            \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A.
+			            \]
 		      \end{itemize}
 	\end{itemize}
 \end{proofI}
 
 \begin{definition}
-	\AP Let $A $ a "NBUA" we say that it is ""universal"" if it "accepts" every "tree".
+	\AP Let $A$ be a "NBUA". We say that $A$ is "universal" if it "accepts" every "tree".
 \end{definition}
 
+Once we have defined the "reachability set", we can use it to decide whether an automaton is "universal". Intuitively, a "DBUA" is "universal" if 
+the only "states" it can reach are "final states". This is formalized in the following theorem.
 
 \begin{theorem}
-	$A = \DBUA$ is "universal" if and only if $\Reach A \subseteq F$.
+	A "DBUA" $A = \DBUA$ is "universal" if and only if $\Reach A \subseteq F$.
 \end{theorem}
 
 \begin{proofI}
 	\begin{itemize}
-		\item $\bimpLR$\\
-		      We suppose $A$ "universal", then for all $t \in \tree_\Sigma$ we have that $\interpret A t \in F$, because $A$ "accepts" $t$.
-		      Since $\Reach A = \setdef {\interpret A t} {t\in \tree_\Sigma}$ we have that $\Reach A \subseteq F$.
+		\item Suppose $A$ is "universal". Then for all $t \in \tree_\Sigma$, we have $\interpret A t \in F$ because $A$ "accepts" $t$.
+		      Since $\Reach A = \setdef {\interpret A t} {t \in \tree_\Sigma}$, we conclude that $\Reach A \subseteq F$.
 
-		\item $\bimpRL$\\
-		      We suppose $\Reach A \subseteq F$. Let $t$ be a "tree", then $\interpret A t \in \Reach A \subseteq F$, so $\interpret A t \in F$ and $A$
-		      "accepts" $t$. We have proven that $A$ is "universal".
+		\item Conversely, suppose $\Reach A \subseteq F$. For any "tree" $t \in \tree_\Sigma$, we have $\interpret A t \in \Reach A \subseteq F$.
+		      Hence, $A$ "accepts" $t$ and is therefore "universal".
 	\end{itemize}
 \end{proofI}
-
 
 \begin{coro}\label{coro:univeral-Reach}
 	A saturation algorithm based on $\Reach A$ decides "universality".
 \end{coro}
 
+We have now defined an algorithm to decide whether a "DBUA" is "universal". 
+This result will be used in \Cref{sec:uniformisation} to decide "uniformisation".
 
 \subsection{Monadic second-order logic}\label{sec:MSO}
 
