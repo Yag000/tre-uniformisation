@@ -101,7 +101,7 @@ The central question addressed in this paper is:
 \end{problem}
 \todo{state the theorem / ref it}
 
-Our main result is that this question is \emph{decidable}, and in the positive case, a "uniformiser" $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
+Our main result, \Cref{theorem:main}, is that this question is \emph{decidable}, and in the positive case, a "uniformiser" $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
 "deterministic bottom-up tree automaton" whose "transition map" is "order-insensitive" (\ie closed under sibling swaps). We then perform a "universality" check on this
 automaton—does it accept every tree?—and, when it does, we extract from its transitions an MSO formula that uniformly selects a witness.
 
@@ -168,7 +168,7 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 \AP This recursive structure induces a natural notion of position within a "tree". We now define the set of ""nodes"",
 represented as words over $\{0,1\}$ indicating a path from the root as
 \[
-	\intro* \Nodes t =
+	\intro* \Nodes(t)  =
 	\begin{cases}
 		\varepsilon                             & \text{if } t = a         \\
 		\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
@@ -182,7 +182,7 @@ represented as words over $\{0,1\}$ indicating a path from the root as
 		\Nodes b  = \{\varepsilon\}, \quad \Nodes {c(d, e)} = \{\varepsilon, 0, 1\}
 	\]
 	\[
-		\Nodes t = \{\varepsilon\} \cup \{0\} \cup \{1, 10, 11\} = \{\varepsilon, 0, 1, 10, 11\}
+		\Nodes(t) = \{\varepsilon\} \cup \{0\} \cup \{1, 10, 11\} = \{\varepsilon, 0, 1, 10, 11\}
 	\]
 \end{example}
 
@@ -196,7 +196,7 @@ Among the "nodes", some are distinguished as "leaves", "nodes" without children.
 	\end{cases}
 \]
 
-\AP We can see that $\Leaves t \subseteq \Nodes t$ and we call ""internal nodes"" the set $\Nodes t \cap \Leaves t$
+\AP We can see that $\Leaves t \subseteq \Nodes(t) $ and we call ""internal nodes"" the set $\Nodes(t) \cap \Leaves t$
 
 
 Each "node" in a "tree" carries a symbol from the alphabet.
@@ -226,9 +226,9 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 
 \begin{definition}
-	\AP Let $t$ be a "tree" and $x, y \in \Nodes t$. We define the ""ancestor"" relation as:
+	\AP Let $t$ be a "tree" and $x, y \in \Nodes(t) $. We define the ""ancestor"" relation as:
 	\[
-		x \intro* \ancestor y \tiff \exists z \in \Nodes t,\, y = xz
+		x \intro* \ancestor y \tiff \exists z \in \Nodes(t) ,\, y = xz
 	\]
 \end{definition}
 
@@ -369,9 +369,9 @@ tree automata using the same techniques. We will define them and give basic defi
 	\AP A ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
-		\exec : \Nodes t &\to& Q \\
+		\exec : \Nodes(t)  &\to& Q \\
 		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \Leaves t \\
-		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes t \setminus \Leaves t
+		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes(t) \setminus \Leaves t
 	\end{eqnarray*}
 
 	We say that $\exec$ is "acceptant" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
@@ -397,9 +397,9 @@ We can easily see that "DBUA" are a particular case of "NBUA", just like in the 
 	In this case, $A'$ has exactly one possible "run" on each "tree" :
 
 	\begin{eqnarray*}
-		\exec : \Nodes t &\to & Q \\
+		\exec : \Nodes(t)  &\to & Q \\
 		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \Leaves t \\
-		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t \setminus \Leaves t
+		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes(t)  \setminus \Leaves t
 	\end{eqnarray*}
 \end{remark}
 
@@ -649,7 +649,7 @@ We start by showing that every "automaton@NBUA" can be expressed as a formula. T
 	\AP Let $t \in \tree_{\Sigma}$. We define a ""model"" of $t$ as:
 
 	\[
-		\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma})
+		\intro* \Model t := (\Nodes(t), \ancestor , (a (x))_{a \in \Sigma})
 	\]
 
 	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a$.
@@ -894,48 +894,73 @@ In this section we are going to formally define what "uniformisation" is, give s
 propose an algorithm that decides "uniformization" on finite binary trees and prove its correctness and soundness.
 The main result is \Cref{thm:uniformisability-decision}.
 
-\subsection{Definitions}
+\subsection{Definitions and statement of the main theorem}
 
 We begin by formalising the core concepts.
 
-\begin{definition}label{def:uniformiser}
+\begin{definition}\label{def:uniformiser}
 	\AP A formula $\psi(X)$ is a ""uniformiser"" of a formula $\phi(X)$ if, for all "trees" $t$, the following hold:
 	\begin{enumerate}
 		\item There exists at most one set $X$ such that $t \models \psi(X)$.
 		\item If there exists a set $X$ such that $t \models \phi(X)$, then there exists a set $Y$ such that $t \models \psi(Y) \land \phi(Y)$.
 	\end{enumerate}
+	\AP A formula $\phi(X)$ is said to be ""uniformisable"" if it admits a "uniformiser".
 \end{definition}
 
-\AP A formula $\phi(X)$ is said to be ""uniformisable"" if it admits a "uniformiser".
+\begin{remark}
+	An equivalent way to express that $\phi(X)$ is "uniformisable" is that there exists an "MSO-formula" $\psi(x)$ such that, for all "trees" $t$:
+	\[
+		t \models \exists X.\, \phi(X) \quad \text{implies} \quad t \models \phi(\setdef{x}{t \models \psi(x)}).
+	\]
+	Note that here we use a set defined by comprehension, which is not in the syntax of plain "MSO logic". 
+	This is for commodity and can be easily translated into a syntactically correct equivalent statement.
+\end{remark}
 
-Another way to express this is that $\phi(X)$ is "uniformisable" if there exists $\psi(X)$ such that, for every "tree" $t$:
-\[
-	t \models \exists X.\, \phi(X) \quad \Rightarrow \quad t \models \phi(\setdef{x}{t \models \psi(x)}).
-\]
+We can now state the main result of this work.
+\begin{theorem} \label{thm:uniformisability-decision}\label{theorem:main}
+	There exists an algorithm which, given an "MSO-formula" as input, decides whether it has a "uniformiser" over finite "unordered binary trees".
+\end{theorem}
 
-This global property ensures that the formula $\psi$ extracts, uniformly, one solution for $\phi$ when one exists.
+In fact, it is a consequence of a more precise result, \Cref{lemma:main}, that we state now, though all the definitions necessary have not yet been provided.
+\begin{lemma}\label{lem:main-result}\label{lemma:main}
+	For all "MSO-formulas" $\phi(X)$, the following statements are equivalent:
+	\begin{enumerate}
+		\item $\phi(X)$ is "uniformisable". \label{lem:main-result-1}
+%		\item $\phi(X)$ is "globally definable". \label{lem:main-result-2}
+		\item For all "trees" $t$ that models $\phi(X)$ for some~$X$, $t$ models~$\phi(X)$ for some "definable"~$X$. \label{lem:main-result-2}
+		% invariant under the automorphisms of~$t$ (ie  $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
+		\item For all "trees" $t$ that models $\phi(X)$ for some~$X$, $t$ models~$\phi(X)$ for some~$X$ invariant under the automorphisms of~$t$ (ie such that $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
+		%\item For all "trees" $t$ such that $t \models \exists X. \phi(X)$, there exists $X$ such that $t \models \phi(X)$ and $\sigma(X) = X$ for all $\sigma \in \Aut(t)$. \label{lem:main-result-3}
+		\item The "uniformiser automaton" of~$\phi(X)$ is "universal". \label{lem:main-result-4}
+	\end{enumerate}
+	As as consequence, "uniformisability@uniformisable" of "MSO" over trees is decidable.
+\end{lemma}
+In the rest of this section, we recall the definitions of "definable" sets and invariance under "automorphisms" from which we immediately get the implications from 
+\Cref{lem:main-result-1} to \Cref{lem:main-result-2}, and from \Cref{lem:main-result-2} to \Cref{lem:main-result-3}. The "uniformiser automaton" is then defined in the next section, \kCref{uniformiser automaton}. The implication from \Cref{lem:main-result-3} to \Cref{lem:main-result-4} is then the subject of \Cref{lemma:...} in \Cref{section:...}, and the implication from~\Cref{lem:main-result-4} to \Cref{lem:main-result-1} is stated in \Cref{lemma:...}, \Cref{section:...}.
 
 \begin{definition}[""Definable set""]\label{def:definable}
 	\AP Let $t$ be a "tree". A set $X \subseteq \Nodes(t)$ is said to be ""definable"" if there exists an
 	"MSO" formula $\phi(x)$ such that $X = \setdef{x}{t \models \phi(x)}$.
 \end{definition}
 
+
+
+
+
 In particular, if $\phi(X)$ is "uniformisable", then for every "tree" $t$ such that $t \models \exists X. \phi(X)$,
-there exists a "definable" $X_d$ such that $t \models \phi(X_d)$.
+there exists a "definable" $X_d$ such that $t \models \phi(X_d)$. ... This proves the implication from \Cref{lem:main-result-1} to \Cref{lem:main-result-2} in \Cref{lemma:main}.
 
-Thus, "definability" expresses the local property of describing a solution on a given "tree", while "uniformisability" expresses
-a global capacity to do so uniformly across all "trees".
+%Thus, "definability" expresses the local property of describing a solution on a given "tree", while "uniformisability" expresses
+%a global capacity to do so uniformly across all "trees".
 
-
-One key concept in this section will be the use of "automorphisms" of "trees".
-
+Another concept used in this section is the one of "automorphisms" of "trees".
 \begin{definition}["Automorphism"]\label{def:automorphism}
 	\AP An ""automorphism"" of a "tree" $t$ is a bijection $\sigma : \Nodes(t) \to \Nodes(t)$ preserving the tree structure:
 	if $u$ is a child of $v$, then $\sigma(u)$ is a child of $\sigma(v)$, and $\sigma$ preserves the labels of nodes.
 	The group of all automorphisms of $t$ is denoted $\intro* \Aut(t)$.
 \end{definition}
 
-In other words, an "automorphism" is a symmetry of the "tree" that rearranges its nodes while preserving the structure and labels.
+In other words, an "automorphism" is a symmetry of the "tree" that rearranges its nodes while preserving the ancestor relation and labels.
 Let us illustrate this concept with an example.
 
 \begin{example}
@@ -1001,54 +1026,60 @@ Let us illustrate this concept with an example.
 \end{remark}
 
 
-\subsection{Intuition behind the main result}
 
-We are interested in checking whether a given formula $\phi(X)$ has a "uniformiser".
-Our approach is to consider a more manageable property: whether $\phi(X)$ is "globally definable".
+\begin{lemma}\label{lem:def-aut}
+	If $X$ is "definable" in a "tree" $t$, then $\sigma(X) = X$ for all $\sigma \in \Aut(t)$ .
+\end{lemma}
+\begin{proof}[Idea of a proof]
+	If $X$ is "definable", there exists an "MSO" formula $\phi(x)$ such that $X = \setdef{x}{t \models \phi(x)}$.
+	We want to show that for all $\sigma \in \Aut(t)$ and all $x \in X$, we have $t \models \phi(\sigma(x))$.
+	Since $\sigma$ is a bijection, this suffices to conclude $\sigma(X) = X$.
 
-\begin{definition}["Globally definable"]\label{def:global-def}
-	\AP A formula $\phi(X)$ is ""globally definable"" if, for every "tree" $t$, the following holds:
-	\[
-		t \models \exists X.\, \phi(X) \quad \Rightarrow \quad \text{there exists a "definable" } X_d \text{ such that } t \models \phi(X_d).
-	\]
-\end{definition}
+	The idea is that an MSO formula, by construction, cannot distinguish between "nodes" that are mapped to each other by "automorphisms":
+	these transformations preserve the structure and labels of the "tree".
 
-Clearly, if a formula is "uniformisable", then it is also "globally definable". The surprising part- and one of our results- is that the converse also holds.
-That is, "global definability" implies "uniformisability". This equivalence is established in \Cref{lem:main-result}.
+	The proof proceeds by induction on the structure of $\phi$. Atomic formulas are invariant under "automorphisms" by definition,
+	since "automorphisms" preserve the tree structure and labeling. The logical connectives (conjunction, disjunction, negation)
+	and quantifiers preserve this invariance, so the property holds inductively.
 
-The rest of this section is devoted to expressing "global definability" in terms of automata, constructing a suitable "deterministic bottom-up automaton",
-and reducing the problem to an "automata universality" check.
+	Therefore, for all $x \in X$, we have $t \models \phi(x) \Rightarrow t \models \phi(\sigma(x))$, and hence $\sigma(x) \in X$. Thus, $\sigma(X) = X$.
+\end{proof}
 
-\subsection{Algorithm and the main result}
+The implication from \Cref{lem:main-result-2} to \Cref{lem:main-result-3} in \Cref{lemma:main} is a direct consequence of \Cref{lem:def-aut}.
 
-Let us fix a formula $\phi(X)$. Consider the implication:
+
+
+
+
+
+
+
+%\subsection{Intuition behind the main result}
+
+%We are interested in checking whether a given formula $\phi(X)$ has a "uniformiser".
+%Our approach is to consider a more manageable property: whether $\phi(X)$ is "globally definable".
+
+%\begin{definition}["Globally definable"]\label{def:global-def}
+%	\AP A formula $\phi(X)$ is ""globally definable"" if, for every "tree" $t$, the following holds:
+%	\[
+%		t \models \exists X.\, \phi(X) \quad \Rightarrow \quad \text{there exists a "definable" } X_d \text{ such that } t \models \phi(X_d).
+%	\]
+%\end{definition}
+
+%Clearly, if a formula is "uniformisable", then it is also "globally definable". The surprising part- and one of our results- is that the converse also holds.
+%That is, "global definability" implies "uniformisability". This equivalence is established in \Cref{lem:main-result}.
+
+%The rest of this section is devoted to expressing "global definability" in terms of automata, constructing a suitable "deterministic bottom-up automaton",
+%and reducing the problem to an "automata universality" check.
+
+\subsection{The uniformiser automaton}
+
+Let us fix a formula $\phi(X)$. At very high level, what we aim at is a procedure that would solve a statement of the form\footnote{This is an intuition, and not a valid formula of MSO.}:
 \[
-	(\exists X.\, \phi(X)) \rightarrow (\exists X.\, \phi(X) \text{ and $X$ is "definable"}).
+	(\exists X.\, \phi(X)) \rightarrow (\exists X.\, \phi(X) \text{ and $X$ is invariant under "automomorphims"}).
 \]
-We aim to build an automaton that accepts exactly the "trees" where this formula holds. If this automaton is "universal", then $\phi(X)$ is "globally definable".
-
-As a warm-up, we consider a similar implication involving two formulas $\phi(X)$ and $\psi(Y)$:
-\[
-	\Psi := (\exists X.\, \phi(X)) \rightarrow (\exists Y.\, \psi(Y)).
-\]
-This is an "MSO" formula, and using \Cref{lem:MSO-to-aut}, we can construct equivalent "DBUA"s $A_\phi$ and $A_\psi$.
-
-We now define a new automaton $A$ capturing the semantics of $\Psi$.
-
-\begin{notation}
-	We write $\delta(X,Y,(a,*))$ for $\bigcup_{b \in \set{0,1}} \delta(X,Y,(a,b))$, and $\init(a,*)$ for $\bigcup_{b \in \set{0,1}} \init(a,b)$.
-\end{notation}
-
-We define a "DBUA" $A = (\Sigma, \parts{Q_\phi} \times \parts{Q_\psi}, \init, \delta, F)$ as follows:
-\begin{itemize}
-	\item $\init(a) = (\init_\phi(a,*), \init_\psi(a,*))$
-	\item $\delta((X,X'),(Y,Y'),a) = (\delta_\phi(X,Y,(a,*)), \delta_\psi(X',Y',(a,*)))$
-	\item $F = \setdef{(X,X')}{(X \cap F_\phi \neq \emptyset) \Rightarrow (X' \cap F_\psi \neq \emptyset)}$
-\end{itemize}
-
-$A$ accepts a "tree" $t$ if and only if $t \models \Psi$. Hence, testing whether $A$ is universal gives a decision procedure for the validity of $\Psi$ over all "trees".
-
-To decide "uniformisability", we build a modified automaton that ensures the witness is "definable".
+We aim to build an automaton that somehow accepts the "trees" for which this property holds. 
+This is the "uniformiser automaton" for the formula, that we describe below. We then show in \Cref{lemma:...} that if it is "universal", then $\phi(X)$ is "uniformisable", and in \Cref{lemma:...} that if it is not "universal", then there exists a "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ that would be invariant under the automorphisms of~$t$.
 
 \begin{definition}["Uniformiser automaton"]
 	\AP Let $\phi(X)$ be an "MSO" formula and $A = (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ its "DBUA". The ""uniformiser automaton"" is defined as
@@ -1057,16 +1088,17 @@ To decide "uniformisability", we build a modified automaton that ensures the wit
 	\]
 	where:
 	\begin{itemize}
-		\item $\init_U(a) = (\init(a,*), \init(a,*))$
+		\item $\init_U(a) = (\init(a,"*"), \init(a,"*"))$
 		\item $\deltau((X,X'),(Y,Y'),a) = (\delta(X,Y,(a,*)), \deltauu(X',Y',a))$ with:
 		      \[
 			      \deltauu(X',Y',a) = \begin{cases}
 				      \setdef{\delta(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X' = Y' \\
-				      \delta(X',Y',(a,*))                                   & \text{otherwise}
+				      \delta(X',Y',(a,"*"))                                   & \text{otherwise}
 			      \end{cases}
 		      \]
 		\item $F' = \setdef{(X,X')}{(X \cap F \neq \emptyset) \Rightarrow (X' \cap F \neq \emptyset)}$
 	\end{itemize}
+	\AP Using the notation $\delta(X,Y,(a,""*""))$ for $\bigcup_{b \in \set{0,1}} \delta(X,Y,(a,b))$, and $\init(a,\reintro{*})$ for $\bigcup_{b \in \set{0,1}} \init(a,b)$.
 \end{definition}
 
 
@@ -1089,79 +1121,15 @@ is what guarantees "definability": the selected witness must be invariant under 
 
 In the rest of this section, we will prove that this algorithm is correct and sound, leading to the main result of this article, \Cref{thm:uniformisability-decision}.
 
-
-\subsection{Proof of the Main Result}
-
-We now state the main result of this section, which establishes the equivalence between "uniformisability", "global definability", symmetries on "trees", and the universality of the "uniformiser automaton".
-This result leads to a decision procedure for "uniformisability" by checking the universality of the "uniformiser automaton".
-
-\begin{lemma}\label{lem:main-result}
-	Let $\phi(X)$ be an "MSO" formula and $\Ua$ its corresponding "uniformiser automaton". Then the following are equivalent:
-	\begin{enumerate}
-		\item $\phi(X)$ is "uniformisable". \label{lem:main-result-1}
-		\item $\phi(X)$ is "globally definable". \label{lem:main-result-2}
-		\item For all "trees" $t$, if $t \models \exists X. \phi(X)$ then there exists $X$ such that $t \models \phi(X)$ and $\sigma(X) = X$ for all $\sigma \in \Aut(t)$. \label{lem:main-result-3}
-		\item The "uniformiser automaton" $\Ua$ is "universal". \label{lem:main-result-4}
-	\end{enumerate}
-\end{lemma}
-
-One can note that the implication \ref{lem:main-result-1} $\Rightarrow$ \ref{lem:main-result-2} is straightforward, as a "uniformiser" provides a "definable" witness.
-The following sections will show the remaining implications.
-
-We can then deduce the main result of this article:
-\begin{theorem} \label{thm:uniformisability-decision}
-	There exists a decision procedure for "uniformisability" of "MSO" formulas over finite binary "trees" that
-	also effectively constructs a "uniformiser" if the formula is "uniformisable".
-\end{theorem}
-
-\begin{proof}
-	The equivalence in \Cref{lem:main-result} prove that the "uniformiser automaton" $\Ua$ is universal if and only if $\phi(X)$ is "uniformisable", so using the
-	"uniformisability checking algorithm", we can decide whether $\phi(X)$ is "uniformisable" and construct a "uniformiser" if it is.
-
-	The proof of correctness exposed in \Cref{sec:correctness} provides said "uniformiser",$\unif(X)$, if the algorithm concludes that $\phi(X)$ is "uniformisable".
-\end{proof}
-
-
-The implication \ref{lem:main-result-1} $\Rightarrow$ \ref{lem:main-result-2} is straightforward, as a "uniformiser" provides a "definable" witness.
-In the rest of the article, we will show the remaining implications.
-
-\subsection{Definability and automorphisms}
-
-The implication \ref{lem:main-result-2} $\Rightarrow$ \ref{lem:main-result-3} follows directly from a key property of "definable" sets:
-
-\begin{lemma}\label{lem:def-aut}
-	If $X$ is "definable" over a "tree" $t$, then for all $\sigma \in \Aut(t)$, we have $\sigma(X) = X$.
-\end{lemma}
-
-\begin{proof}
-	If $X$ is "definable", there exists an "MSO" formula $\phi(x)$ such that $X = \setdef{x}{t \models \phi(x)}$.
-	We want to show that for all $\sigma \in \Aut(t)$ and all $x \in X$, we have $t \models \phi(\sigma(x))$.
-	Since $\sigma$ is a bijection, this suffices to conclude $\sigma(X) = X$.
-
-	The idea is that an MSO formula, by construction, cannot distinguish between "nodes" that are mapped to each other by "automorphisms":
-	these transformations preserve the structure and labels of the "tree".
-
-	The proof proceeds by induction on the structure of $\phi$. Atomic formulas are invariant under "automorphisms" by definition,
-	since "automorphisms" preserve the tree structure and labeling. The logical connectives (conjunction, disjunction, negation)
-	and quantifiers preserve this invariance, so the property holds inductively.
-
-	Therefore, for all $x \in X$, we have $t \models \phi(x) \Rightarrow t \models \phi(\sigma(x))$, and hence $\sigma(x) \in X$. Thus, $\sigma(X) = X$.
-\end{proof}
-
-This lemma allows us to reason about "definable" sets in terms of their invariance under "automorphisms",
-which often makes them easier to identify in practice. It also forms a conceptual bridge between "definability" and symmetry:
-"automorphisms" reflect the symmetries of the "tree", and "definable" sets must respect those symmetries.
-
-
 \subsection{Correctness}\label{sec:correctness}
 
-We now prove the correctness of the "uniformisability checking algorithm" described in \Cref{sec:uniformisation}, by proving the
-implication \ref{lem:main-result-4} $\Rightarrow$ \ref{lem:main-result-1}.
+In this section, we prove the correctness of the "uniformisability checking algorithm", which is the
+implication from \Cref{lem:main-result-4} to  \Cref{lem:main-result-1} in \Cref{lemma:main}.
+This is what states the next lemma.
 
-\begin{lemma}
-	Let $\phi(X)$ be an MSO formula, if the "uniformiser automaton" $\Ua$ of $\phi$ is "universal" then $\phi$ is "uniformisable".
+\begin{lemma}\label{lemma:universal-implies-uniformisable}
+	Let $\phi(X)$ be an MSO formula, if the "uniformiser automaton" of $\phi$ is "universal" then $\phi$ is "uniformisable".
 \end{lemma}
-
 \begin{proof}
 	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
 	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is universal.
@@ -1266,7 +1234,7 @@ implication \ref{lem:main-result-4} $\Rightarrow$ \ref{lem:main-result-1}.
 	Since $\Ua$ is not "universal", there exists $(R,R') \in \Reach \Ua$, such that $R \cap F \neq \emptyset$ and $R' \cap F = \emptyset$.
 	We want to define a "tree" $t_{R,R'}$ such that
 	\begin{enumerate}
-		\item $R \subseteq \{ \delta_A (t_{R,R'},X) : X \subseteq \Nodes {t_{R,R'}}\}$ \label{lem:prop1}
+		\item $R \subseteq \{ \delta_A (t_{R,R'},X) : X \subseteq \Nodes (t_{R,R'})\}$ \label{lem:prop1}
 		\item $\{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \subseteq R'$\label{lem:prop2}
 		\item $\interpret \Ua {t_{R,R'}} = (R,R')$\label{lem:prop3}
 	\end{enumerate}

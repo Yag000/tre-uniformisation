@@ -158,7 +158,12 @@
 
 \knowledgenewrobustcmd \tree {\cmdkl {\text{tree}}}
 
-\knowledgenewrobustcmd \Nodes [1] {\cmdkl {\text{Nodes}} \app {#1}}
+
+%\knowledgenewrobustcmd \Nodes [1] {\cmdkl {\text{Nodes}} \app {#1}}
+\KnowledgeNewDocumentCommand\Nodes{}
+	{\cmdkl {\mathrm{Nodes}}}
+
+
 \knowledgenewrobustcmd \Leaves [1] {\cmdkl {\text{Leaves}} \app {#1}}
 
 \knowledgenewrobustcmd \tlabel [2] {\cmdkl {#1} \left( #2\right)}
