@@ -1,8 +1,5 @@
 %% Color
 
-\usepackage{color}
-\usepackage{xcolor}
-
 \definecolor{red}{rgb}{1,0,0}
 \definecolor{green}{rgb}{0,1,0}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
@@ -128,6 +125,7 @@
 %% Misc commands
 
 \newcommand{\quotes}[1] {"#1"}
+
 \newcommand{\todo}[1]{\red{TODO\ifx#1~ \else: #1\fi}}
 \newcommand{\todof}[1]{\red{\footnote{\red{TODO\ifx#1~ \else: #1\fi}}}}
 
@@ -198,8 +196,13 @@
 \knowledgenewrobustcmd \rhou {\cmdkl {\rho_U}}
 \knowledgenewrobustcmd \unif{\cmdkl {\text{unif}}}
 
-
-\newcommand{\Aut}{\text{Aut}}
+\knowledgenewrobustcmd  \singleState {\cmdkl {\text{single\_state}}}
+\knowledgenewrobustcmd  \rootNode  {\cmdkl {\text{root\_node}}}
+\knowledgenewrobustcmd  \inSet  {\cmdkl {\text{in\_set}}}
+\knowledgenewrobustcmd  \leafNode  {\cmdkl {\text{leaf\_node}}}
+\knowledgenewrobustcmd \innerNodes  {\cmdkl {\text{inner\_nodes}}}
+\knowledgenewrobustcmd \Aut {\cmdkl {\text{Aut}}}
+\knowledgenewrobustcmd \Ua {\cmdkl {U}}
 
 \newcommand{\setcomp}[1]{{#1}^\complement}
 
