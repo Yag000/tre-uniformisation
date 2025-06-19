@@ -35,7 +35,11 @@
 
 \knowledge{notion}
     | associated language
+
+\knowledge{notion}
     | language
+    | language@tree
+    | tree language
 
 \knowledge{notion}
     | Nodes

@@ -102,18 +102,16 @@ The central question addressed in this paper is:
 \begin{problem}[The ""uniformisation"" problem]\label{prob:uniformisation-problem}
 \AP Given an MSO formula $\phi(X)$, does there exist a "uniformiser" $\psi(X)$?
 \end{problem}
-\todo{state the theorem / ref it}
 
 Our main result, \Cref{theorem:main}, is that this question is \emph{decidable}, and in the positive case, a "uniformiser" $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
 "deterministic bottom-up tree automaton" whose "transition map" is "order-insensitive" (\ie closed under sibling swaps). We then perform a "universality" check on this
 automaton—does it accept every tree?—and, when it does, we extract from its transitions an MSO formula that uniformly selects a witness.
 
-\todo{better formulate this}
 This paper makes three main contributions:
 \begin{itemize}
-	\item Extending the decidability of MSO "uniformisation" to finite binary "trees" using only symmetry preserving automata,
-	\item Providing a constructive method to extract a "uniformiser" via "automata universality", and
-	\item Demonstrating how to handle sibling‐permutation symmetry in "tree" transformations.
+	\item It establishes the classical equivalence between "monadic second-order logic" and "automata@NBUA" using "order-insensitive" "automata@NBUA", \Cref{thm:MSO-NBUA},
+	\item It demonstrates the equivalence between "MSO uniformisation", "definability", and "automorphism" invariance, \Cref{lem:main-result},
+	\item It extends the decidability of "MSO uniformisation" to "finite binary trees", \Cref{theorem:main}.
 \end{itemize}
 
 
@@ -130,8 +128,7 @@ In this section, we review classical concepts related to trees, automata, and lo
 \Cref{sec:automata} provides a brief overview of bottom-up tree automata.
 \Cref{sec:OrderAutomata} introduces an order-insensitive variant of these automata, and
 \Cref{sec:UniversalityAutomata} defines a corresponding universality test.
-Finally, \Cref{sec:MSO} describes how to translate MSO formulas into automata while preserving order insensitivity.
-
+Finally, \Cref{sec:MSO} describes how to translate MSO formulas into automata while preserving order insensitivity.N
 \subsection{Trees}\label{sec:trees}
 
 This first subsection contains the definition of the "trees" we are working with. Other equivalent definitions of "trees" and
@@ -145,6 +142,7 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 	\end{itemize}
 	We call the ""root"" of a "tree" the first node in its definition.
 	The set of all "trees" over $\Sigma$ is denoted $\intro* \tree_{\Sigma}$.
+	A subset of $\tree_{\Sigma}$ is called a ""tree language"" (or "language" for short).
 \end{definition}
 
 \begin{figure}[h]
@@ -266,31 +264,31 @@ The idea is to recursively assign a "state" to each "node" of the "tree":
 We now state the formal definitions.
 
 \begin{definition}
-	\AP A ""deterministic bottom-up tree automaton"" (\reintro*"DBUA") is a tuple $(\Sigma, Q, \init, \delta, F)$ where:
+	\AP A ""deterministic bottom-up tree automaton"" (\reintro*"DBUA") is a tuple $(\Sigma, Q, \init, \deltaA, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		      \itemAP $Q$ is a finite set of ""states"".
 		      \itemAP $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
-		      \itemAP $\delta : Q \times Q \times \Sigma \to Q$ is the ""transition map"". \todo{make this a macro}
+		      \itemAP $\intro*\deltaA : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
 		      \itemAP $F \subseteq Q$ is the set of ""final states"".
 	\end{itemize}
 \end{definition}
 
 \begin{definition}[Interpretation of an automaton]
-	\AP The ""interpretation"" of a "DBUA" $A = (\Sigma, Q, \init, \delta, F)$  over an alphabet $\Sigma$ is defined as follows:
+	\AP The ""interpretation"" of a "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$  over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\intro* \interpret A ~: \tree_{\Sigma} &\to& Q \\
 		a &\mapsto& \init_a \\
-		a(t,t') &\mapsto& \delta_a (\interpret A t, \interpret A {t'})
+		a(t,t') &\mapsto& \deltaA_a (\interpret A t, \interpret A {t'})
 	\end{eqnarray*}
 
 	We say that $A$ ""accepts"" a "tree" $t$ if $\interpret A t \in F$.
 
-	We will sometimes use the notation $\delta(t)$ for the "interpretation" of $A$ over the "tree" $t$.
+	We will sometimes use the notation $\deltaA(t)$ for the "interpretation" of $A$ over the "tree" $t$.
 \end{definition}
 
 \begin{example}[Trees with at most one leaf]\label{ex:count-leaves}
-	We define a "DBUA" $A = (\Sigma, Q, \init, \delta, F)$ that "accepts" exactly the "trees" with at most one "leaf". Let:
+	We define a "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$ that "accepts" exactly the "trees" with at most one "leaf". Let:
 	\begin{itemize}
 		\item $Q = \{0,1,2\}$, where $q=0$ means \textit{no leaves}, $q=1$ means \textit{exactly one leaf},
 		      and $q=2$ means \textit{more than one leaf}.
@@ -298,7 +296,7 @@ We now state the formal definitions.
 		\item For all $a \in \Sigma$, we define $\init_a = 1$.
 		\item The transition function is defined by:
 		      \[
-			      \delta_a(q_1, q_2) = \min(q_1 + q_2, 2)
+			      \deltaA_a(q_1, q_2) = \min(q_1 + q_2, 2)
 		      \]
 	\end{itemize}
 
@@ -351,13 +349,13 @@ In the same way that we can define a non-deterministic automaton over strings, t
 tree automata using the same techniques. We will define them and give basic definitions on how to use them.
 
 \begin{definition}
-	\AP A ""non-deterministic bottom-up tree automaton"" (\reintro* "NBUA") is defined as a tuple
-	$(\Sigma, Q, I, \Delta, F)$ where:
+	\AP A ""non-deterministic bottom-up tree automaton"" (\reintro*"NBUA") is defined as a tuple
+	$(\Sigma, Q, \Init, \DeltaA, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of "states".
-		\item $I \subseteq \Sigma \times Q$ correspond to the possible states of the "leaves".
-		      \itemAP $\Delta \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
+		      \itemAP $\intro*\Init \subseteq \Sigma \times Q$ correspond to the possible states of the "leaves".
+		      \itemAP $\DeltaA \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
 		\item $F \subseteq Q$ is the set of "final states".
 	\end{itemize}
 \end{definition}
@@ -367,8 +365,8 @@ tree automata using the same techniques. We will define them and give basic defi
 
 	\begin{eqnarray*}
 		\exec : \Nodes t  &\to& Q \\
-		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \Leaves t \\
-		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes t \setminus \Leaves t
+		(\tlabel t b,  \exec (n) ) \in \Init &\text{ if }& n \in \Leaves t \\
+		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \DeltaA &\text{ if }& n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 
 	We say that $\exec$ is "acceptant" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
@@ -381,14 +379,15 @@ tree automata using the same techniques. We will define them and give basic defi
 	\[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
+
 We can easily see that "DBUA" are a particular case of "NBUA", just like in the classic theory.
 
 \begin{remark}
-	Every "DBUA" $A = (\Sigma, Q, \init, \delta, F)$ can be seen as a special case of a "NBUA"
-	$A' = (\Sigma, Q, I, \Delta, F)$ where:
+	Every "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$ can be seen as a special case of a "NBUA"
+	$A' = (\Sigma, Q, \Init, \DeltaA, F)$ where:
 	\begin{itemize}
-		\item $I = \setdef{(a, \init_a)}{a \in \Sigma}$,
-		\item $\Delta = \setdef{(q_1, q_2, a, \delta_a(q_1, q_2))}{q_1, q_2 \in Q, a \in \Sigma}$.
+		\item $\Init = \setdef{(a, \init_a)}{a \in \Sigma}$,
+		\item $\DeltaA = \setdef{(q_1, q_2, a, \deltaA_a(q_1, q_2))}{q_1, q_2 \in Q, a \in \Sigma}$.
 	\end{itemize}
 
 	In this case, $A'$ has exactly one possible "run" on each "tree" :
@@ -396,7 +395,7 @@ We can easily see that "DBUA" are a particular case of "NBUA", just like in the 
 	\begin{eqnarray*}
 		\exec : \Nodes t  &\to & Q \\
 		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \Leaves t \\
-		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t  \setminus \Leaves t
+		n  &\mapsto& \deltaA_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t  \setminus \Leaves t
 	\end{eqnarray*}
 \end{remark}
 
@@ -416,12 +415,12 @@ The following lemma shows the equivalence of both definitions.
 		      Consider now some "run" $\rho$ of $A$ over~$t$. We have $\rho(\varepsilon)=\init_a=\interpret A a=\interpret A t$. We have proved  (b).
 
 		\item If $t = a(t',t'')$. By induction hypothesis (a), there exists "runs"~$\rho'$ and $\rho''$ on~$t'$ and $t''$ respectively.
-		      Let~$\rho$ be defined by $\rho(\varepsilon)=\delta_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon))$,
+		      Let~$\rho$ be defined by $\rho(\varepsilon)=\deltaA_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon))$,
 		      $\rho(0u)=\rho'(u)$ for all $u\in\Nodes{t'}$ and $\rho(1u)=\rho''(u)$ for all~$u\in \Nodes{t''}$. Then $\rho$ is a "run" of~$A$ over $t$. We have proved (a).
 
 		      Consider now some "run" $\rho$ of $A$ over $t$. Let~$\rho'(u)=\rho(0u)$ for all $u \in \Nodes {t'}$ and $\rho''(u)=\rho(0u)$ for all $u \in \Nodes {t''}$.
 		      Then $\rho'$ is a "run" of~$A$ over $t'$ and $\rho''$ over $t''$. By induction hypothesis (b) twice, we know that $\rho'(\varepsilon)=\interpret A {t'}$ and $\rho''(\varepsilon)=\interpret A {t''}$.
-		      We have now $\rho(\varepsilon) = \delta_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon)) = \delta_{t(\varepsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
+		      We have now $\rho(\varepsilon) = \deltaA_{t(\varepsilon)}(\rho'(\varepsilon),\rho''(\varepsilon)) = \deltaA_{t(\varepsilon)}(\interpret A {t'},\interpret A {t''}) = \interpret A t$. We have proved (b).
 	\end{itemize}
 \end{proof}
 
@@ -431,17 +430,17 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 
 \begin{definition}
 	\AP Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
-	$\Det A = (\Sigma, \parts Q, \init, \delta, F')$ where:
+	$\Det A = (\Sigma, \parts Q, \init, \deltaA, F')$ where:
 
 	\begin{itemize}
 		\item $\begin{aligned}[t]
-				      \init      : \Sigma & \to \parts Q                          \\
-				      a                   & \mapsto \setdef{q \in Q}{(a,q) \in I}
+				      \init      : \Sigma & \to \parts Q                              \\
+				      a                   & \mapsto \setdef{q \in Q}{(a,q) \in \Init}
 			      \end{aligned} $
 
 		\item $\begin{aligned}[t]
-				      \delta               : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                     \\
-				      (X, Y, a)                                                     & \mapsto \setdef{q \in Q}{(x,y,a,q) \in \Delta, x \in X, y \in Y}
+				      \deltaA               : \parts Q \times \parts Q \times \Sigma & \to \parts Q                                                      \\
+				      (X, Y, a)                                                      & \mapsto \setdef{q \in Q}{(x,y,a,q) \in \DeltaA, x \in X, y \in Y}
 			      \end{aligned}$
 
 		\item $F' = \setdef{X \in \parts Q}{X \cap F \neq \emptyset} \subseteq \parts Q$
@@ -464,7 +463,7 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 	\begin{itemize}
 		\item If $t = a$, then
 		      \begin{eqnarray*}
-			      \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} &=&  \setdef {q \in Q} {(a,q) \in I} \\
+			      \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}} &=&  \setdef {q \in Q} {(a,q) \in \Init} \\
 			      &=& \interpret {\Det N} t\ .
 		      \end{eqnarray*}
 		\item If $t = a(t_1,t_2)$, then
@@ -473,10 +472,10 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 
 		      \begin{eqnarray*}
 			      &&q \in \interpret {\Det N} t \\
-			      &\text{if and only if}& q \in \delta_a (\interpret {\Det N} {t_1}, \interpret {\Det N} {t_2}) \\
-			      &\text{if and only if}& q \in \setdef {q \in  Q} {(x_1,x_2,a,q) \in \Delta, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2}} \\
-			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \Delta, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2} \\
-			      &\text{if and only if}& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \Delta\\
+			      &\text{if and only if}& q \in \deltaA_a (\interpret {\Det N} {t_1}, \interpret {\Det N} {t_2}) \\
+			      &\text{if and only if}& q \in \setdef {q \in  Q} {(x_1,x_2,a,q) \in \DeltaA, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2}} \\
+			      &\text{if and only if}& \exists x_1,x_2, (x_1,x_2,a,q) \in \DeltaA, x_1 \in \interpret {\Det N} {t_1}, x_2 \in \interpret {\Det N} {t_2} \\
+			      &\text{if and only if}& \text{there exists a "run" over }  t_i  \text { ending at } x_i \text { for  } i \in \set {1,2} \text{ and } (x_1,x_2,a,q) \in \DeltaA\\
 			      &\text{if and only if}& q \in \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}
 		      \end{eqnarray*}
 	\end{itemize}
@@ -484,7 +483,7 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 
 	We must now show that $\Det N$ "accepts" $t$ if and only if $N$ "accepts" $t$.
 	\begin{eqnarray*}
-		N \text{ "accepts" } t &\tiff& F \cap \setdef {q \in Q} {(a,q) \in I} \neq \emptyset \\
+		N \text{ "accepts" } t &\tiff& F \cap \setdef {q \in Q} {(a,q) \in \Init} \neq \emptyset \\
 		&\tiff&   F \cap  \interpret {\Det N} t \neq \emptyset \\
 		&\tiff& \interpret {\Det N} t  \in F' \\
 		&\tiff& {\Det N} \text{ "accepts" } t
@@ -500,13 +499,13 @@ That means that the state reached from the two children is the same if we swap t
 interesting because they respect the symmetries of "trees".
 
 \begin{definition}
-	\AP An "NBUA" of "transition relation"~$\Delta$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \Delta$,
-	$(q,p,a,r) \in \Delta$.
+	\AP An "NBUA" of "transition relation"~$\DeltaA$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \DeltaA$,
+	$(q,p,a,r) \in \DeltaA$.
 \end{definition}
 
 \begin{remark}\label{def:order-insensitive}
-	For a "DBUA" of "transition map"~$\delta$, it is "order-insensitive" if and only if
-	$\delta_a (p,q) = \delta_a (q,p)$ for all "states"~$p,q$ and letter~$a$.
+	For a "DBUA" of "transition map"~$\deltaA$, it is "order-insensitive" if and only if
+	$\deltaA_a (p,q) = \deltaA_a (q,p)$ for all "states"~$p,q$ and letter~$a$.
 \end{remark}
 
 
@@ -533,12 +532,12 @@ interesting because they respect the symmetries of "trees".
 		\node[draw=blue] (s) at (3, -0.5) {$s$};
 
 		% Arrows
-		\draw[->, thick, draw=blue] (root1) to[out=0, in=180] node[draw=none, midway, below] {\(\delta_a\)} (s);
-		\draw[->, thick, draw=blue] (root2) to[out=180, in=0] node[draw=none, midway, below] {\(\delta_a\)} (s);
+		\draw[->, thick, draw=blue] (root1) to[out=0, in=180] node[draw=none, midway, below] {\(\deltaA_a\)} (s);
+		\draw[->, thick, draw=blue] (root2) to[out=180, in=0] node[draw=none, midway, below] {\(\deltaA_a\)} (s);
 
 	\end{tikzpicture}
 	\caption{Illustration of "order-insensitivity" in a "DBUA" (see \Cref{def:order-insensitive}).
-		Both trees yield the same state $s$ under the transition map $\delta_a$.}
+		Both trees yield the same state $s$ under the transition map $\deltaA_a$.}
 	\label{fig:order-insensitivity}
 \end{figure}
 
@@ -550,9 +549,9 @@ interesting because they respect the symmetries of "trees".
 
 \begin{proof}
 	\begin{eqnarray*}
-		\delta_a (X,Y) &=& \setdef {q \in Q} {(x,y,a,q) \in \Delta, x \in X, y \in Y} \\
-		&=& \setdef {q \in Q} {(y,x,a,q) \in \Delta, x \in X, y \in Y}  \reason {$N$ is "order-insensitive"} \\
-		&=& \delta_a (Y,X)
+		\deltaA_a (X,Y) &=& \setdef {q \in Q} {(x,y,a,q) \in \DeltaA, x \in X, y \in Y} \\
+		&=& \setdef {q \in Q} {(y,x,a,q) \in \DeltaA, x \in X, y \in Y}  \reason {$N$ is "order-insensitive"} \\
+		&=& \deltaA_a (Y,X)
 	\end{eqnarray*}
 \end{proof}
 
@@ -564,7 +563,7 @@ In this section, we define the "reachability set" of a "DBUA" and show that it c
 	\AP Let $A = \DBUA$ a "DBUA", and let $\intro* \Reach A \subseteq Q$ be the smallest set such that:
 	\begin{enumerate}
 		\item $\init(a) \in \Reach A$ for all $a \in \Sigma$,
-		\item $\delta(p, q, a) \in \Reach A$ for all $p, q \in \Reach A$ and $a \in \Sigma$.
+		\item $\deltaA(p, q, a) \in \Reach A$ for all $p, q \in \Reach A$ and $a \in \Sigma$.
 	\end{enumerate}
 \end{definition}
 
@@ -584,7 +583,7 @@ In particular, it represents the set of all "states" that can be reached when th
 		\item For the direction $\Reach A \subseteq \setdef {\interpret A t} {t \in \tree_\Sigma}$, we proceed by induction over the construction of elements in $\Reach A$:
 		      \begin{itemize}
 			      \item If $r = \init(a)$ for some $a \in \Sigma$, then the "tree" $a$ satisfies $\interpret A a = \init(a) = r$.
-			      \item If $r = \delta(p, q, a)$ where $p, q \in \Reach A$, then by the induction hypothesis there exist
+			      \item If $r = \deltaA(p, q, a)$ where $p, q \in \Reach A$, then by the induction hypothesis there exist
 			            $t', t'' \in \tree_\Sigma$ such that $\interpret A {t'} = p$ and $\interpret A {t''} = q$. Then the "tree" $t = a(t', t'')$ satisfies $\interpret A t = r$.
 		      \end{itemize}
 
@@ -593,7 +592,7 @@ In particular, it represents the set of all "states" that can be reached when th
 			      \item If $t = a$, then $\interpret A a = \init(a) \in \Reach A$.
 			      \item If $t = a(t', t'')$, then by the induction hypothesis $\interpret A {t'}, \interpret A {t''} \in \Reach A$, so
 			            \[
-				            \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A.
+				            \interpret A t = \deltaA(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A.
 			            \]
 		      \end{itemize}
 	\end{itemize}
@@ -630,6 +629,7 @@ This result will be used in \Cref{sec:uniformisation} to decide "uniformisation"
 \subsection{Monadic second-order logic}\label{sec:MSO}
 
 \todo{maybe define what mso actually is and talk a bit more about models}
+\todo{Tak about the main result at some point, and do it better than right now}
 In this subsection, we introduce "monadic second-order logic" ("MSO") over finite binary "trees",
 and examine its relationship with "non-deterministic bottom-up automata", in partivulat with "order-insensitive" automata.
 
@@ -652,6 +652,13 @@ We start by showing that every "automaton@NBUA" can be expressed as a formula. T
 	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a$.
 
 	We write $t \models \phi$ to mean that the formula $\phi$ holds in the "model" $\Model t$.
+\end{definition}
+
+\begin{definition}
+	\AP We say that a language is ""MSO-definable"" if there exists a "MSO" formula $\phi$ such that
+	\[
+		L = \setdef{t \in \tree_{\Sigma}}{t \models \phi}.
+	\]
 \end{definition}
 
 We will discuss some examples of "MSO" formulas.
@@ -688,6 +695,14 @@ We will discuss some examples of "MSO" formulas.
 	\]
 \end{example}
 
+
+We can now state the main result of this section, which establishes the equivalence between "order-insensitive" "NBUA" and "MSO" formulas.
+
+\begin{theorem}\label{thm:MSO-NBUA}
+	A "language" $L \subseteq \tree_{\Sigma}$ is "MSO-definable" if and only if there exists an "order-insensitive" "NBUA" $A$ such that $\lang A = L$.
+\end{theorem}
+
+
 We now show how to simulate an "automaton@NBUA" by a formula. The idea is to encode the existence of a valid "run" of
 the "automaton@NBUA" using second-order variables that assign "states" to "nodes".
 
@@ -702,10 +717,10 @@ the "automaton@NBUA" using second-order variables that assign "states" to "nodes
 	Let $A = \NBUA$ be an "order-insensitive" "NBUA", and let $k = \abs Q$ be the number of "states".
 	\todo{write something up here and move the formula to an annex}
 	\begin{align}
-		\phi =\  & \exists X_0 \ldots \exists X_{k-1} \ \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1}                                                                                    \\
-		         & \land\ \forall x \left( \bigwedge_{0 \leq i < j \leq k-1} \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2}                                                                               \\
-		         & \land\ \forall x \left( \leaf(x) \rightarrow \bigvee_{(a,i) \in I} X_i(x) \right) \label{lem:AMSO3}                                                                                           \\
-		         & \land\ \forall x\, \forall y\, \forall z \left(\children(x,y,z) \rightarrow \bigvee_{(p,q,a,r) \in \Delta} \left(X_p(x) \land X_q(y) \land a(z) \land X_r(z)\right) \right) \label{lem:AMSO4} \\
+		\phi =\  & \exists X_0 \ldots \exists X_{k-1} \ \forall x \left( \bigvee_{i=0}^{k-1} X_i(x) \right) \label{lem:AMSO1}                                                                                     \\
+		         & \land\ \forall x \left( \bigwedge_{0 \leq i < j \leq k-1} \lnot (X_i(x) \land X_j(x)) \right) \label{lem:AMSO2}                                                                                \\
+		         & \land\ \forall x \left( \leaf(x) \rightarrow \bigvee_{(a,i) \in \Init} X_i(x) \right) \label{lem:AMSO3}                                                                                        \\
+		         & \land\ \forall x\, \forall y\, \forall z \left(\children(x,y,z) \rightarrow \bigvee_{(p,q,a,r) \in \DeltaA} \left(X_p(x) \land X_q(y) \land a(z) \land X_r(z)\right) \right) \label{lem:AMSO4} \\
 		         & \land\ \forall x \left( \treeroot(x) \rightarrow \bigvee_{q \in F} X_q(x) \right) \label{lem:AMSO5}
 	\end{align}
 
@@ -718,7 +733,7 @@ the "automaton@NBUA" using second-order variables that assign "states" to "nodes
 		\item[\ref{lem:AMSO2}] No "node" is in more than one "state".
 		\item[\ref{lem:AMSO3}] "Leaf" nodes are assigned an initial "state".
 		\item[\ref{lem:AMSO4}] For each triple $(x,y,z)$ forming a parent and its two children,
-		      there exists a transition in $\Delta$ from the children to the parent.
+		      there exists a transition in $\DeltaA$ from the children to the parent.
 		\item[\ref{lem:AMSO5}] The "root" is labeled with a final "state".
 	\end{itemize}
 
@@ -737,29 +752,29 @@ Throughout, we ensure that the resulting automata remain "order-insensitive".
 We begin with basic closure properties of such automata.
 
 \begin{lemma}[Intersection]\label{lem:intersection}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUAs". Then the product automaton
+	Let $A_1 = (\Sigma, Q_1, I_1, \DeltaA_1, F_1)$ and $A_2 = (\Sigma, Q_2, I_2, \DeltaA_2, F_2)$ be two "order-insensitive" "NBUAs". Then the product automaton
 	\[
-		A_3 = (\Sigma, Q_1 \times Q_2, I_1 \times I_2, \Delta, F_1 \times F_2),
+		A_3 = (\Sigma, Q_1 \times Q_2, I_1 \times I_2, \DeltaA, F_1 \times F_2),
 	\]
 	where
 	\[
-		\Delta = \left\{ ((q_1,q_2), (p_1,p_2), (a_1,a_2), (r_1,r_2)) \,\middle|\, (q_1,p_1,a_1,r_1) \in \Delta_1,\ (q_2,p_2,a_2,r_2) \in \Delta_2 \right\},
+		\DeltaA = \left\{ ((q_1,q_2), (p_1,p_2), (a_1,a_2), (r_1,r_2)) \,\middle|\, (q_1,p_1,a_1,r_1) \in \DeltaA_1,\ (q_2,p_2,a_2,r_2) \in \DeltaA_2 \right\},
 	\]
 	is "order-insensitive", and satisfies $\lang{A_3} = \lang{A_1} \cap \lang{A_2}$.
 \end{lemma}
 
 \begin{lemma}[Union]\label{lem:union}
-	Let $A_1 = (\Sigma, Q_1, I_1, \Delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, I_2, \Delta_2, F_2)$ be two "order-insensitive" "NBUAs". Then the disjoint union
+	Let $A_1 = (\Sigma, Q_1, I_1, \DeltaA_1, F_1)$ and $A_2 = (\Sigma, Q_2, I_2, \DeltaA_2, F_2)$ be two "order-insensitive" "NBUAs". Then the disjoint union
 	\[
-		A_3 = (\Sigma, Q_1 \uplus Q_2, I_1 \uplus I_2, \Delta_1 \uplus \Delta_2, F_1 \uplus F_2)
+		A_3 = (\Sigma, Q_1 \uplus Q_2, I_1 \uplus I_2, \DeltaA_1 \uplus \DeltaA_2, F_1 \uplus F_2)
 	\]
 	is also "order-insensitive", and it accepts precisely the union of the two languages: $\lang{A_3} = \lang{A_1} \cup \lang{A_2}$.
 \end{lemma}
 
 \begin{lemma}[Complement]\label{lem:complement}
-	Given an "order-insensitive" "NBUA" $A = (\Sigma, Q, I, \Delta, F)$, the automaton
+	Given an "order-insensitive" "NBUA" $A = (\Sigma, Q, \Init, \DeltaA, F)$, the automaton
 	\[
-		A' = (\Sigma, Q, I, \Delta, Q \setminus F)
+		A' = (\Sigma, Q, \Init, \DeltaA, Q \setminus F)
 	\]
 	is also "order-insensitive", and recognizes the complement of $A$: $\lang{A'} = \lang{A}^\complement$.
 \end{lemma}
@@ -774,7 +789,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 	Let $a \in \Sigma$. Over the alphabet $\Sigma \times \{0,1\}$, there exists an "order-insensitive" automaton deciding
 	the atomic predicate $a(x)$, where $x$ is a free first-order variable. Define:
 	\[
-		A = (\Sigma \times \{0,1\}, \{\text{Yes}, \text{No}\}, \init, \delta, \text{Yes}),
+		A = (\Sigma \times \{0,1\}, \{\text{Yes}, \text{No}\}, \init, \deltaA, \text{Yes}),
 	\]
 	where:
 	\begin{itemize}
@@ -785,9 +800,9 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 		\item
 		      \[
 			      \begin{aligned}
-				      \delta(\_, \_, (a,1))            & = \text{Yes} \\
-				      \delta(\text{No}, \text{No}, \_) & = \text{No}  \\
-				      \delta(\_, \_, \_)               & = \text{Yes}
+				      \deltaA(\_, \_, (a,1))            & = \text{Yes} \\
+				      \deltaA(\text{No}, \text{No}, \_) & = \text{No}  \\
+				      \deltaA(\_, \_, \_)               & = \text{Yes}
 			      \end{aligned}
 		      \]
 	\end{itemize}
@@ -796,7 +811,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 \begin{lemma}\label{lem:atomic-ancestor}
 	There exists an "order-insensitive" automaton over $\Sigma \times \{0,1\}^2$ that decides the formula $x \ancestor y$. We define:
 	\[
-		A = (\Sigma \times \{0,1\}^2, \{\text{Yes}, \text{No}, \text{FoundY}\}, \init, \delta, \text{Yes}),
+		A = (\Sigma \times \{0,1\}^2, \{\text{Yes}, \text{No}, \text{FoundY}\}, \init, \deltaA, \text{Yes}),
 	\]
 	with the following behavior:
 	\begin{itemize}
@@ -807,14 +822,14 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 		\item
 		      \[
 			      \begin{aligned}
-				      \delta(\text{FoundY}, \_, (\_,1,0)) & = \text{Yes}    \\
-				      \delta(\_, \text{FoundY}, (\_,1,0)) & = \text{Yes}    \\
-				      \delta(\text{FoundY}, \_, (\_,0,0)) & = \text{FoundY} \\
-				      \delta(\_, \text{FoundY}, (\_,0,0)) & = \text{FoundY} \\
-				      \delta(\text{Yes}, \_, \_)          & = \text{Yes}    \\
-				      \delta(\_, \text{Yes}, \_)          & = \text{Yes}    \\
-				      \delta(\_, \_, (\_,0,1))            & = \text{FoundY} \\
-				      \delta(\_, \_, \_)                  & = \text{No}
+				      \deltaA(\text{FoundY}, \_, (\_,1,0)) & = \text{Yes}    \\
+				      \deltaA(\_, \text{FoundY}, (\_,1,0)) & = \text{Yes}    \\
+				      \deltaA(\text{FoundY}, \_, (\_,0,0)) & = \text{FoundY} \\
+				      \deltaA(\_, \text{FoundY}, (\_,0,0)) & = \text{FoundY} \\
+				      \deltaA(\text{Yes}, \_, \_)          & = \text{Yes}    \\
+				      \deltaA(\_, \text{Yes}, \_)          & = \text{Yes}    \\
+				      \deltaA(\_, \_, (\_,0,1))            & = \text{FoundY} \\
+				      \deltaA(\_, \_, \_)                  & = \text{No}
 			      \end{aligned}
 		      \]
 	\end{itemize}
@@ -843,7 +858,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 
 	By the induction hypothesis, we have an "order-insensitive" "DBUA" (since avery "NBUA" can be converted to a "DBUA")
 	\[
-		A = (\Sigma \times \{0,1\}^n, Q, \init, \delta, F)
+		A = (\Sigma \times \{0,1\}^n, Q, \init, \deltaA, F)
 	\]
 	that accepts the language of $\psi(x)$, where we assume the input "trees" "annotated" with $n$ bits per "node" and the $n$-th bit indicates
 	whether the node is assigned to $x$.
@@ -853,7 +868,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 
 	Define the new automaton:
 	\[
-		A' = (\Sigma \times \{0,1\}^{n-1}, \parts Q, \init', \delta', F')
+		A' = (\Sigma \times \{0,1\}^{n-1}, \parts Q, \init', \deltaA', F')
 	\]
 	where:
 	\begin{itemize}
@@ -864,7 +879,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 		      That is, we simulate both possibilities for the missing $x$-bit.
 		\item "Transition map":
 		      \[
-			      \delta'(P, Q, (a, \vec{b})) = \setdef{ \delta(p, q, (a, \vec{b}, b'))} {p \in P,\ q \in Q,\ b' \in \{0,1\} }
+			      \deltaA'(P, Q, (a, \vec{b})) = \setdef{ \deltaA(p, q, (a, \vec{b}, b'))} {p \in P,\ q \in Q,\ b' \in \{0,1\} }
 		      \]
 		      Again, for every guess of $x$’s value at this "node", we compute the next "state" as if that guess were part of the input.
 		\item "Accepting states":
@@ -961,48 +976,48 @@ Let us illustrate this concept with an example.
 
 
 \begin{example}
-    We compare the automorphism groups of two binary trees.
+	We compare the automorphism groups of two binary trees.
 
-    \begin{center}
-        \begin{tabular}{cc}
-            % First tree
-            \begin{tikzpicture}[level distance=1.2cm,
-                    every node/.style={draw, circle, minimum size=7mm},
-                    level 1/.style={sibling distance=2cm},
-                    level 2/.style={sibling distance=1cm}]
-                \node {r}
-                child { node {a}
-                        child {node {b}}
-                        child {node {b}} }
-                child { node {a}
-                        child {node {c}}
-                        child {node {c}} };
-            \end{tikzpicture}
-            &
-            % Second tree
-            \begin{tikzpicture}[level distance=1.2cm,
-                    every node/.style={draw, circle, minimum size=7mm},
-                    level 1/.style={sibling distance=2cm},
-                    level 2/.style={sibling distance=1cm}]
-                \node {r}
-                child { node {a} }
-                child { node {a}
-                        child {node {b}}
-                        child {node {b}} };
-            \end{tikzpicture}
-            \\
-            \textbf{Tree A: Symmetric} & \textbf{Tree B: Asymmetric}
-        \end{tabular}
-    \end{center}
+	\begin{center}
+		\begin{tabular}{cc}
+			% First tree
+			\begin{tikzpicture}[level distance=1.2cm,
+					every node/.style={draw, circle, minimum size=7mm},
+					level 1/.style={sibling distance=2cm},
+					level 2/.style={sibling distance=1cm}]
+				\node {r}
+				child { node {a}
+						child {node {b}}
+						child {node {b}} }
+				child { node {a}
+						child {node {c}}
+						child {node {c}} };
+			\end{tikzpicture}
+			                           &
+			% Second tree
+			\begin{tikzpicture}[level distance=1.2cm,
+					every node/.style={draw, circle, minimum size=7mm},
+					level 1/.style={sibling distance=2cm},
+					level 2/.style={sibling distance=1cm}]
+				\node {r}
+				child { node {a} }
+				child { node {a}
+						child {node {b}}
+						child {node {b}} };
+			\end{tikzpicture}
+			\\
+			\textbf{Tree A: Symmetric} & \textbf{Tree B: Asymmetric}
+		\end{tabular}
+	\end{center}
 
-    \textbf{Tree A} is a complete "binary tree" of height 2. In this case, there are 8 "automorphisms", corresponding to all possible ways of swapping left and right children at each level.
+	\textbf{Tree A} is a complete "binary tree" of height 2. In this case, there are 8 "automorphisms", corresponding to all possible ways of swapping left and right children at each level.
 
-    \textbf{Tree B}, on the other hand, is asymmetric. The left child of the root is a "leaf", while the right child is an "internal node" with two children.
-    Since these "subtrees" are not structurally the same, the only "automorphisms" are:
-    \begin{itemize}
-        \item the identity (doing nothing), and
-        \item swapping the two children of the right "subtree".
-    \end{itemize}
+	\textbf{Tree B}, on the other hand, is asymmetric. The left child of the root is a "leaf", while the right child is an "internal node" with two children.
+	Since these "subtrees" are not structurally the same, the only "automorphisms" are:
+	\begin{itemize}
+		\item the identity (doing nothing), and
+		\item swapping the two children of the right "subtree".
+	\end{itemize}
 \end{example}
 
 
@@ -1056,23 +1071,23 @@ This is the "uniformiser automaton" for the formula, that we describe below. We 
 then $\phi(X)$ is "uniformisable", and in \Cref{lemma:not-universal-implies-non-invariant} that if it is not "universal", then there exists a
 "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ that would be invariant under the automorphisms of~$t$.
 \begin{definition}["Uniformiser automaton"]
-	\AP Let $\phi(X)$ be an "MSO" formula and $A = (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ its "DBUA". The ""uniformiser automaton"" is defined as
+	\AP Let $\phi(X)$ be an "MSO" formula and $A = (\Sigma \times \{0,1\}, Q, \init, \deltaA, F)$ its "DBUA". The ""uniformiser automaton"" is defined as
 	\[
 		\intro* \Ua = (\Sigma, \parts{Q} \times \parts{Q}, \init_U, \deltau, F')
 	\]
 	where:
 	\begin{itemize}
 		\item $\init_U(a) = (\init(a,"*"), \init(a,"*"))$
-		\item $\deltau((X,X'),(Y,Y'),a) = (\delta(X,Y,(a,*)), \deltauu(X',Y',a))$ with:
+		\item $\deltau((X,X'),(Y,Y'),a) = (\deltaA(X,Y,(a,*)), \deltauu(X',Y',a))$ with:
 		      \[
 			      \deltauu(X',Y',a) = \begin{cases}
-				      \setdef{\delta(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X' = Y' \\
-				      \delta(X',Y',(a,"*"))                                 & \text{otherwise}
+				      \setdef{\deltaA(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X' = Y' \\
+				      \deltaA(X',Y',(a,"*"))                                 & \text{otherwise}
 			      \end{cases}
 		      \]
 		\item $F' = \setdef{(X,X')}{(X \cap F \neq \emptyset) \Rightarrow (X' \cap F \neq \emptyset)}$
 	\end{itemize}
-	\AP Using the notation $\delta(X,Y,(a,""*""))$ for $\bigcup_{b \in \set{0,1}} \delta(X,Y,(a,b))$, and $\init(a,\reintro{*})$ for $\bigcup_{b \in \set{0,1}} \init(a,b)$.
+	\AP Using the notation $\deltaA(X,Y,(a,""*""))$ for $\bigcup_{b \in \set{0,1}} \deltaA(X,Y,(a,b))$, and $\init(a,\reintro{*})$ for $\bigcup_{b \in \set{0,1}} \init(a,b)$.
 \end{definition}
 
 
@@ -1106,12 +1121,12 @@ This is what states the next lemma.
 	Let $\phi(X)$ be an MSO formula, if the "uniformiser automaton" of $\phi$ is "universal" then $\phi$ is "uniformisable".
 \end{lemma}
 \begin{proof}
-	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
-	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is universal.
+	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \deltaA, F)$ be the automaton for $\phi(X)$ and lets suppose that
+	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \deltaA', F')$ the "uniformiser automaton" of $\phi$ is universal.
 	We need to exhibit a "uniformiser" for $\phi(X)$.
 
 	\AP We first introduce a choice function $\intro*\choiceN : \parts Q \times \parts Q \times Q \times \Sigma \to Q \times Q \times \set{0,1}$
-	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltauu(X',Y', a)$ then $\delta(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
+	that given $(X',Y',r,a)$ chooses a triple $(b,p,q)$ such that, if $r \in \deltauu(X',Y', a)$ then $\deltaA(p,q,(a,b)) = r$ where $p \in X', q \in Y'$
 	and if $X' = Y'$ then $p = q$.
 	We also introduce $\intro* \choiceL : Q \times \Sigma \to \set{0,1} $, which chooses
 	$b$ such that $p = \init((a,b))$.
@@ -1133,7 +1148,7 @@ This is what states the next lemma.
 		\item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then,
 		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that
 		      $(p,q,b) = \choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), r, \tlabel t x)$.
-		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\delta(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ if and only if $b = 1$.
+		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\deltaA(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ if and only if $b = 1$.
 		      This is then a valid "run" of $A$ over $(t,X_U)$
 		\item For a "leaf" $x$ of "label" $a$, by the induction hypothesis we have that $b = \choiceL(a, \rhou(x))$ which is well defined since $a \in \Sigma$ and unique.
 		      We also have that $x \in X$ if and only if $b = 1$ and $\rho(x) = \init ((a,b))$.
@@ -1144,8 +1159,7 @@ This is what states the next lemma.
 	This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, \ie,
 	\[  t \models \unif(X)  \tiff X=X_U \]
 
-
-	\AP Given a set of "states" $P$, from \Cref{lem:MSO-to-aut} there exists a formula $\intro* \ustate_P(x)$ such that
+	\AP Given a set of "states" $P$, from \Cref{thm:MSO-NBUA} there exists a formula $\intro* \ustate_P(x)$ such that
 	\[ t \models \ustate_P(x) \text{ if and only if } \deltauu(\subtree t x) = P .\]
 
 	\todo{add explanation here !!!}
@@ -1210,16 +1224,16 @@ This chain of implications states that if $\phi(X)$ is "uniformisable", then the
 \end{lemma}
 
 \begin{proof} \todo{change : to $\mid$} \todo{knoledge all *}
-	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
-	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is not universal.
+	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \deltaA, F)$ be the automaton for $\phi(X)$ and lets suppose that
+	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \deltaA', F')$ the "uniformiser automaton" of $\phi$ is not universal.
 	We will show that there exists a "tree" $t$ that models  $\phi(X)$ for a some $X$, but does not model $\phi(X)$ for
 	some $X$ that is invariant under the automorphisms of $t$.
 
 	Since $\Ua$ is not "universal", there exists $(R,R') \in \Reach \Ua$, such that $R \cap F \neq \emptyset$ and $R' \cap F = \emptyset$.
 	We want to define a "tree" $t_{R,R'}$ such that
 	\begin{enumerate}
-		\item $R \subseteq \{ \delta_A (t_{R,R'},X) \mid X \subseteq \Nodes {t_{R,R'}}\}$ \label{lem:prop1}
-		\item $\{ \delta_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'$\label{lem:prop2}
+		\item $R \subseteq \{ \deltaA_A (t_{R,R'},X) \mid X \subseteq \Nodes {t_{R,R'}}\}$ \label{lem:prop1}
+		\item $\{ \deltaA_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'$\label{lem:prop2}
 		\item $\interpret \Ua {t_{R,R'}} = (R,R')$\label{lem:prop3}
 	\end{enumerate}
 
@@ -1228,21 +1242,21 @@ This chain of implications states that if $\phi(X)$ is "uniformisable", then the
 	If $(T,T') = (\init(a,"*"), \init (a, "*"))$ for $a \in \Sigma$, then \Cref{lem:prop1} and \Cref{lem:prop3} are trivially satisfied and we have that
 	$\Aut (a) = \{\text{id}\}$, so \Cref{lem:prop2} is also satisfied.
 
-	If $(T,T') = \delta_{\Ua}((P,P'),(Q,Q'),a)$ for $a \in \Sigma$ and $P,P',Q,Q' \in \Reach \Ua$, then by the induction hypothesis there exists
+	If $(T,T') = \deltaA_{\Ua}((P,P'),(Q,Q'),a)$ for $a \in \Sigma$ and $P,P',Q,Q' \in \Reach \Ua$, then by the induction hypothesis there exists
 	$t_{P,P'}$ and $t_{Q,Q'}$ that verify the hypothesis. We can construct $t_{T,T'} = a(t_{P,P'},t_{Q,Q'})$. Lets prove that it satisfies the
 	three properties.
 
 	Lets begin by proving \Cref{lem:prop3}.
 	By definition of $\interpret \Ua {\cdot}$,
-	$\interpret \Ua {t_{T,T'}} = \delta_{\Ua} (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a)$.
+	$\interpret \Ua {t_{T,T'}} = \deltaA_{\Ua} (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a)$.
 	If we use \Cref{lem:prop3} of the induction hypothesis we deduce that
-	$\delta_{\Ua} (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a) = \delta_{\Ua} ((P,P'), (Q,Q'), a)$
-	And by definition of $(T,T')$, $\delta_{\Ua} ((P,P'), (Q,Q'), a) = (T,T')$.
+	$\deltaA_{\Ua} (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a) = \deltaA_{\Ua} ((P,P'), (Q,Q'), a)$
+	And by definition of $(T,T')$, $\deltaA_{\Ua} ((P,P'), (Q,Q'), a) = (T,T')$.
 	\Cref{lem:prop3} is then verified.
 
-	By definition, $T = \delta_A(P,Q,(a,"*"))$. Since by \Cref{lem:prop1} of the induction hypothesis $P \subseteq \{ \delta_A (t_{P,P'},X) \mid X \subseteq \Nodes {t_{P,P'}}\}$
-	and $Q \subseteq \{ \delta_A (t_{Q,Q'},X) \mid X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
-	$T = \delta_A(P,Q,(a,"*")) \subseteq \{ \delta_A (t_{T,T'},X) \mid X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \Cref{lem:prop1}.
+	By definition, $T = \deltaA_A(P,Q,(a,"*"))$. Since by \Cref{lem:prop1} of the induction hypothesis $P \subseteq \{ \deltaA_A (t_{P,P'},X) \mid X \subseteq \Nodes {t_{P,P'}}\}$
+	and $Q \subseteq \{ \deltaA_A (t_{Q,Q'},X) \mid X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
+	$T = \deltaA_A(P,Q,(a,"*")) \subseteq \{ \deltaA_A (t_{T,T'},X) \mid X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \Cref{lem:prop1}.
 
 	We will prove \Cref{lem:prop2} by case distinction.
 	Let $X \subseteq \Nodes {t_{P,P'}}$ such that $\forall \sigma \in \Aut (t_{T,T'}), \sigma(X) = X$, we introduce the
@@ -1254,30 +1268,30 @@ This chain of implications states that if $\phi(X)$ is "uniformisable", then the
 		      and $\interpret \Ua {t_{P,P'}} = \interpret \Ua {t_{Q,Q'}}$, we have that $P = Q$ and $P' = Q'$.
 
 		      Let $\sigma$ be the "automorphism" over $\Nodes{T,T'}$ that swaps  $t_{P,P'}$ and $t_{Q,Q'}$.
-		      We have that $\sigma (X) = X$. Since $\delta(X) = X$, $\delta$ must map $X_1$ to $X_2$, and the same is true for
-		      $X_2$. So we have that $X_1 = X_2$ which means that $\delta(X_1) = X_1$. By construction we have that $p := \delta_A(t_{P,P'}, X_1) =  \delta_A(t_{Q,Q'}, X_2)$.
+		      We have that $\sigma (X) = X$. Since $\deltaA(X) = X$, $\deltaA$ must map $X_1$ to $X_2$, and the same is true for
+		      $X_2$. So we have that $X_1 = X_2$ which means that $\deltaA(X_1) = X_1$. By construction we have that $p := \deltaA_A(t_{P,P'}, X_1) =  \deltaA_A(t_{Q,Q'}, X_2)$.
 		      Using \Cref{lem:prop2} of the induction hypothesis, we find that $p \in P'$. So
-		      $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$.
+		      $\deltaA_A (t_{T,T'}, X) = \deltaA_A(p,p,(a, X(\treeroot))) \in T'$.
 
-		\item Lets suppose $t_{P,P'} \ncong t_{Q,Q'}$, in this case we have that $P' \neq Q'$ or $P \neq Q$ and thus $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,"*"))$.
+		\item Lets suppose $t_{P,P'} \ncong t_{Q,Q'}$, in this case we have that $P' \neq Q'$ or $P \neq Q$ and thus $T' = \deltauu (P',Q',a) = \deltaA_a(P',Q',(a,"*"))$.
 
 		      We have to prove that
-		      $\{ \delta_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$.
+		      $\{ \deltaA_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$.
 		      Let $\sigma \in \Aut(t_{T,T'})$. Since $t_{P,P'} \ncong t_{Q,Q'}$, $\sigma$ cannot swap $t_{P,P'}$ and
 		      $t_{P,P'}$.
 		      Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and
 		      $\sigma(X_2) = X_2$, because $\sigma$ must acte on the "subtrees" independently (because the "subtrees" are not isomorphic).
-		      Let $p := \delta_A (t_{P,P'}, X_1)$ and $q := \delta_A (t_{Q,Q'}, X_2)$.
+		      Let $p := \deltaA_A (t_{P,P'}, X_1)$ and $q := \deltaA_A (t_{Q,Q'}, X_2)$.
 		      Using \Cref{lem:prop2} of the induction hypothesis we deduce that $p \in P'$ and $q \in Q'$.
-		      So $\delta_A (t_{T,T'}, X) = \delta_A(p,q,(a, X(\treeroot))) \in T'$.
+		      So $\deltaA_A (t_{T,T'}, X) = \deltaA_A(p,q,(a, X(\treeroot))) \in T'$.
 	\end{itemize}
 	We have proven the three properties.
 
 	Lets prove the lemma by exhibiting that no $X$ verifying $t_{R,R'} \models \phi(X)$ is invariant under the "automorphisms" of $t_{R,R'}$.
 	Since $R \cap F \neq \emptyset$, there exists $X$ that models $\phi(X)$ and  belonging to $R \cap F$. We can use \Cref{lem:prop1} to deduce that
-	$X \in \{ \delta_A (t_{R,R'},X) \mid X \subseteq \Nodes {t_{R,R'}}\} \cap F$.
-	We also know that $R' \cap F = \emptyset$, we can the deduce that $\{ \delta_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \cap F = \emptyset$
-	thanks to \Cref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \cap F = \emptyset$ which means that no
+	$X \in \{ \deltaA_A (t_{R,R'},X) \mid X \subseteq \Nodes {t_{R,R'}}\} \cap F$.
+	We also know that $R' \cap F = \emptyset$, we can the deduce that $\{ \deltaA_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \cap F = \emptyset$
+	thanks to \Cref{lem:prop2}. So we know that $X \notin \{ \deltaA_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \cap F = \emptyset$ which means that no
 	$X$ satisfying $t_{P,P'} \models \phi(X)$ is invariant under the "automorphisms" of $t_{R,R'}$.
 \end{proof}
 
