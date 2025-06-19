@@ -48,6 +48,7 @@
 
 \knowledge{notion}
     | transition map
+    | Transition map
     | transition function
 
 \knowledge{notion}
@@ -70,6 +71,11 @@
 \knowledge{notion}
     | label
     | labels
+    | node labels
+
+\knowledge{notion}
+    | reachability set
+    | Reachability set
 
 \knowledge{notion}
     | ancestor
@@ -115,6 +121,19 @@
 
 \knowledge{notion}
     | definable
+    | definable set
+    | definability
 
 \knowledge{notion}
     | model
+
+
+\knowledge{notion}
+    | *
+
+
+\knowledge{notion}
+    | automorphism
+    | automorphisms
+    | Automorphism
+    | Automorphisms

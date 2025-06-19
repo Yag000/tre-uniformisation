@@ -48,7 +48,7 @@
 \ccsdesc[500]{Theory of computation~Algebraic language theory}
 \ccsdesc[500]{Theory of computation~Regular languages}
 
-\keywords{MSO, uniformization, finite state automata, trees} 
+\keywords{MSO, uniformisation, finite state automata, trees} 
 
 \category{Rapport de stage} 
 
@@ -72,6 +72,7 @@
 \todo{remove table of contents}
 \todo{change knowledge mode}
 \todo{an vs a}
+\todo{satisfiable and model}
 \newpage
 \section{Introduction}
 
@@ -315,7 +316,6 @@ We now state the formal definitions.
 			state/.style={blue}
 		]
 
-		% TREE 1
 		\node (t1) at (0,0) {a}
 		child {node (t1b1) {b}}
 		child {node (t1a2) {a}
@@ -324,7 +324,6 @@ We now state the formal definitions.
 
 		\node at (2.2, -1) {$\Rightarrow$};
 
-		% TREE 2
 		\node (t2) at (4.5,0) {a}
 		child {node[state ](t2b1) {1}}
 		child {node (t2a2) {a}
@@ -333,21 +332,17 @@ We now state the formal definitions.
 
 		\node at (6.7, -1) {$\Rightarrow$};
 
-		% TREE 3 
 		\node (t3) at (9,0) {a}
 		child {node[state] (t3s4) {1}}
 		child {node[state] (t3a2) {2}};
 
 		\node at (11.2, -1) {$\Rightarrow$};
 
-		% TREE 4 
 		\node[state] (t4) at (13.5,0) {2};
 
 	\end{tikzpicture}
 	\caption{Execution of the automaton of \Cref{ex:count-leaves} over the input $a(b,a(b,b))$}
 \end{figure}
-
-
 
 
 In the same way that we can define a non-deterministic automaton over strings, the same can be done for
@@ -429,7 +424,7 @@ The following lemma shows the equivalence of both definitions.
 \end{proof}
 
 
-We aim now to show that, like in the classical theory, both non-deterministic automata and deterministic ones have the same expressiveness power.
+We aim now to show that, like in the classical theory, both "non-deterministic automata" and "deterministic@automata" ones have the same expressiveness power.
 Since "DBUA" is a particular case of "NBUA" it suffices to show that each "language" accepted by an "NBUA" can also be accepted by a "DBUA".
 
 \begin{definition}
@@ -891,7 +886,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 \section{Uniformisation}\label{sec:uniformisation}
 
 In this section we are going to formally define what "uniformisation" is, give some intuition about it,
-propose an algorithm that decides "uniformization" on finite binary trees and prove its correctness and soundness.
+propose an algorithm that decides "uniformisation" on finite binary trees and prove its correctness and soundness.
 The main result is \Cref{thm:uniformisability-decision}.
 
 \subsection{Definitions and statement of the main theorem}
@@ -944,9 +939,7 @@ In the rest of this section, we recall the definitions of "definable" sets and i
 \end{definition}
 
 
-
-
-
+\todo{explain}
 In particular, if $\phi(X)$ is "uniformisable", then for every "tree" $t$ such that $t \models \exists X. \phi(X)$,
 there exists a "definable" $X_d$ such that $t \models \phi(X_d)$. ... This proves the implication from \Cref{lem:main-result-1} to \Cref{lem:main-result-2} in \Cref{lemma:main}.
 
@@ -963,7 +956,7 @@ Another concept used in this section is the one of "automorphisms" of "trees".
 In other words, an "automorphism" is a symmetry of the "tree" that rearranges its nodes while preserving the ancestor relation and labels.
 Let us illustrate this concept with an example.
 
-\begin{example}
+\begin{example}\todo{remove color and join with remark}
 	Consider the complete binary tree of height 2 and its image under an "automorphism" $\sigma$ that swaps the left and right subtrees:
 	\[
 		\begin{tikzpicture}[baseline={(current bounding box.center)}]
@@ -1047,13 +1040,6 @@ Let us illustrate this concept with an example.
 
 The implication from \Cref{lem:main-result-2} to \Cref{lem:main-result-3} in \Cref{lemma:main} is a direct consequence of \Cref{lem:def-aut}.
 
-
-
-
-
-
-
-
 %\subsection{Intuition behind the main result}
 
 %We are interested in checking whether a given formula $\phi(X)$ has a "uniformiser".
@@ -1076,11 +1062,12 @@ The implication from \Cref{lem:main-result-2} to \Cref{lem:main-result-3} in \Cr
 
 Let us fix a formula $\phi(X)$. At very high level, what we aim at is a procedure that would solve a statement of the form\footnote{This is an intuition, and not a valid formula of MSO.}:
 \[
-	(\exists X.\, \phi(X)) \rightarrow (\exists X.\, \phi(X) \text{ and $X$ is invariant under "automomorphims"}).
+	(\exists X.\, \phi(X)) \rightarrow (\exists X.\, \phi(X) \text{ and $X$ is invariant under "automorphism"}).
 \]
 We aim to build an automaton that somehow accepts the "trees" for which this property holds. 
-This is the "uniformiser automaton" for the formula, that we describe below. We then show in \Cref{lemma:...} that if it is "universal", then $\phi(X)$ is "uniformisable", and in \Cref{lemma:...} that if it is not "universal", then there exists a "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ that would be invariant under the automorphisms of~$t$.
-
+This is the "uniformiser automaton" for the formula, that we describe below. We then show in \Cref{lemma:universal-implies-uniformisable} that if it is "universal", 
+then $\phi(X)$ is "uniformisable", and in \Cref{lemma:non-universal-implies-non-invariant} that if it is not "universal", then there exists a 
+"tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ that would be invariant under the automorphisms of~$t$.
 \begin{definition}["Uniformiser automaton"]
 	\AP Let $\phi(X)$ be an "MSO" formula and $A = (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ its "DBUA". The ""uniformiser automaton"" is defined as
 	\[
@@ -1220,27 +1207,30 @@ This is what states the next lemma.
 
 \subsection{Soundness}\label{sec:soundness}
 
-\begin{lemma}
-	Let $\phi(X)$ be and MSO formula, if $\phi(X)$ is "uniformisable" then the "uniformiser automaton" $\Ua$ of $\phi(X)$ is "universal".
+In this section, we prove the soundness of the "uniformisability checking algorithm", by compleating the proof of \Cref{lem:main-result-3} to 
+\Cref{lem:main-result-4} in \Cref{lemma:main} by contraposition.
+This chain of implications states that if $\phi(X)$ is "uniformisable", then the "uniformiser automaton" of $\phi(X)$ is "universal", \ie that the algorithm is sound.
+
+\begin{lemma}\label{lemma:non-universal-implies-non-invariant}
+	Let $\phi(X)$ be and MSO formula, 
+if the "uniformiser automaton" of $\phi(X)$ is not  "universal",
+then there exists a "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ 
+that would be invariant under the automorphisms of~$t$.
 \end{lemma}
 
 \begin{proof}
-	We will prove it by contraposition.
-
 	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
 	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is not universal.
-	We will show that $\phi(X)$ is not "uniformisable".
+	We will show that there exists a "tree" $t$ that models  $\phi(X)$ for a some $X$, but does not model $\phi(X)$ for
+    some $X$ that is invariant under the automorphisms of $t$.
 
 	Since $\Ua$ is not "universal", there exists $(R,R') \in \Reach \Ua$, such that $R \cap F \neq \emptyset$ and $R' \cap F = \emptyset$.
 	We want to define a "tree" $t_{R,R'}$ such that
 	\begin{enumerate}
 		\item $R \subseteq \{ \delta_A (t_{R,R'},X) : X \subseteq \Nodes (t_{R,R'})\}$ \label{lem:prop1}
-		\item $\{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \subseteq R'$\label{lem:prop2}
+        \item $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'\}$\label{lem:prop2}
 		\item $\interpret \Ua {t_{R,R'}} = (R,R')$\label{lem:prop3}
 	\end{enumerate}
-
-	Using \Cref{lem:def-aut}, if we prove that $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'$ we also
-	satisfy \ref{lem:prop2}.
 
 	We prove by induction that $(T,T') \in \Reach \Ua$ implies all of the three conditions.
 
@@ -1284,14 +1274,16 @@ This is what states the next lemma.
 	\end{itemize}
 	We have proved the three properties.
 
-	Lets prove that  $\phi(X)$ is not "uniformisable" by exhibiting that no $X$ verifying $t_{R,R'} \models \phi(X)$ is "definable".
+	Lets prove the lemma by exhibiting that no $X$ verifying $t_{R,R'} \models \phi(X)$ is invariant under the "automorphisms" of $t_{R,R'}$.
 	Let $X \in F \cap \{ \delta_A (t_{R,R'},X) : X \subset \Nodes {t_{R,R'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}. \todo{more details}
-	We also know that $R' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \cap F = \emptyset$
-	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) : X \ \text{"definable"}\} \cap F = \emptyset$ which means that no
-	$X$ satisfying $t_{P,P'} \models \phi(X)$ is "definable". We deduce that $\phi(X)$ is not "uniformisable".
+	We also know that $R' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'\} \cap F = \emptyset$
+	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'\} \cap F = \emptyset$ which means that no
+	$X$ satisfying $t_{P,P'} \models \phi(X)$ is invariant under the "automorphisms" of $t_{R,R'}$.
 \end{proof}
 
 \section{Conclusion}
+
+\todo{write}
 
 \bibliographystyle{plainurl}
 \bibliography{tre-uniformisation}
