@@ -73,6 +73,8 @@
 \todo{change knowledge mode}
 \todo{an vs a}
 \todo{satisfiable and model}
+\todo{pay attention to nodes t}
+\todo{knowledge all the *}
 \newpage
 \section{Introduction}
 
@@ -169,7 +171,7 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 \AP This recursive structure induces a natural notion of position within a "tree". We now define the set of ""nodes"",
 represented as words over $\{0,1\}$ indicating a path from the root as
 \[
-	\intro* \Nodes(t)  =
+	\intro* \Nodes t   =
 	\begin{cases}
 		\varepsilon                             & \text{if } t = a         \\
 		\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
@@ -183,7 +185,7 @@ represented as words over $\{0,1\}$ indicating a path from the root as
 		\Nodes b  = \{\varepsilon\}, \quad \Nodes {c(d, e)} = \{\varepsilon, 0, 1\}
 	\]
 	\[
-		\Nodes(t) = \{\varepsilon\} \cup \{0\} \cup \{1, 10, 11\} = \{\varepsilon, 0, 1, 10, 11\}
+		\Nodes t = \{\varepsilon\} \cup \{0\} \cup \{1, 10, 11\} = \{\varepsilon, 0, 1, 10, 11\}
 	\]
 \end{example}
 
@@ -197,7 +199,7 @@ Among the "nodes", some are distinguished as "leaves", "nodes" without children.
 	\end{cases}
 \]
 
-\AP We can see that $\Leaves t \subseteq \Nodes(t) $ and we call ""internal nodes"" the set $\Nodes(t) \cap \Leaves t$
+\AP We can see that $\Leaves t \subseteq \Nodes t $ and we call ""internal nodes"" the set $\Nodes t \cap \Leaves t$
 
 
 Each "node" in a "tree" carries a symbol from the alphabet.
@@ -227,9 +229,9 @@ The "ancestor" relation captures the natural hierarchical structure of a "tree":
 of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 
 \begin{definition}
-	\AP Let $t$ be a "tree" and $x, y \in \Nodes(t) $. We define the ""ancestor"" relation as:
+	\AP Let $t$ be a "tree" and $x, y \in \Nodes t $. We define the ""ancestor"" relation as:
 	\[
-		x \intro* \ancestor y \tiff \exists z \in \Nodes(t) ,\, y = xz
+		x \intro* \ancestor y \tiff \exists z \in \Nodes t ,\, y = xz
 	\]
 \end{definition}
 
@@ -364,9 +366,9 @@ tree automata using the same techniques. We will define them and give basic defi
 	\AP A ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
-		\exec : \Nodes(t)  &\to& Q \\
+		\exec : \Nodes t  &\to& Q \\
 		(\tlabel t b,  \exec (n) ) \in I &\text{ if }& n \in \Leaves t \\
-		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes(t) \setminus \Leaves t
+		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \Delta &\text{ if }& n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 
 	We say that $\exec$ is "acceptant" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
@@ -392,9 +394,9 @@ We can easily see that "DBUA" are a particular case of "NBUA", just like in the 
 	In this case, $A'$ has exactly one possible "run" on each "tree" :
 
 	\begin{eqnarray*}
-		\exec : \Nodes(t)  &\to & Q \\
+		\exec : \Nodes t  &\to & Q \\
 		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \Leaves t \\
-		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes(t)  \setminus \Leaves t
+		n  &\mapsto& \delta_{\tlabel t n}(\exec (n0), \exec (n1)) \text{ if } n \in \Nodes t  \setminus \Leaves t
 	\end{eqnarray*}
 \end{remark}
 
@@ -467,7 +469,7 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 		      \end{eqnarray*}
 		\item If $t = a(t_1,t_2)$, then
 		      by the induction hypothesis we know that
-		      $\interpret {\Det N} {t_i} = q_i$ \tiff there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
+		      $\interpret {\Det N} {t_i} = q_i$ if and only if there exists a "run" over $t_i$ ending at $q_i$, for $i \in \set {1,2}$.
 
 		      \begin{eqnarray*}
 			      &&q \in \interpret {\Det N} t \\
@@ -480,7 +482,7 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 	\end{itemize}
 	Then $ \interpret {\Det N} t = \setdef {\rho(\varepsilon)}{\text{$\rho$ "run" of~$N$ over~$t$}}$.\\
 
-	We must now show that $\Det N$ "accepts" $t$ \tiff $N$ "accepts" $t$.
+	We must now show that $\Det N$ "accepts" $t$ if and only if $N$ "accepts" $t$.
 	\begin{eqnarray*}
 		N \text{ "accepts" } t &\tiff& F \cap \setdef {q \in Q} {(a,q) \in I} \neq \emptyset \\
 		&\tiff&   F \cap  \interpret {\Det N} t \neq \emptyset \\
@@ -572,7 +574,7 @@ In particular, it represents the set of all "states" that can be reached when th
 \begin{lemma}
 	Let $A$ be a "DBUA", then:
 	\[
-	\Reach A = \setdef {\interpret A t} {t \in \tree_\Sigma}.
+		\Reach A = \setdef {\interpret A t} {t \in \tree_\Sigma}.
 	\]
 \end{lemma}
 
@@ -582,8 +584,8 @@ In particular, it represents the set of all "states" that can be reached when th
 		\item For the direction $\Reach A \subseteq \setdef {\interpret A t} {t \in \tree_\Sigma}$, we proceed by induction over the construction of elements in $\Reach A$:
 		      \begin{itemize}
 			      \item If $r = \init(a)$ for some $a \in \Sigma$, then the "tree" $a$ satisfies $\interpret A a = \init(a) = r$.
-			      \item If $r = \delta(p, q, a)$ where $p, q \in \Reach A$, then by the induction hypothesis there exist 
-                      $t', t'' \in \tree_\Sigma$ such that $\interpret A {t'} = p$ and $\interpret A {t''} = q$. Then the "tree" $t = a(t', t'')$ satisfies $\interpret A t = r$.
+			      \item If $r = \delta(p, q, a)$ where $p, q \in \Reach A$, then by the induction hypothesis there exist
+			            $t', t'' \in \tree_\Sigma$ such that $\interpret A {t'} = p$ and $\interpret A {t''} = q$. Then the "tree" $t = a(t', t'')$ satisfies $\interpret A t = r$.
 		      \end{itemize}
 
 		\item For the direction $\setdef {\interpret A t} {t \in \tree_\Sigma} \subseteq \Reach A$, we use structural induction on the "tree" $t$:
@@ -591,7 +593,7 @@ In particular, it represents the set of all "states" that can be reached when th
 			      \item If $t = a$, then $\interpret A a = \init(a) \in \Reach A$.
 			      \item If $t = a(t', t'')$, then by the induction hypothesis $\interpret A {t'}, \interpret A {t''} \in \Reach A$, so
 			            \[
-			            \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A.
+				            \interpret A t = \delta(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A.
 			            \]
 		      \end{itemize}
 	\end{itemize}
@@ -601,7 +603,7 @@ In particular, it represents the set of all "states" that can be reached when th
 	\AP Let $A$ be a "NBUA". We say that $A$ is "universal" if it "accepts" every "tree".
 \end{definition}
 
-Once we have defined the "reachability set", we can use it to decide whether an automaton is "universal". Intuitively, a "DBUA" is "universal" if 
+Once we have defined the "reachability set", we can use it to decide whether an automaton is "universal". Intuitively, a "DBUA" is "universal" if
 the only "states" it can reach are "final states". This is formalized in the following theorem.
 
 \begin{theorem}
@@ -622,7 +624,7 @@ the only "states" it can reach are "final states". This is formalized in the fol
 	A saturation algorithm based on $\Reach A$ decides "universality".
 \end{coro}
 
-We have now defined an algorithm to decide whether a "DBUA" is "universal". 
+We have now defined an algorithm to decide whether a "DBUA" is "universal".
 This result will be used in \Cref{sec:uniformisation} to decide "uniformisation".
 
 \subsection{Monadic second-order logic}\label{sec:MSO}
@@ -644,7 +646,7 @@ We start by showing that every "automaton@NBUA" can be expressed as a formula. T
 	\AP Let $t \in \tree_{\Sigma}$. We define a ""model"" of $t$ as:
 
 	\[
-		\intro* \Model t := (\Nodes(t), \ancestor , (a (x))_{a \in \Sigma})
+		\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma})
 	\]
 
 	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a$.
@@ -764,12 +766,13 @@ We begin with basic closure properties of such automata.
 
 We now turn to atomic formulas. These are handled by explicitly designed automata over expanded alphabets that encode variable assignments.
 \todo{explain expanded alphabets and annotated trees}
+\todo{define $X(\treeroot)$.}
 
 \todo{maybe move these automata to the annex}
 
 \begin{lemma}\label{lem:atomic-a}
-	Let $a \in \Sigma$. Over the alphabet $\Sigma \times \{0,1\}$, there exists an "order-insensitive" automaton deciding 
-    the atomic predicate $a(x)$, where $x$ is a free first-order variable. Define:
+	Let $a \in \Sigma$. Over the alphabet $\Sigma \times \{0,1\}$, there exists an "order-insensitive" automaton deciding
+	the atomic predicate $a(x)$, where $x$ is a free first-order variable. Define:
 	\[
 		A = (\Sigma \times \{0,1\}, \{\text{Yes}, \text{No}\}, \init, \delta, \text{Yes}),
 	\]
@@ -902,12 +905,12 @@ We begin by formalising the core concepts.
 	\AP A formula $\phi(X)$ is said to be ""uniformisable"" if it admits a "uniformiser".
 \end{definition}
 
-\begin{remark}
+\begin{remark}\label{remark:uniformisability}
 	An equivalent way to express that $\phi(X)$ is "uniformisable" is that there exists an "MSO-formula" $\psi(x)$ such that, for all "trees" $t$:
 	\[
 		t \models \exists X.\, \phi(X) \quad \text{implies} \quad t \models \phi(\setdef{x}{t \models \psi(x)}).
 	\]
-	Note that here we use a set defined by comprehension, which is not in the syntax of plain "MSO logic". 
+	Note that here we use a set defined by comprehension, which is not in the syntax of plain "MSO logic".
 	This is for commodity and can be easily translated into a syntactically correct equivalent statement.
 \end{remark}
 
@@ -921,34 +924,34 @@ In fact, it is a consequence of a more precise result, \Cref{lemma:main}, that w
 	For all "MSO-formulas" $\phi(X)$, the following statements are equivalent:
 	\begin{enumerate}
 		\item $\phi(X)$ is "uniformisable". \label{lem:main-result-1}
-%		\item $\phi(X)$ is "globally definable". \label{lem:main-result-2}
+		      %		\item $\phi(X)$ is "globally definable". \label{lem:main-result-2}
 		\item For all "trees" $t$ that models $\phi(X)$ for some~$X$, $t$ models~$\phi(X)$ for some "definable"~$X$. \label{lem:main-result-2}
-		% invariant under the automorphisms of~$t$ (ie  $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
+		      % invariant under the automorphisms of~$t$ (ie  $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
 		\item For all "trees" $t$ that models $\phi(X)$ for some~$X$, $t$ models~$\phi(X)$ for some~$X$ invariant under the automorphisms of~$t$ (ie such that $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
-		%\item For all "trees" $t$ such that $t \models \exists X. \phi(X)$, there exists $X$ such that $t \models \phi(X)$ and $\sigma(X) = X$ for all $\sigma \in \Aut(t)$. \label{lem:main-result-3}
+		      %\item For all "trees" $t$ such that $t \models \exists X. \phi(X)$, there exists $X$ such that $t \models \phi(X)$ and $\sigma(X) = X$ for all $\sigma \in \Aut(t)$. \label{lem:main-result-3}
 		\item The "uniformiser automaton" of~$\phi(X)$ is "universal". \label{lem:main-result-4}
 	\end{enumerate}
 	As as consequence, "uniformisability@uniformisable" of "MSO" over trees is decidable.
 \end{lemma}
-In the rest of this section, we recall the definitions of "definable" sets and invariance under "automorphisms" from which we immediately get the implications from 
-\Cref{lem:main-result-1} to \Cref{lem:main-result-2}, and from \Cref{lem:main-result-2} to \Cref{lem:main-result-3}. The "uniformiser automaton" is then defined in the next section, \kCref{uniformiser automaton}. The implication from \Cref{lem:main-result-3} to \Cref{lem:main-result-4} is then the subject of \Cref{lemma:...} in \Cref{section:...}, and the implication from~\Cref{lem:main-result-4} to \Cref{lem:main-result-1} is stated in \Cref{lemma:...}, \Cref{section:...}.
+In the rest of this section, we recall the definitions of "definable" sets and invariance under "automorphisms" from which we immediately get the implications from
+\Cref{lem:main-result-1} to \Cref{lem:main-result-2}, and from \Cref{lem:main-result-2} to \Cref{lem:main-result-3}. The "uniformiser automaton"
+is then defined in the next section, \kCref{uniformiser automaton}. The implication from \Cref{lem:main-result-3} to \Cref{lem:main-result-4} is then the subject of
+\Cref{lemma:not-universal-implies-non-invariant} in \Cref{section:soundness} and the implication from~\Cref{lem:main-result-4} to \Cref{lem:main-result-1} is stated in
+\Cref{lemma:universal-implies-uniformisable}, \Cref{section:correctness}.
 
 \begin{definition}[""Definable set""]\label{def:definable}
-	\AP Let $t$ be a "tree". A set $X \subseteq \Nodes(t)$ is said to be ""definable"" if there exists an
+	\AP Let $t$ be a "tree". A set $X \subseteq \Nodes t$ is said to be ""definable"" if there exists an
 	"MSO" formula $\phi(x)$ such that $X = \setdef{x}{t \models \phi(x)}$.
 \end{definition}
 
-
-\todo{explain}
-In particular, if $\phi(X)$ is "uniformisable", then for every "tree" $t$ such that $t \models \exists X. \phi(X)$,
-there exists a "definable" $X_d$ such that $t \models \phi(X_d)$. ... This proves the implication from \Cref{lem:main-result-1} to \Cref{lem:main-result-2} in \Cref{lemma:main}.
-
-%Thus, "definability" expresses the local property of describing a solution on a given "tree", while "uniformisability" expresses
-%a global capacity to do so uniformly across all "trees".
+In particular, if $\phi(X)$ is "uniformisable", there exists a "uniformiser" $\psi(x)$ such that for all "trees" $t$,
+we have that the set $X_d = \setdef{x}{t \models \psi(x)}$ is "definable" in $t$ and models $\phi(X_d)$ if $t$ models $\exists X.\, \phi(X)$,
+see \Cref{remark:uniformisability}.
+This proves the implication from \Cref{lem:main-result-1} to \Cref{lem:main-result-2} in \Cref{lemma:main}.
 
 Another concept used in this section is the one of "automorphisms" of "trees".
 \begin{definition}["Automorphism"]\label{def:automorphism}
-	\AP An ""automorphism"" of a "tree" $t$ is a bijection $\sigma : \Nodes(t) \to \Nodes(t)$ preserving the tree structure:
+	\AP An ""automorphism"" of a "tree" $t$ is a bijection $\sigma : \Nodes t \to \Nodes t$ preserving the tree structure:
 	if $u$ is a child of $v$, then $\sigma(u)$ is a child of $\sigma(v)$, and $\sigma$ preserves the labels of nodes.
 	The group of all automorphisms of $t$ is denoted $\intro* \Aut(t)$.
 \end{definition}
@@ -956,67 +959,51 @@ Another concept used in this section is the one of "automorphisms" of "trees".
 In other words, an "automorphism" is a symmetry of the "tree" that rearranges its nodes while preserving the ancestor relation and labels.
 Let us illustrate this concept with an example.
 
-\begin{example}\todo{remove color and join with remark}
-	Consider the complete binary tree of height 2 and its image under an "automorphism" $\sigma$ that swaps the left and right subtrees:
-	\[
-		\begin{tikzpicture}[baseline={(current bounding box.center)}]
-			\node (left) at (0,0) {
-				\begin{tikzpicture}[level distance=1.2cm,
-						every node/.style={draw, circle, minimum size=7mm},
-						level 1/.style={sibling distance=2cm},
-						level 2/.style={sibling distance=1cm}]
-					\node {r}
-					child { node[fill=blue!20] {a}
-							child {node[fill=green!20] {b}}
-							child {node[fill=green!20] {c}} }
-					child { node[fill=red!20] {d}
-							child {node[fill=yellow!20] {e}}
-							child {node[fill=yellow!20] {f}} };
-				\end{tikzpicture}
-			};
 
-			\node (right) at (6,0) {
-				\begin{tikzpicture}[level distance=1.2cm,
-						every node/.style={draw, circle, minimum size=7mm},
-						level 1/.style={sibling distance=2cm},
-						level 2/.style={sibling distance=1cm}]
-					\node {r}
-					child { node[fill=red!20] {d}
-							child {node[fill=yellow!20] {e}}
-							child {node[fill=yellow!20] {f}} }
-					child { node[fill=blue!20] {a}
-							child {node[fill=green!20] {b}}
-							child {node[fill=green!20] {c}} };
-				\end{tikzpicture}
-			};
+\begin{example}
+    We compare the automorphism groups of two binary trees.
 
-			\draw[->, thick] (2,0) -- (4,0) node[draw=none,midway, above] {$\sigma$};
-		\end{tikzpicture}
-	\]
+    \begin{center}
+        \begin{tabular}{cc}
+            % First tree
+            \begin{tikzpicture}[level distance=1.2cm,
+                    every node/.style={draw, circle, minimum size=7mm},
+                    level 1/.style={sibling distance=2cm},
+                    level 2/.style={sibling distance=1cm}]
+                \node {r}
+                child { node {a}
+                        child {node {b}}
+                        child {node {b}} }
+                child { node {a}
+                        child {node {c}}
+                        child {node {c}} };
+            \end{tikzpicture}
+            &
+            % Second tree
+            \begin{tikzpicture}[level distance=1.2cm,
+                    every node/.style={draw, circle, minimum size=7mm},
+                    level 1/.style={sibling distance=2cm},
+                    level 2/.style={sibling distance=1cm}]
+                \node {r}
+                child { node {a} }
+                child { node {a}
+                        child {node {b}}
+                        child {node {b}} };
+            \end{tikzpicture}
+            \\
+            \textbf{Tree A: Symmetric} & \textbf{Tree B: Asymmetric}
+        \end{tabular}
+    \end{center}
 
-	The "automorphism" $\sigma$ swaps the left and right subtrees of the root, mapping: $a \leftrightarrow d$, $b \leftrightarrow e$, $c \leftrightarrow f$.
-	This is possible because both "subtrees" are structurally identical and their "node labels" align symmetrically.
+    \textbf{Tree A} is a complete "binary tree" of height 2. In this case, there are 8 "automorphisms", corresponding to all possible ways of swapping left and right children at each level.
+
+    \textbf{Tree B}, on the other hand, is asymmetric. The left child of the root is a "leaf", while the right child is an "internal node" with two children.
+    Since these "subtrees" are not structurally the same, the only "automorphisms" are:
+    \begin{itemize}
+        \item the identity (doing nothing), and
+        \item swapping the two children of the right "subtree".
+    \end{itemize}
 \end{example}
-
-\begin{remark}
-	Consider this asymmetric "tree":
-	\[
-		\begin{tikzpicture}[level distance=1.2cm,
-				every node/.style={draw, circle, minimum size=7mm},
-				level 1/.style={sibling distance=2cm},
-				level 2/.style={sibling distance=1cm}]
-			\node {r}
-			child { node[fill=blue!20] {a} }
-			child { node[fill=red!20] {d}
-					child {node[fill=green!20] {e}}
-					child {node[fill=green!20] {f}} };
-		\end{tikzpicture}
-	\]
-
-	This "tree" admits only two "automorphisms": the identity, and the one that swaps $e$ and $f$.
-	An "automorphism" cannot map $a \leftrightarrow d$ because their subtrees differ: $a$ is a leaf, while $d$ has children.
-	Thus, there is no bijection that can preserve both the structure and labels in such a case.
-\end{remark}
 
 
 
@@ -1064,9 +1051,9 @@ Let us fix a formula $\phi(X)$. At very high level, what we aim at is a procedur
 \[
 	(\exists X.\, \phi(X)) \rightarrow (\exists X.\, \phi(X) \text{ and $X$ is invariant under "automorphism"}).
 \]
-We aim to build an automaton that somehow accepts the "trees" for which this property holds. 
-This is the "uniformiser automaton" for the formula, that we describe below. We then show in \Cref{lemma:universal-implies-uniformisable} that if it is "universal", 
-then $\phi(X)$ is "uniformisable", and in \Cref{lemma:non-universal-implies-non-invariant} that if it is not "universal", then there exists a 
+We aim to build an automaton that somehow accepts the "trees" for which this property holds.
+This is the "uniformiser automaton" for the formula, that we describe below. We then show in \Cref{lemma:universal-implies-uniformisable} that if it is "universal",
+then $\phi(X)$ is "uniformisable", and in \Cref{lemma:not-universal-implies-non-invariant} that if it is not "universal", then there exists a
 "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ that would be invariant under the automorphisms of~$t$.
 \begin{definition}["Uniformiser automaton"]
 	\AP Let $\phi(X)$ be an "MSO" formula and $A = (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ its "DBUA". The ""uniformiser automaton"" is defined as
@@ -1080,7 +1067,7 @@ then $\phi(X)$ is "uniformisable", and in \Cref{lemma:non-universal-implies-non-
 		      \[
 			      \deltauu(X',Y',a) = \begin{cases}
 				      \setdef{\delta(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X' = Y' \\
-				      \delta(X',Y',(a,"*"))                                   & \text{otherwise}
+				      \delta(X',Y',(a,"*"))                                 & \text{otherwise}
 			      \end{cases}
 		      \]
 		\item $F' = \setdef{(X,X')}{(X \cap F \neq \emptyset) \Rightarrow (X' \cap F \neq \emptyset)}$
@@ -1101,14 +1088,15 @@ us to distinguish between them, the automaton enforces that they must transition
 is what guarantees "definability": the selected witness must be invariant under all "automorphisms" of the "tree".
 
 \begin{definition}["Uniformisability checking algorithm"]
-	\AP Given an "MSO" formula $\phi(X)$, the ""uniformisability checking algorithm"" constructs the "uniformiser automaton" $\Ua$ for $\phi(X)$ and checks whether it is universal,
+	\AP Given an "MSO" formula $\phi(X)$ as an input, the ""uniformisability checking algorithm"" constructs the "uniformiser automaton" $\Ua$ for $\phi(X)$ and checks whether it is universal,
 	using the algorithm from \Cref{coro:univeral-Reach}.
-	If $\Ua$ is universal, then $\phi(X)$ is "uniformisable", and the algorithm returns a "uniformiser" for $\phi(X)$. Otherwise, it concludes that $\phi(X)$ is not "uniformisable".
+	If $\Ua$ is universal, then the algorithm returns 'yes', indicating that $\phi(X)$ is "uniformisable".
+	Otherwise, it returns 'no', indicating that $\phi(X)$ is not "uniformisable".
 \end{definition}
 
 In the rest of this section, we will prove that this algorithm is correct and sound, leading to the main result of this article, \Cref{thm:uniformisability-decision}.
 
-\subsection{Correctness}\label{sec:correctness}
+\subsection{Correctness}\label{section:correctness}
 
 In this section, we prove the correctness of the "uniformisability checking algorithm", which is the
 implication from \Cref{lem:main-result-4} to  \Cref{lem:main-result-1} in \Cref{lemma:main}.
@@ -1145,23 +1133,26 @@ This is what states the next lemma.
 		\item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then,
 		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that
 		      $(p,q,b) = \choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), r, \tlabel t x)$.
-		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\delta(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ \tiff $b = 1$.
+		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\delta(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ if and only if $b = 1$.
 		      This is then a valid "run" of $A$ over $(t,X_U)$
 		\item For a "leaf" $x$ of "label" $a$, by the induction hypothesis we have that $b = \choiceL(a, \rhou(x))$ which is well defined since $a \in \Sigma$ and unique.
-		      We also have that $x \in X$ \tiff $b = 1$ and $\rho(x) = \init ((a,b))$.
+		      We also have that $x \in X$ if and only if $b = 1$ and $\rho(x) = \init ((a,b))$.
 	\end{itemize}
 	The claim is proved. In particular, this run satisfies the restrictions of $\deltauu$ and it's a run over the second projection of $\Ua$.
 
 	\AP We are now ready to define a formula $\intro*\unif (X)$ that witnesses that $\phi$ is "uniformisable".
 	This formula simply states using the MSO-syntax the existence of the run $\rhou$ described above, \ie,
-	\[  t \models \unif(X) \text{ \tiff } X=X_U \]
+	\[  t \models \unif(X)  \tiff X=X_U \]
 
 
 	\AP Given a set of "states" $P$, from \Cref{lem:MSO-to-aut} there exists a formula $\intro* \ustate_P(x)$ such that
 	\[ t \models \ustate_P(x) \text{ if and only if } \deltauu(\subtree t x) = P .\]
 
+	\todo{add explanation here !!!}
+
 	Let $k = \abs Q$.
 	\todo{maybe move to annex ?}
+	\todo{change in set}
 	We define 5 subformulas :
 
 	\begin{eqnarray*}
@@ -1178,13 +1169,13 @@ This is what states the next lemma.
 	\end{equation*}
 
 	\begin{equation*}
-		\AP \intro* \leafNode (X_{p_1}, \ldots, X_{p_k})  = \forall x \left( \leaf(x) \rightarrow \bigvee_{\substack{(a, q) \in \init,\\ \choiceL(a,q) = b}} X_i(x) \land  \text{in\_set}(X,x,b)  \right)
+		\AP \intro* \leafNode (X_{p_1}, \ldots, X_{p_k})  = \forall x \left( \leaf(x) \rightarrow \bigvee_{\substack{(a, q) \in \init,\\ \choiceL(a,q) = b}} X_i(x) \land  \inSet (X,x,b)  \right)
 	\end{equation*}
 	\AP
 	\begin{eqnarray*}
 		\intro* \innerNodes (X_{p_1}, \ldots, X_{p_k}, X)  &=& \forall x \forall y, \forall z, \children (x,y,z) \ra \\
 		&& \bigvee_{ \substack{(P',Q',a,R')\in \deltauu, \, r \in R', \\ \choiceN(P',Q',a,r) = (p,q,b)}} \Big( \ustate_{P'}(x) \land \ustate_{Q'}(y) \\
-		&& \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \land  \text{in\_set}(X,x,b)\Big)
+		&& \qquad \land \  X_p(x) \land X_q(y) \land a(z) \land X_r(z) \land  \inSet(X,x,b)\Big)
 	\end{eqnarray*}
 
 
@@ -1205,80 +1196,96 @@ This is what states the next lemma.
 
 \end{proof}
 
-\subsection{Soundness}\label{sec:soundness}
+\subsection{Soundness}\label{section:soundness}
 
-In this section, we prove the soundness of the "uniformisability checking algorithm", by compleating the proof of \Cref{lem:main-result-3} to 
+In this section, we prove the soundness of the "uniformisability checking algorithm", by compleating the proof of \Cref{lem:main-result-3} to
 \Cref{lem:main-result-4} in \Cref{lemma:main} by contraposition.
 This chain of implications states that if $\phi(X)$ is "uniformisable", then the "uniformiser automaton" of $\phi(X)$ is "universal", \ie that the algorithm is sound.
 
-\begin{lemma}\label{lemma:non-universal-implies-non-invariant}
-	Let $\phi(X)$ be and MSO formula, 
-if the "uniformiser automaton" of $\phi(X)$ is not  "universal",
-then there exists a "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$ 
-that would be invariant under the automorphisms of~$t$.
+\begin{lemma}\label{lemma:not-universal-implies-non-invariant}
+	Let $\phi(X)$ be and MSO formula,
+	if the "uniformiser automaton" of $\phi(X)$ is not  "universal",
+	then there exists a "tree"~$t$ that models~$\phi(X)$ for some~$X$, but does not model~$\phi(X)$ for some~$X$
+	that would be invariant under the automorphisms of~$t$.
 \end{lemma}
 
-\begin{proof}
+\begin{proof} \todo{change : to $\mid$} \todo{knoledge all *}
 	Let $A =  (\Sigma \times \{0,1\}, Q, \init, \delta, F)$ be the automaton for $\phi(X)$ and lets suppose that
 	$\Ua = (\Sigma, \parts Q \times \parts Q,\init', \delta', F')$ the "uniformiser automaton" of $\phi$ is not universal.
 	We will show that there exists a "tree" $t$ that models  $\phi(X)$ for a some $X$, but does not model $\phi(X)$ for
-    some $X$ that is invariant under the automorphisms of $t$.
+	some $X$ that is invariant under the automorphisms of $t$.
 
 	Since $\Ua$ is not "universal", there exists $(R,R') \in \Reach \Ua$, such that $R \cap F \neq \emptyset$ and $R' \cap F = \emptyset$.
 	We want to define a "tree" $t_{R,R'}$ such that
 	\begin{enumerate}
-		\item $R \subseteq \{ \delta_A (t_{R,R'},X) : X \subseteq \Nodes (t_{R,R'})\}$ \label{lem:prop1}
-        \item $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'\}$\label{lem:prop2}
+		\item $R \subseteq \{ \delta_A (t_{R,R'},X) \mid X \subseteq \Nodes {t_{R,R'}}\}$ \label{lem:prop1}
+		\item $\{ \delta_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'$\label{lem:prop2}
 		\item $\interpret \Ua {t_{R,R'}} = (R,R')$\label{lem:prop3}
 	\end{enumerate}
 
 	We prove by induction that $(T,T') \in \Reach \Ua$ implies all of the three conditions.
 
-	If $(T,T') = (\init(a,*), \init (a, *))$ for $a \in \Sigma$, then \ref{lem:prop1} and \ref{lem:prop3} are trivially satisfied and we have that
-	$\Aut (a) = \{\text{id}\}$, so \ref{lem:prop2} is also satisfied.
+	If $(T,T') = (\init(a,"*"), \init (a, "*"))$ for $a \in \Sigma$, then \Cref{lem:prop1} and \Cref{lem:prop3} are trivially satisfied and we have that
+	$\Aut (a) = \{\text{id}\}$, so \Cref{lem:prop2} is also satisfied.
 
-	If $(T,T') = \delta_U((P,P'),(Q,Q'),a)$ for $a \in \Sigma$ and $P,P',Q,Q' \in \Reach \Ua$, then by the induction hypothesis there exists
+	If $(T,T') = \delta_{\Ua}((P,P'),(Q,Q'),a)$ for $a \in \Sigma$ and $P,P',Q,Q' \in \Reach \Ua$, then by the induction hypothesis there exists
 	$t_{P,P'}$ and $t_{Q,Q'}$ that verify the hypothesis. We can construct $t_{T,T'} = a(t_{P,P'},t_{Q,Q'})$. Lets prove that it satisfies the
 	three properties.
 
-	Lets begin by proving \ref{lem:prop3}.
+	Lets begin by proving \Cref{lem:prop3}.
 	By definition of $\interpret \Ua {\cdot}$,
-	$\interpret \Ua {t_{T,T'}} = \delta_U (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a)$.
-	If we use the induction hypothesis we deduce that
-	$\delta_U (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a) = \delta_U ((P,P'), (Q,Q'), a)$
-	And by definition of $(T,T')$, $\delta_U ((P,P'), (Q,Q'), a) = (T,T')$.
-	\ref{lem:prop3} is then verified.
+	$\interpret \Ua {t_{T,T'}} = \delta_{\Ua} (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a)$.
+	If we use \Cref{lem:prop3} of the induction hypothesis we deduce that
+	$\delta_{\Ua} (\interpret \Ua {t_{P,P'}}, \interpret \Ua {t_{Q,Q'}}, a) = \delta_{\Ua} ((P,P'), (Q,Q'), a)$
+	And by definition of $(T,T')$, $\delta_{\Ua} ((P,P'), (Q,Q'), a) = (T,T')$.
+	\Cref{lem:prop3} is then verified.
 
-	By definition, $T = \delta_A(P,Q,(a,*))$. Since by the induction hypothesis $P \subseteq \{ \delta_A (t_{P,P'},X) : X \subseteq \Nodes {t_{P,P'}}\}$
-	and $Q \subseteq \{ \delta_A (t_{Q,Q'},X) : X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
-	$T = \delta_A(P,Q,(a,*)) \subseteq \{ \delta_A (t_{T,T'},X) : X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \ref{lem:prop1}.
+	By definition, $T = \delta_A(P,Q,(a,"*"))$. Since by \Cref{lem:prop1} of the induction hypothesis $P \subseteq \{ \delta_A (t_{P,P'},X) \mid X \subseteq \Nodes {t_{P,P'}}\}$
+	and $Q \subseteq \{ \delta_A (t_{Q,Q'},X) \mid X \subseteq \Nodes {t_{Q,Q'}}\}$  we have that
+	$T = \delta_A(P,Q,(a,"*")) \subseteq \{ \delta_A (t_{T,T'},X) \mid X \subseteq \Nodes {t_{T,T'}}\}$. We have proven \Cref{lem:prop1}.
 
-	We will prove \ref{lem:prop2} by case distinction.
+	We will prove \Cref{lem:prop2} by case distinction.
 	Let $X \subseteq \Nodes {t_{P,P'}}$ such that $\forall \sigma \in \Aut (t_{T,T'}), \sigma(X) = X$, we introduce the
 	sets $X_1 = X \cap \Nodes {t_{P,P'}}$ and $X_2 = X \cap \Nodes {t_{Q,Q'}}$.
 	\begin{itemize}
-		\item Lets suppose $P = Q$ and $P' = Q'$, in this case $t_{P,P'} \cong t_{Q,Q'}$. \todo{explain that it's because interpret is a function}
-		      Let $\sigma$ be the automorphism over $\Nodes{T,T'}$ that swaps  $t_{P,P'}$ and $t_{Q,Q'}$.
+		\item Lets suppose $t_{P,P'} \cong t_{Q,Q'}$.
+		      By \Cref{lem:prop3} of the induction hypothesis
+		      $\interpret \Ua {t_{P,P'}} = (P,P')$ and $\interpret \Ua {t_{Q,Q'}} = (Q,Q')$, since $\interpret \Ua {\cdot}$ is a function
+		      and $\interpret \Ua {t_{P,P'}} = \interpret \Ua {t_{Q,Q'}}$, we have that $P = Q$ and $P' = Q'$.
+
+		      Let $\sigma$ be the "automorphism" over $\Nodes{T,T'}$ that swaps  $t_{P,P'}$ and $t_{Q,Q'}$.
 		      We have that $\sigma (X) = X$. Since $\delta(X) = X$, $\delta$ must map $X_1$ to $X_2$, and the same is true for
 		      $X_2$. So we have that $X_1 = X_2$ which means that $\delta(X_1) = X_1$. By construction we have that $p := \delta_A(t_{P,P'}, X_1) =  \delta_A(t_{Q,Q'}, X_2)$.
-		      Using the induction hypothesis, we find that $p \in P'$ \todo{detail this}. So
-		      $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$. \todo{define $X(\treeroot)$.}
+		      Using \Cref{lem:prop2} of the induction hypothesis, we find that $p \in P'$. So
+		      $\delta_A (t_{T,T'}, X) = \delta_A(p,p,(a, X(\treeroot))) \in T'$.
 
-		\item Lets suppose $P' \neq Q'$ or $P \neq Q$, then $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,*))$. We have to prove that
+		\item Lets suppose $t_{P,P'} \ncong t_{Q,Q'}$, in this case we have that $P' \neq Q'$ or $P \neq Q$ and thus $T' = \deltauu (P',Q',a) = \delta_a(P',Q',(a,"*"))$.
+
+		      We have to prove that
 		      $\{ \delta_A (t_{T,T'},X) : \forall \sigma \in \Aut(t_{T,T'}), \sigma(X) = X\} \subseteq T'$.
 		      Let $\sigma \in \Aut(t_{T,T'})$. Since $t_{P,P'} \ncong t_{Q,Q'}$, $\sigma$ cannot swap $t_{P,P'}$ and
-		      $t_{P,P'}$ \todo{explain why}. Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and
-		      $\sigma(X_2) = X_2$ \todo{more details ?}. Let $p := \delta_A (t_{P,P'}, X_1)$ and $q := \delta_A (t_{Q,Q'}, X_2)$.
-		      Using the induction hypothesis we deduce that $p \in P'$ and $q \in Q'$ \todo{Like in the previous case detail this?}.
+		      $t_{P,P'}$.
+		      Since we have that $\sigma(X) = X$, then we deduce that $\sigma(X_1) = X_1$ and
+		      $\sigma(X_2) = X_2$, because $\sigma$ must acte on the "subtrees" independently (because the "subtrees" are not isomorphic).
+		      Let $p := \delta_A (t_{P,P'}, X_1)$ and $q := \delta_A (t_{Q,Q'}, X_2)$.
+		      Using \Cref{lem:prop2} of the induction hypothesis we deduce that $p \in P'$ and $q \in Q'$.
 		      So $\delta_A (t_{T,T'}, X) = \delta_A(p,q,(a, X(\treeroot))) \in T'$.
 	\end{itemize}
-	We have proved the three properties.
+	We have proven the three properties.
 
 	Lets prove the lemma by exhibiting that no $X$ verifying $t_{R,R'} \models \phi(X)$ is invariant under the "automorphisms" of $t_{R,R'}$.
-	Let $X \in F \cap \{ \delta_A (t_{R,R'},X) : X \subset \Nodes {t_{R,R'}}\}$, the intersection is not empty thanks to \ref{lem:prop1}. \todo{more details}
-	We also know that $R' \cap F = \emptyset$ we can the deduce that $\{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'\} \cap F = \emptyset$
-	thanks to \ref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) : \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \subseteq R'\} \cap F = \emptyset$ which means that no
+	Since $R \cap F \neq \emptyset$, there exists $X$ that models $\phi(X)$ and  belonging to $R \cap F$. We can use \Cref{lem:prop1} to deduce that
+	$X \in \{ \delta_A (t_{R,R'},X) \mid X \subseteq \Nodes {t_{R,R'}}\} \cap F$.
+	We also know that $R' \cap F = \emptyset$, we can the deduce that $\{ \delta_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \cap F = \emptyset$
+	thanks to \Cref{lem:prop2}. So we know that $X \notin \{ \delta_A (t_{R,R'},X) \mid \forall \sigma \in \Aut(t_{R,R'}), \sigma(X) = X\} \cap F = \emptyset$ which means that no
 	$X$ satisfying $t_{P,P'} \models \phi(X)$ is invariant under the "automorphisms" of $t_{R,R'}$.
+\end{proof}
+
+\Cref{lem:main-result} is then proved. We can conclue with a simple proof of our main theorem.
+
+\begin{proof}[Proof of \Cref{thm:uniformisability-decision}]
+	\Cref{lem:main-result} states the equivalence between the "uniformisability" of a formula $\phi(X)$ and the "universality" of its "uniformiser automaton" $\Ua$.
+	We can use the "uniformisability checking algorithm" to construct $\Ua$ and check whether it is "universal". This algorithm decides whether $\phi(X)$ is "uniformisable".
 \end{proof}
 
 \section{Conclusion}
