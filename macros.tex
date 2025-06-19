@@ -70,11 +70,11 @@
 %%% Functions
 
 \newcommand{\restr}[2]{#1_{\restriction #2}}
-\newcommand{\im}[1]{\text{Im}\left(#1\right)}
+\newcommand{\im}[1]{\mathrm{Im}\left(#1\right)}
 
-\newcommand{\pgcd}[2]{\text{pgcd}(#1,#2)}
-\newcommand{\car}{\text{car}}
-\newcommand{\id}{\text{id}}
+\newcommand{\pgcd}[2]{\mathrm{pgcd}(#1,#2)}
+\newcommand{\car}{\mathrm{car}}
+\newcommand{\id}{\mathrm{id}}
 
 
 %%% Polynomials
@@ -89,14 +89,14 @@
 
 \newcommand{\sprod}[2]{\left\langle #1, #2 \right\rangle}
 
-\newcommand{\spec}{\text{Spec}}
+\newcommand{\spec}{\mathrm{Spec}}
 
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\norm}[1]{\abs{\abs{#1}}}
 \newcommand{\normop}[1]{\abs{\abs{\abs{#1}}}}
 
-\newcommand{\dist}[2]{\text{ d}\left(#1, #2\right)}
-\newcommand{\vect}[1]{\text{Vect}\left( #1 \right)}
+\newcommand{\dist}[2]{\mathrm{d}\left(#1, #2\right)}
+\newcommand{\vect}[1]{\mathrm{Vect}\left( #1 \right)}
 
 \newcommand{\Mn}[2]{\mathcal{M}_{#1}(#2)}
 
@@ -115,9 +115,9 @@
 
 %% Semantics
 
-\newcommand{\syntaxHeader}[3]{#1 &::=& #2 &\quad\text{#3}\\}
+\newcommand{\syntaxHeader}[3]{#1 &::=& #2 &\quad\mathrm{#3}\\}
 \newcommand{\syntaxExtension}[1]{\syntaxHeader{#1}{\cdots}{}}
-\newcommand{\syntax}[2]{&|&#1&\quad\text{#2}\\}
+\newcommand{\syntax}[2]{&|&#1&\quad\mathrm{#2}\\}
 
 \newenvironment{syntaxdef} {\begin{mathpar} \begin{array}{lcll}} {\end{array} \end{mathpar}}
 
@@ -156,15 +156,10 @@
 
 \newcommand{\app}[1]{\ifx#1~ \else \left( #1 \right)\fi}
 
-\knowledgenewrobustcmd \tree {\cmdkl {\text{tree}}}
+\knowledgenewrobustcmd \tree {\cmdkl {\mathrm{tree}}}
 
-
-%\knowledgenewrobustcmd \Nodes [1] {\cmdkl {\text{Nodes}} \app {#1}}
-\KnowledgeNewDocumentCommand\Nodes{}
-	{\cmdkl {\mathrm{Nodes}}}
-
-
-\knowledgenewrobustcmd \Leaves [1] {\cmdkl {\text{Leaves}} \app {#1}}
+\knowledgenewrobustcmd \Nodes [1] {\cmdkl {\mathrm{Nodes}} \app {#1}}
+\knowledgenewrobustcmd \Leaves [1] {\cmdkl {\mathrm{Leaves}} \app {#1}}
 
 \knowledgenewrobustcmd \tlabel [2] {\cmdkl {#1} \left( #2\right)}
 
@@ -178,35 +173,35 @@
 
 \knowledgenewrobustcmd \Model [1] {\cmdkl{\mathcal M} \app{#1}}
 
-\knowledgenewrobustcmd \Det [1] {\cmdkl{\text{Det}} \app{#1}}
+\knowledgenewrobustcmd \Det [1] {\cmdkl{\mathrm{Det}} \app{#1}}
 
 \knowledgenewrobustcmd \init {\cmdkl {\iota}}
 
 
-\knowledgenewrobustcmd \leaf {\cmdkl {\text{leaf}}}
-\knowledgenewrobustcmd \treeroot {\cmdkl {\text{root}}}
-\knowledgenewrobustcmd \children {\cmdkl {\text{children}}}
+\knowledgenewrobustcmd \leaf {\cmdkl {\mathrm{leaf}}}
+\knowledgenewrobustcmd \treeroot {\cmdkl {\mathrm{root}}}
+\knowledgenewrobustcmd \children {\cmdkl {\mathrm{children}}}
 
-\knowledgenewrobustcmd \Reach [1] {\cmdkl {\text{Reach}_{#1}}}
+\knowledgenewrobustcmd \Reach [1] {\cmdkl {\mathrm{Reach}_{#1}}}
 
 
 \knowledgenewrobustcmd \Atimes {\cmdkl {\times}}
 
-\knowledgenewrobustcmd \choiceN {\cmdkl {\text{choice-nodes}}}
-\knowledgenewrobustcmd \choiceL {\cmdkl {\text{choice-leaves}}}
-\knowledgenewrobustcmd \choiceF {\cmdkl {\text{choice-final}}}
-\knowledgenewrobustcmd \ustate {\cmdkl {\text{u\_state}}}
+\knowledgenewrobustcmd \choiceN {\cmdkl {\mathrm{choice-nodes}}}
+\knowledgenewrobustcmd \choiceL {\cmdkl {\mathrm{choice-leaves}}}
+\knowledgenewrobustcmd \choiceF {\cmdkl {\mathrm{choice-final}}}
+\knowledgenewrobustcmd \ustate {\cmdkl {\mathrm{u\_state}}}
 \knowledgenewrobustcmd \deltau {\cmdkl {\delta_U}}
 \knowledgenewrobustcmd \deltauu {\cmdkl {\delta_{U_2}}}
 \knowledgenewrobustcmd \rhou {\cmdkl {\rho_U}}
-\knowledgenewrobustcmd \unif{\cmdkl {\text{unif}}}
+\knowledgenewrobustcmd \unif{\cmdkl {\mathrm{unif}}}
 
-\knowledgenewrobustcmd  \singleState {\cmdkl {\text{single\_state}}}
-\knowledgenewrobustcmd  \rootNode  {\cmdkl {\text{root\_node}}}
-\knowledgenewrobustcmd  \inSet  {\cmdkl {\text{in\_set}}}
-\knowledgenewrobustcmd  \leafNode  {\cmdkl {\text{leaf\_node}}}
-\knowledgenewrobustcmd \innerNodes  {\cmdkl {\text{inner\_nodes}}}
-\knowledgenewrobustcmd \Aut {\cmdkl {\text{Aut}}}
+\knowledgenewrobustcmd  \singleState {\cmdkl {\mathrm{single\_state}}}
+\knowledgenewrobustcmd  \rootNode  {\cmdkl {\mathrm{root\_node}}}
+\knowledgenewrobustcmd  \inSet  {\cmdkl {\mathrm{in\_set}}}
+\knowledgenewrobustcmd  \leafNode  {\cmdkl {\mathrm{leaf\_node}}}
+\knowledgenewrobustcmd \innerNodes  {\cmdkl {\mathrm{inner\_nodes}}}
+\knowledgenewrobustcmd \Aut {\cmdkl {\mathrm{Aut}}}
 \knowledgenewrobustcmd \Ua {\cmdkl {U}}
 
 \newcommand{\setcomp}[1]{{#1}^\complement}
@@ -227,7 +222,7 @@
 \newcommand{\DBUA}{(\Sigma, Q, \init, \delta, F)}
 
 
-\newcommand{\tiff}{\text{ if and only if }}
+\newcommand{\tiff}{\mathrm{ if and only if }}
 
 
 
