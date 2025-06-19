@@ -59,7 +59,7 @@
 \maketitle
 
 \begin{abstract}
-	We study "uniformisation" for "MSO" formulas over finite binary "trees". A formula $\psi(X)$ "uniformises" $\phi(X)$
+	We study "uniformisation" for "MSO formulas" over "finite binary trees". A formula $\psi(X)$ "uniformises" $\phi(X)$
 	if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that,
 	using symmetry-preserving automata ("order-insensitive" automata), it is decidable whether a
 	given $\phi$ admits such a "uniformiser", and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
@@ -75,6 +75,7 @@
 \todo{satisfiable and model}
 \todo{pay attention to nodes t}
 \todo{knowledge all the *}
+\todo{remove capital letter on definition parenthesis}
 \newpage
 \section{Introduction}
 
@@ -128,7 +129,7 @@ In this section, we review classical concepts related to trees, automata, and lo
 \Cref{sec:automata} provides a brief overview of bottom-up tree automata.
 \Cref{sec:OrderAutomata} introduces an order-insensitive variant of these automata, and
 \Cref{sec:UniversalityAutomata} defines a corresponding universality test.
-Finally, \Cref{sec:MSO} describes how to translate MSO formulas into automata while preserving order insensitivity.N
+Finally, \Cref{sec:MSO} describes how to translate "MSO formulas" into automata while preserving order insensitivity.N
 \subsection{Trees}\label{sec:trees}
 
 This first subsection contains the definition of the "trees" we are working with. Other equivalent definitions of "trees" and
@@ -213,7 +214,7 @@ thanks to the function $\intro* \tlabel t {\cdot}$ :
 \]
 
 We often need to refer to the "subtree" rooted at a particular "node".
-\AP We introduce the notation $\intro* \subtree t n$ to refer to the "subtrees"
+\AP We introduce the notation $\intro* \subtree t n$ to refer to the ""subtrees""
 of $t$ rooted at the node $n$. This can be computed as follows:
 \[
 	\subtree t n =   \begin{cases}
@@ -268,7 +269,7 @@ We now state the formal definitions.
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		      \itemAP $Q$ is a finite set of ""states"".
-		      \itemAP $\intro *\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
+		      \itemAP $\intro*\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
 		      \itemAP $\intro*\deltaA : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
 		      \itemAP $F \subseteq Q$ is the set of ""final states"".
 	\end{itemize}
@@ -294,7 +295,7 @@ We now state the formal definitions.
 		      and $q=2$ means \textit{more than one leaf}.
 		\item $F = \{0,1\}$.
 		\item For all $a \in \Sigma$, we define $\init_a = 1$.
-		\item The transition function is defined by:
+		\item The "transition function" is defined by:
 		      \[
 			      \deltaA_a(q_1, q_2) = \min(q_1 + q_2, 2)
 		      \]
@@ -355,7 +356,7 @@ tree automata using the same techniques. We will define them and give basic defi
 		\item $\Sigma$ is an alphabet.
 		\item $Q$ is a finite set of "states".
 		      \itemAP $\intro*\Init \subseteq \Sigma \times Q$ correspond to the possible states of the "leaves".
-		      \itemAP $\DeltaA \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
+		      \itemAP $\intro*\DeltaA \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
 		\item $F \subseteq Q$ is the set of "final states".
 	\end{itemize}
 \end{definition}
@@ -559,7 +560,7 @@ interesting because they respect the symmetries of "trees".
 
 In this section, we define the "reachability set" of a "DBUA" and show that it can be used to decide the "universality" of the automaton.
 
-\begin{definition}["Reachability set"]
+\begin{definition}[""reachability set""]
 	\AP Let $A = \DBUA$ a "DBUA", and let $\intro* \Reach A \subseteq Q$ be the smallest set such that:
 	\begin{enumerate}
 		\item $\init(a) \in \Reach A$ for all $a \in \Sigma$,
@@ -599,7 +600,7 @@ In particular, it represents the set of all "states" that can be reached when th
 \end{proofI}
 
 \begin{definition}
-	\AP Let $A$ be a "NBUA". We say that $A$ is "universal" if it "accepts" every "tree".
+	\AP Let $A$ be a "NBUA". We say that $A$ is ""universal"" if it "accepts" every "tree".
 \end{definition}
 
 Once we have defined the "reachability set", we can use it to decide whether an automaton is "universal". Intuitively, a "DBUA" is "universal" if
@@ -628,40 +629,52 @@ This result will be used in \Cref{sec:uniformisation} to decide "uniformisation"
 
 \subsection{Monadic second-order logic}\label{sec:MSO}
 
-\todo{maybe define what mso actually is and talk a bit more about models}
 \todo{Tak about the main result at some point, and do it better than right now}
-In this subsection, we introduce "monadic second-order logic" ("MSO") over finite binary "trees",
-and examine its relationship with "non-deterministic bottom-up automata", in partivulat with "order-insensitive" automata.
 
-We will use this equivalence later to reason about "MSO" formulas using automata-theoretic techniques. In particular, this will allow us to:
 
-Our objective is to show that "MSO" and "order-insensitive" "automata@NBUA" have the same expressive power. This will allow to reason about
-properties of "MSO" using automata theory techniques, wich will be extensively use in \Cref{sec:uniformisation}.
+\subsection{Monadic second-order logic on trees}
 
-The proof follows the classical schema.
+In this subsection, we introduce "monadic second-order logic" ("MSO") over "finite binary trees", and examine its relationship with
+"non-deterministic bottom-up automata", in particular with "order-insensitive" "automata@NBUA".
 
-We start by showing that every "automaton@NBUA" can be expressed as a formula. The proof itself is standard \cite{Buchi60, Thomas1997, bookautomata}.
+Our objective is to show that "MSO" and "order-insensitive" "automata@NBUA" have the same expressive power. This will allow us to reason about properties
+of "MSO" using automata theory techniques, which will be extensively used in \Cref{sec:uniformisation}.
 
 \begin{definition}
 	\AP Let $t \in \tree_{\Sigma}$. We define a ""model"" of $t$ as:
-
 	\[
 		\intro* \Model t := (\Nodes t, \ancestor , (a (x))_{a \in \Sigma})
 	\]
-
-	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a$.
+	where each unary predicate $a(x)$ holds if and only if $\tlabel t x = a $.
 
 	We write $t \models \phi$ to mean that the formula $\phi$ holds in the "model" $\Model t$.
 \end{definition}
 
 \begin{definition}
-	\AP We say that a language is ""MSO-definable"" if there exists a "MSO" formula $\phi$ such that
+	\AP ""Monadic second-order logic"" (\reintro*"MSO") is the extension of the first-order logic with the following features:
+	\begin{itemize}
+		\item Variables can be either first-order (denoting "nodes") or second-order (denoting sets of "nodes").
+		\item Quantification can be done over both first-order and second-order variables.
+		\item The logic includes the usual logical connectives and quantifiers.
+		      \itemAP The ""atomic formulas"" include:
+		      \begin{itemize}
+			      \item Equality between "nodes".
+			      \item $x \in X$ means that the "node" $x$ belongs to the set $X$.
+			      \item "Ancestor" relation: \( x \ancestor y \) means that \( x \) is an ancestor of \( y \).
+			      \item Unary predicates for each symbol in the alphabet: \( a(x) \) means that the label of node \( x \) is \( a \).
+		      \end{itemize}
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	\AP We say that a language is ""MSO-definable"" if there exists an "MSO" formula \( \phi \) such that
 	\[
 		L = \setdef{t \in \tree_{\Sigma}}{t \models \phi}.
 	\]
 \end{definition}
 
-We will discuss some examples of "MSO" formulas.
+
+We will discuss some examples of "MSO formulas".
 
 \begin{example}
 	\AP The formula
@@ -696,7 +709,12 @@ We will discuss some examples of "MSO" formulas.
 \end{example}
 
 
-We can now state the main result of this section, which establishes the equivalence between "order-insensitive" "NBUA" and "MSO" formulas.
+\todo{make this make sense please}
+The proof follows the classical schema.
+
+We start by showing that every "automaton@NBUA" can be expressed as a formula. The proof itself is standard \cite{Buchi60, Thomas1997, bookautomata}.
+
+We can now state the main result of this section, which establishes the equivalence between "order-insensitive" "NBUA" and "MSO formulas".
 
 \begin{theorem}\label{thm:MSO-NBUA}
 	A "language" $L \subseteq \tree_{\Sigma}$ is "MSO-definable" if and only if there exists an "order-insensitive" "NBUA" $A$ such that $\lang A = L$.
@@ -709,7 +727,7 @@ the "automaton@NBUA" using second-order variables that assign "states" to "nodes
 \begin{lemma}
 	If $A$ is an "order-insensitive" "NBUA", then there exists a "MSO" formula $\phi$ such that for all $t \in \tree_{\Sigma}$,
 	\[
-		t \models \phi \tiff t \in \lang A.
+		t \models \phi \text{ if and only if } t \in \lang A.
 	\]
 \end{lemma}
 
@@ -746,7 +764,7 @@ the "automaton@NBUA" using second-order variables that assign "states" to "nodes
 We now turn to the other direction. Our goal is to show that for every "MSO" formula over finite binary "trees",
 there exists an equivalent "order-insensitive" "non-deterministic bottom-up automaton".
 
-The construction proceeds by induction on the structure of formulas, using standard constructions for closure and the atomic formulas.
+The construction proceeds by induction on the structure of "formulas", using standard constructions for closure and the "atomic formulas".
 Throughout, we ensure that the resulting automata remain "order-insensitive".
 
 We begin with basic closure properties of such automata.
@@ -779,9 +797,58 @@ We begin with basic closure properties of such automata.
 	is also "order-insensitive", and recognizes the complement of $A$: $\lang{A'} = \lang{A}^\complement$.
 \end{lemma}
 
-We now turn to atomic formulas. These are handled by explicitly designed automata over expanded alphabets that encode variable assignments.
+We now turn to "atomic formulas". These are handled by explicitly designed automata over expanded alphabets that encode variable assignments.
+We will only treat the ones that are relevant for our purposes, namely the atomic predicates $a(x)$ and $x \ancestor y$.
+
 \todo{explain expanded alphabets and annotated trees}
 \todo{define $X(\treeroot)$.}
+
+In order to model variables we use "annotated trees", where each "node" is annotated with a bit vector representing the assignment of variables.
+In this case, we will use the alphabet $\Sigma \times \{0,1\}^n$, where $n$ is the number of free variables in the formula.
+
+\begin{example}
+	The following tree corresponds to the "tree" $a(b,c(d,e))$ with two free variables, where the first variable is assigned to the "root" and the second to the "leaf"
+	with label $e$:
+	\[
+		\begin{tikzpicture}[level distance=1.7cm,
+				every node/.style={draw, circle, minimum size=5mm},
+				level 1/.style={sibling distance=2cm},
+				level 2/.style={sibling distance=1.6cm}]
+			\node {(a,1,0)}
+			child { node {(b,0,0)}}
+			child { node {(c,0,0)}
+					child {node {(d,0,0)}}
+					child {node {(e,0,1)}} };
+		\end{tikzpicture}
+	\]
+
+\end{example}
+
+\begin{definition}["annotated tree"]
+	Given a set of "nodes" $X$ and a "tree" t, we define an ""annotated tree"" as the pair $(t, X)$. This pair
+	corresponds to a new "tree", where each "label" of a "node" is a pair consisting of the original "label" and a bit indicating whether the "node" belongs to the set $X$.
+
+	We will use the notation $\intro*\bit X n $, where $n$ is a "node" of the "tree", to denote the bit indicating whether $n$ belongs to the set $X$.
+\end{definition}
+
+\begin{example}
+	Let $t$ be the "tree" $a(b,c(d,e))$, and let $X = \{\varepsilon,11\}$.
+	Then $(t, X)$ corresponds to the "annotated tree" :
+	\[
+		\begin{tikzpicture}[level distance=1.5cm,
+				every node/.style={draw, circle, minimum size=5mm},
+				level 1/.style={sibling distance=2cm},
+				level 2/.style={sibling distance=1.5cm}]
+			\node {(a,1)}
+			child { node {(b,0)}}
+			child { node {(c,1)}
+					child {node {(d,0)}}
+					child {node {(e,0)}} };
+		\end{tikzpicture}
+	\]
+\end{example}
+
+
 
 \todo{maybe move these automata to the annex}
 
@@ -894,7 +961,7 @@ We now turn to atomic formulas. These are handled by explicitly designed automat
 
 	For $\phi = \exists X.\psi(X)$, the construction is similar. The automaton $A$ reads $n$-bit "annotations", with the last bit corresponding
 	to the second-order variable $X$. We define $A'$ by again simulating all two options for each node (being in $X$ or not) and applying the same
-	"powerset construction".
+	"power set construction".
 
 	Each inductive case preserves "order-insensitivity", and constructs an "NBUA" for the given formula. Thus, by induction on the structure of $\phi$,
 	we obtain the desired automaton.
@@ -939,11 +1006,8 @@ In fact, it is a consequence of a more precise result, \Cref{lemma:main}, that w
 	For all "MSO-formulas" $\phi(X)$, the following statements are equivalent:
 	\begin{enumerate}
 		\item $\phi(X)$ is "uniformisable". \label{lem:main-result-1}
-		      %		\item $\phi(X)$ is "globally definable". \label{lem:main-result-2}
 		\item For all "trees" $t$ that models $\phi(X)$ for some~$X$, $t$ models~$\phi(X)$ for some "definable"~$X$. \label{lem:main-result-2}
-		      % invariant under the automorphisms of~$t$ (ie  $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
 		\item For all "trees" $t$ that models $\phi(X)$ for some~$X$, $t$ models~$\phi(X)$ for some~$X$ invariant under the automorphisms of~$t$ (ie such that $\sigma(X) = X$ for all $\sigma \in \Aut(t)$). \label{lem:main-result-3}
-		      %\item For all "trees" $t$ such that $t \models \exists X. \phi(X)$, there exists $X$ such that $t \models \phi(X)$ and $\sigma(X) = X$ for all $\sigma \in \Aut(t)$. \label{lem:main-result-3}
 		\item The "uniformiser automaton" of~$\phi(X)$ is "universal". \label{lem:main-result-4}
 	\end{enumerate}
 	As as consequence, "uniformisability@uniformisable" of "MSO" over trees is decidable.
@@ -954,7 +1018,7 @@ is then defined in the next section, \kCref{uniformiser automaton}. The implicat
 \Cref{lemma:not-universal-implies-non-invariant} in \Cref{section:soundness} and the implication from~\Cref{lem:main-result-4} to \Cref{lem:main-result-1} is stated in
 \Cref{lemma:universal-implies-uniformisable}, \Cref{section:correctness}.
 
-\begin{definition}[""Definable set""]\label{def:definable}
+\begin{definition}["definable set"]\label{def:definable}
 	\AP Let $t$ be a "tree". A set $X \subseteq \Nodes t$ is said to be ""definable"" if there exists an
 	"MSO" formula $\phi(x)$ such that $X = \setdef{x}{t \models \phi(x)}$.
 \end{definition}
@@ -965,7 +1029,7 @@ see \Cref{remark:uniformisability}.
 This proves the implication from \Cref{lem:main-result-1} to \Cref{lem:main-result-2} in \Cref{lemma:main}.
 
 Another concept used in this section is the one of "automorphisms" of "trees".
-\begin{definition}["Automorphism"]\label{def:automorphism}
+\begin{definition}["automorphism"]\label{def:automorphism}
 	\AP An ""automorphism"" of a "tree" $t$ is a bijection $\sigma : \Nodes t \to \Nodes t$ preserving the tree structure:
 	if $u$ is a child of $v$, then $\sigma(u)$ is a child of $\sigma(v)$, and $\sigma$ preserves the labels of nodes.
 	The group of all automorphisms of $t$ is denoted $\intro* \Aut(t)$.
@@ -1033,7 +1097,7 @@ Let us illustrate this concept with an example.
 	The idea is that an MSO formula, by construction, cannot distinguish between "nodes" that are mapped to each other by "automorphisms":
 	these transformations preserve the structure and labels of the "tree".
 
-	The proof proceeds by induction on the structure of $\phi$. Atomic formulas are invariant under "automorphisms" by definition,
+	The proof proceeds by induction on the structure of $\phi$. "Atomic formulas" are invariant under "automorphisms" by definition,
 	since "automorphisms" preserve the tree structure and labeling. The logical connectives (conjunction, disjunction, negation)
 	and quantifiers preserve this invariance, so the property holds inductively.
 
@@ -1041,24 +1105,6 @@ Let us illustrate this concept with an example.
 \end{proof}
 
 The implication from \Cref{lem:main-result-2} to \Cref{lem:main-result-3} in \Cref{lemma:main} is a direct consequence of \Cref{lem:def-aut}.
-
-%\subsection{Intuition behind the main result}
-
-%We are interested in checking whether a given formula $\phi(X)$ has a "uniformiser".
-%Our approach is to consider a more manageable property: whether $\phi(X)$ is "globally definable".
-
-%\begin{definition}["Globally definable"]\label{def:global-def}
-%	\AP A formula $\phi(X)$ is ""globally definable"" if, for every "tree" $t$, the following holds:
-%	\[
-%		t \models \exists X.\, \phi(X) \quad \Rightarrow \quad \text{there exists a "definable" } X_d \text{ such that } t \models \phi(X_d).
-%	\]
-%\end{definition}
-
-%Clearly, if a formula is "uniformisable", then it is also "globally definable". The surprising part- and one of our results- is that the converse also holds.
-%That is, "global definability" implies "uniformisability". This equivalence is established in \Cref{lem:main-result}.
-
-%The rest of this section is devoted to expressing "global definability" in terms of automata, constructing a suitable "deterministic bottom-up automaton",
-%and reducing the problem to an "automata universality" check.
 
 \subsection{The uniformiser automaton}
 
@@ -1078,9 +1124,9 @@ then $\phi(X)$ is "uniformisable", and in \Cref{lemma:not-universal-implies-non-
 	where:
 	\begin{itemize}
 		\item $\init_U(a) = (\init(a,"*"), \init(a,"*"))$
-		\item $\deltau((X,X'),(Y,Y'),a) = (\deltaA(X,Y,(a,*)), \deltauu(X',Y',a))$ with:
+		      \itemAP $\intro*\deltau((X,X'),(Y,Y'),a) = (\deltaA(X,Y,(a,*)), \deltauu(X',Y',a))$ with:
 		      \[
-			      \deltauu(X',Y',a) = \begin{cases}
+			      \intro*\deltauu(X',Y',a) = \begin{cases}
 				      \setdef{\deltaA(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X' = Y' \\
 				      \deltaA(X',Y',(a,"*"))                                 & \text{otherwise}
 			      \end{cases}
@@ -1271,7 +1317,7 @@ This chain of implications states that if $\phi(X)$ is "uniformisable", then the
 		      We have that $\sigma (X) = X$. Since $\deltaA(X) = X$, $\deltaA$ must map $X_1$ to $X_2$, and the same is true for
 		      $X_2$. So we have that $X_1 = X_2$ which means that $\deltaA(X_1) = X_1$. By construction we have that $p := \deltaA_A(t_{P,P'}, X_1) =  \deltaA_A(t_{Q,Q'}, X_2)$.
 		      Using \Cref{lem:prop2} of the induction hypothesis, we find that $p \in P'$. So
-		      $\deltaA_A (t_{T,T'}, X) = \deltaA_A(p,p,(a, X(\treeroot))) \in T'$.
+		      $\deltaA_A (t_{T,T'}, X) = \deltaA_A(p,p,(a, \bit X {\treeroot})) \in T'$.
 
 		\item Lets suppose $t_{P,P'} \ncong t_{Q,Q'}$, in this case we have that $P' \neq Q'$ or $P \neq Q$ and thus $T' = \deltauu (P',Q',a) = \deltaA_a(P',Q',(a,"*"))$.
 

@@ -1,6 +1,11 @@
  \knowledge{notion}
     | tree
     | binary tree
+    | finite binary tree
+    | finite binary trees
+    | unordered binary trees
+    | finite tree
+    | finite trees
     | trees
     | Tree
     | Trees
@@ -25,6 +30,7 @@
     | non-deterministic bottom-up tree automata
     | non-deterministic bottom-up automaton
     | non-deterministic bottom-up automata
+    | non-deterministic automata
     | automaton@NBUA
     | automata@NBUA
     | NBUA
@@ -63,9 +69,14 @@
 \knowledge{notion}
     | final state
     | final states
+    | accepting states
+    | Accepting states
+    | accepting state
 
 \knowledge{notion}
     | power set automaton
+    | power set construction
+
 
 \knowledge{notion}
     | leaves
@@ -84,6 +95,7 @@
 
 \knowledge{notion}
     | ancestor
+    | Ancestor
 
 \knowledge{notion}
     | run
@@ -113,6 +125,7 @@
 
 \knowledge{notion}
     | uniformisation
+    | MSO uniformisation
 
 \knowledge{notion}
     | internal node
@@ -120,6 +133,7 @@
 
 \knowledge{notion}
     | uniformiser automaton
+    | Uniformiser automaton
 
 \knowledge{notion}
     | root
@@ -127,6 +141,7 @@
 \knowledge{notion}
     | definable
     | definable set
+    | Definable set
     | definability
 
 \knowledge{notion}
@@ -142,3 +157,41 @@
     | automorphisms
     | Automorphism
     | Automorphisms
+
+
+
+\knowledge{notion}
+    | Atomic formulas
+    | Atomic formula
+    | atomic formula
+    | atomic formulas
+
+\knowledge{notion}
+    | MSO
+    | MSO logic
+    | Monadic second-order logic
+    | Monadic second-order
+    | monadic second-order logic
+    | Monadic second‐order
+    | Monadic second‐order logic
+    | MSO-formula
+    | MSO-formulas
+    | MSO formula
+    | MSO formulas
+    | formulas
+    | monadic second-order
+
+\knowledge{notion}
+    | Uniformisability checking algorithm
+    | uniformisability checking algorithm
+
+\knowledge{notion}
+    | MSO-definable
+
+
+\knowledge{notion}
+    | annotated trees
+    | annotated tree
+    | annotated
+    | annotation
+    | annotations
