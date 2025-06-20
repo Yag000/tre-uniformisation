@@ -205,3 +205,5 @@
 \knowledge{notion}
     | child
     | children
+    | descendants
+    | descendant
