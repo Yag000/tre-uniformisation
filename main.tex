@@ -59,13 +59,13 @@
 \maketitle
 
 \begin{abstract}
-	We study "uniformisation" for "MSO formulas" over "finite binary trees". A formula $\psi(X)$ "uniformises" $\phi(X)$
-	if it selects at most one witness $X$ and, whenever $\phi$ has a witness, $\psi$ picks one. We show that,
-	using symmetry-preserving automata ("order-insensitive" automata), it is decidable whether a
-	given $\phi$ admits such a "uniformiser", and in the positive case, we effectively construct $\psi$. Our procedure translates $\phi$ into
+	We study "uniformisation" for "MSO formulas" over "unordered finite binary trees". A "formula" $\psi(X)$ "uniformises" $\phi(X)$
+	if it selects at most one witness $X$ and, whenever $\phi(X)$ has a witness, $\psi$ picks one. We show that,
+	using symmetry-preserving automata ("order-insensitive automata"), it is decidable whether a
+	given $\phi(X)$ admits such a "uniformiser", and in the positive case, we effectively construct $\psi(X)$. Our procedure translates $\phi(X)$ into
 	an "order-insensitive" "deterministic bottom-up tree automaton", checks whether that "automaton@DBUA" "accepts" every "tree", and, when
-	it does, extracts from its "transition relation" an "MSO" formula that uniformly selects a witness. This reduces "MSO" "uniformisation"
-	on finite "trees" to a simple "automata universality" test and a formula extraction step.
+	it does, extracts from its "transition relation" an "MSO formula" that uniformly selects a witness. This reduces "MSO uniformisation"
+	on "finite trees" to a simple "automata universality" test and a "formula" extraction step.
 \end{abstract}
 
 \tableofcontents
@@ -76,37 +76,38 @@
 \todo{pay attention to nodes t}
 \todo{knowledge all the *}
 \todo{remove capital letter on definition parenthesis}
+\todo{update category}
 \newpage
 \section{Introduction}
 
-"Monadic second‐order" ("MSO") logic is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
+"Monadic second‐order logic" ("MSO") is a well-studied fragment of second-order logic with wide-ranging applications in graph theory, automata theory, and formal verification.
 In particular, its deep connection with automata theory has been extensively explored. It is well known that MSO over finite words is equivalent in expressive power to
 finite-state automata~\cite{Buchi60}.
 
-This correspondence extends beyond words: automata can also be defined to run on "trees". Over finite "trees", MSO logic remains equivalent in expressive power to finite-state
+This correspondence extends beyond words: automata can also be defined to run on "trees". Over "finite trees", "MSO logic" remains equivalent in expressive power to finite-state
 tree automata~\cite{TW68, Don70}. This connection enables the use of automata-theoretic techniques to reason about "trees", one of the most fundamental and widely studied data
 structures.
 
-A classical challenge in this context is the \emph{uniformisation problem}: given an MSO formula $\phi(X)$ that asserts the existence of a set $X$ satisfying a certain property,
-is it possible to define another MSO formula $\psi(Y)$ that selects \emph{at most one} such set for each tree, in a way that agrees with $\phi$ whenever it is satisfiable? We
+A classical challenge in this context is the "uniformisation problem": given an "MSO formula" $\phi(X)$ that asserts the existence of a set $X$ satisfying a certain property,
+is it possible to define another "MSO formula" $\psi(Y)$ that selects \emph{at most one} such set for each "tree", in a way that agrees with $\phi(X)$ whenever it is satisfiable? We
 formalize this notion in \Cref{sec:uniformisation}.
 
 This problem has been studied in various settings. A comprehensive survey is provided in~\cite{Cara15}. Positive results are known for infinite words, where every MSO-definable
 relation admits an MSO-definable uniformising function~\cite{Siefkes1975, Choffrut1999, Rabin07}. In contrast, uniformisation is not possible in general for infinite binary
 trees~\cite{GS83}.
-In this work, we study MSO uniformisation over a different class of structures: \emph{finite, labeled binary trees}.
+In this work, we study MSO uniformisation over a different class of structures: \emph{finite, unordered, labeled binary trees}.
 All of the technical work is performed using only automata that preserve structural symmetry,
 \ie they are unable to distinguish between left and right "subtrees".
 
 The central question addressed in this paper is:
 
 \begin{problem}[The ""uniformisation"" problem]\label{prob:uniformisation-problem}
-\AP Given an MSO formula $\phi(X)$, does there exist a "uniformiser" $\psi(X)$?
+\AP Given an "MSO formula" $\phi(X)$, does there exist a "uniformiser" $\psi(X)$?
 \end{problem}
 
-Our main result, \Cref{theorem:main}, is that this question is \emph{decidable}, and in the positive case, a "uniformiser" $\psi$ can be effectively constructed. Concretely, we translate $\phi$ into a
+Our main result, \Cref{theorem:main}, is that this question is \emph{decidable}, and in the positive case, a "uniformiser" $\psi$ can be effectively constructed. Concretely, we translate $\phi(X)$ into a
 "deterministic bottom-up tree automaton" whose "transition map" is "order-insensitive" (\ie closed under sibling swaps). We then perform a "universality" check on this
-automaton—does it accept every tree?—and, when it does, we extract from its transitions an MSO formula that uniformly selects a witness.
+automaton—does it accept every tree?—and, when it does, we extract from its transitions an "MSO formula" that uniformly selects a witness.
 
 This paper makes three main contributions:
 \begin{itemize}
@@ -119,17 +120,18 @@ This paper makes three main contributions:
 \paragraph*{Structure of the paper.} The remainder of the paper is structured as follows:
 \Cref{sec:definitions} introduces the necessary definitions, notations and classical results on "trees", "automata@DBUA", and "MSO logic", with an emphasis on the "order-insensitive"
 variant of tree automata.
-In \Cref{sec:uniformisation}, we define the uniformisation problem and present our main result, showing that it is decidable for finite binary trees.
+\todo{unofrmisation problem is not really defined}
+In \Cref{sec:uniformisation}, we define the "uniformisation problem" and present our main result, showing that it is decidable for "unordered finite binary trees".
 We conclude in \Cref{sec:conclusion} with a discussion of the implications of our results and potential future work.
 
 \section{Definitions} \label{sec:definitions}
 
-In this section, we review classical concepts related to trees, automata, and logic.
-\Cref{sec:trees} establishes our notation for trees.
-\Cref{sec:automata} provides a brief overview of bottom-up tree automata.
-\Cref{sec:OrderAutomata} introduces an order-insensitive variant of these automata, and
-\Cref{sec:UniversalityAutomata} defines a corresponding universality test.
-Finally, \Cref{sec:MSO} describes how to translate "MSO formulas" into automata while preserving order insensitivity.N
+In this section, we review classical concepts related to "trees", "automata@DBUA", and "logic@MSO".
+\Cref{sec:trees} establishes our notation for "trees".
+\Cref{sec:automata} provides a brief overview of "bottom-up tree automata@DBUA".
+\Cref{sec:OrderAutomata} introduces an "order-insensitive" variant of these automata, and
+\Cref{sec:UniversalityAutomata} defines a corresponding "universality" test.
+Finally, \Cref{sec:MSO} describes how to translate "MSO formulas" into automata while preserving "order-insensitivity".
 \subsection{Trees}\label{sec:trees}
 
 This first subsection contains the definition of the "trees" we are working with. Other equivalent definitions of "trees" and
@@ -142,6 +144,7 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 		\item $a(t,t')$, where $a \in \Sigma$ and $t, t'$ are "trees".
 	\end{itemize}
 	We call the ""root"" of a "tree" the first node in its definition.
+	We denote the ""children"" of a "tree" $t$ as $t'$ and $t''$ in the case of $t = a(t',t'')$.
 	The set of all "trees" over $\Sigma$ is denoted $\intro* \tree_{\Sigma}$.
 	A subset of $\tree_{\Sigma}$ is called a ""tree language"" (or "language" for short).
 \end{definition}
@@ -167,28 +170,35 @@ automata are possible~\cite{Thomas1997, tata}, but we have chosen this one becau
 	\caption{Concrete tree corresponding to $a(b, c(d, e))$.}
 \end{figure}
 
-\AP This recursive structure induces a natural notion of position within a "tree". We now define the set of ""nodes"",
-represented as words over $\{0,1\}$ indicating a path from the root as
-\[
-	\intro* \Nodes t   =
-	\begin{cases}
-		\varepsilon                             & \text{if } t = a         \\
-		\varepsilon \cup \setdef {0u} {u \in \Nodes {t'}}
-		\cup \setdef {1u} {u \in \Nodes {t''} } & \text{if } t = a(t',t'')
-	\end{cases}
-\]
+This recursive structure induces a natural notion of position within a "tree".
+
+\begin{definition}
+	\AP The set of ""nodes"" of a "tree" $t$, denoted $\Nodes t$, is defined as the set of binary strings (words over $\{0,1\}$)
+	that represent paths from the "root" to each "node":
+	\[
+		\intro* \Nodes t =
+		\begin{cases}
+			\{\varepsilon\}                      & \text{if } t = a          \\
+			\{\varepsilon\} \cup \setdef{0u}{u \in \Nodes {t'}}
+			\cup \setdef{1u}{u \in \Nodes {t''}} & \text{if } t = a(t', t'')
+		\end{cases}
+	\]
+
+	A "node" is thus the path from the "root" to a particular position in the "tree".
+\end{definition}
 
 \begin{example}
-	Let $ t := a(b, c(d, e)) $. We compute:
+	Let $t := a(b, c(d, e))$. We compute:
 	\[
-		\Nodes b  = \{\varepsilon\}, \quad \Nodes {c(d, e)} = \{\varepsilon, 0, 1\}
+		\Nodes b = \{\varepsilon\}, \quad \Nodes{c(d, e)} = \{\varepsilon, 0, 1\}
 	\]
 	\[
 		\Nodes t = \{\varepsilon\} \cup \{0\} \cup \{1, 10, 11\} = \{\varepsilon, 0, 1, 10, 11\}
 	\]
 \end{example}
 
-Among the "nodes", some are distinguished as "leaves", "nodes" without children.
+
+Among the "nodes", some are distinguished as "leaves", "nodes" without "children".
 \AP The ""leaves"" of a "tree" $t$ are defined as follows:
 \[
 	\intro* \Leaves t = \begin{cases}
@@ -202,7 +212,7 @@ Among the "nodes", some are distinguished as "leaves", "nodes" without children.
 
 
 Each "node" in a "tree" carries a symbol from the alphabet.
-\AP Given a "tree" $t$ and a "node"$n$, we can access the ""label"" of the "node" $n$
+\AP Given a "tree" $t$ and a "node" $n$, we can access the ""label"" of the "node"
 thanks to the function $\intro* \tlabel t {\cdot}$ :
 \[
 	\tlabel t n =   \begin{cases}
@@ -214,7 +224,7 @@ thanks to the function $\intro* \tlabel t {\cdot}$ :
 \]
 
 We often need to refer to the "subtree" rooted at a particular "node".
-\AP We introduce the notation $\intro* \subtree t n$ to refer to the ""subtrees""
+\AP We introduce the notation $\intro* \subtree t n$ to refer to the ""subtree""
 of $t$ rooted at the node $n$. This can be computed as follows:
 \[
 	\subtree t n =   \begin{cases}
@@ -235,7 +245,7 @@ of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 \end{definition}
 
 \begin{remark}
-	Note that this order does not depend on the left or right position of the children, \ie it preserves
+	Note that this order does not depend on the left or right position of the "children", \ie it preserves
 	"order-insensitivity", this will be explored in the following sections.
 \end{remark}
 
@@ -243,21 +253,21 @@ of a "node" $y$ if $y$ is located in the "subtree" rooted at $x$.
 \subsection{Automata over trees}\label{sec:automata}
 
 In this subsection we aim to define the basics of tree automata in a comprehensive way, adding as much detail as possible to the proofs. For reference,
-one can look at more advanced book on this topic \cite{tata,Thomas1997,bookautomata}.
+one can look at more advanced books on this topic \cite{tata,bookautomata} and the survey \cite{Thomas1997}.
 
 In classical automata theory, we analyze deterministic finite automaton (DFA), wich assign a unique state to each prefix of
 a word, updating this state at each step using a transition function, ussualy reading the input from left to right.
 
 A "deterministic bottom-up tree automaton" ("DBUA") generalizes this idea to "trees": instead of reading a linear word, it reads a
 a "tree" where each "node" carries a symbol from a fixed alphabet. Rather than scanning from left to right, it proceeds
-bottom-up, computing "states" at each "node" by combining the states of its children :
+bottom-up, computing "states" at each "node" by combining the states of its "children" :
 the automaton aggregates the information from those "subtrees" to assign a "state" to the parent.
 
 The idea is to recursively assign a "state" to each "node" of the "tree":
 \begin{itemize}
 	\item At the "leaves", the "state" is determined directly from the symbol via a function $\init$, just as a DFA starts in a particular initial state.
 	\item A DFA transitions based on the current letter and the state reached by the previous letters.
-	      When a "NBUA" reaches an "internal node", it transitions based on the "states" reached by its children and the "label" associated to the "node".
+	     Similarly, when a "NBUA" reaches an "internal node", it transitions based on the "states" reached by its "children" and the "label" associated to the "node".
 	\item Finally, the "state" assigned to the "root" tells us whether the whole "tree" is "accepted",
 	      depending on whether it belongs to a set of "final states".
 \end{itemize}
@@ -269,13 +279,13 @@ We now state the formal definitions.
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
 		      \itemAP $Q$ is a finite set of ""states"".
-		      \itemAP $\intro*\init : \Sigma \to Q$ is a function that initializes the states of the "leaves".
+		      \itemAP $\intro*\init : \Sigma \to Q$ is a function that initializes the "states" of the "leaves".
 		      \itemAP $\intro*\deltaA : Q \times Q \times \Sigma \to Q$ is the ""transition map"".
 		      \itemAP $F \subseteq Q$ is the set of ""final states"".
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[Interpretation of an automaton]
+\begin{definition}
 	\AP The ""interpretation"" of a "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$  over an alphabet $\Sigma$ is defined as follows:
 	\begin{eqnarray*}
 		\intro* \interpret A ~: \tree_{\Sigma} &\to& Q \\
@@ -288,17 +298,14 @@ We now state the formal definitions.
 	We will sometimes use the notation $\deltaA(t)$ for the "interpretation" of $A$ over the "tree" $t$.
 \end{definition}
 
-\begin{example}[Trees with at most one leaf]\label{ex:count-leaves}
+\begin{example}[trees with at most one leaf]\label{ex:count-leaves}
 	We define a "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$ that "accepts" exactly the "trees" with at most one "leaf". Let:
 	\begin{itemize}
 		\item $Q = \{0,1,2\}$, where $q=0$ means \textit{no leaves}, $q=1$ means \textit{exactly one leaf},
 		      and $q=2$ means \textit{more than one leaf}.
 		\item $F = \{0,1\}$.
 		\item For all $a \in \Sigma$, we define $\init_a = 1$.
-		\item The "transition function" is defined by:
-		      \[
-			      \deltaA_a(q_1, q_2) = \min(q_1 + q_2, 2)
-		      \]
+		\item The "transition function" is defined by $\deltaA_a(q_1, q_2) = \min(q_1 + q_2, 2)$.
 	\end{itemize}
 
 	Intuitively, this automaton counts the number of "leaves" in the "tree", but caps the count at $2$ to detect when the number exceeds $1$.
@@ -306,7 +313,7 @@ We now state the formal definitions.
 \end{example}
 
 
-\begin{figure}[h]\label{fig:count-leaves}
+\begin{figure}[h] 
 	\centering
 	\begin{tikzpicture}[
 			level distance=1.2cm,
@@ -342,7 +349,7 @@ We now state the formal definitions.
 		\node[state] (t4) at (13.5,0) {2};
 
 	\end{tikzpicture}
-	\caption{Execution of the automaton of \Cref{ex:count-leaves} over the input $a(b,a(b,b))$}
+	\caption{Execution of the automaton of \Cref{ex:count-leaves} over the input $a(b,a(b,b))$}\label{fig:count-leaves}
 \end{figure}
 
 
@@ -350,19 +357,19 @@ In the same way that we can define a non-deterministic automaton over strings, t
 tree automata using the same techniques. We will define them and give basic definitions on how to use them.
 
 \begin{definition}
-	\AP A ""non-deterministic bottom-up tree automaton"" (\reintro*"NBUA") is defined as a tuple
+	\AP A ""non-deterministic bottom-up tree automaton"" (\reintro*"NBUA") is a tuple
 	$(\Sigma, Q, \Init, \DeltaA, F)$ where:
 	\begin{itemize}
 		\item $\Sigma$ is an alphabet.
-		\item $Q$ is a finite set of "states".
+		\item $Q$ is a finite set of states.
 		      \itemAP $\intro*\Init \subseteq \Sigma \times Q$ correspond to the possible states of the "leaves".
 		      \itemAP $\intro*\DeltaA \subseteq Q \times Q \times \Sigma \times Q$ is the ""transition relation"".
 		\item $F \subseteq Q$ is the set of "final states".
 	\end{itemize}
 \end{definition}
 
-\begin{definition}[Run of an automaton]
-	\AP A ""run"" $\intro* \exec$ of a "NBUA" $A$ over a "tree" $t$ is :
+\begin{definition}
+	\AP A ""run"" $\intro* \exec$ of an "NBUA" $A$ over a "tree" $t$ is :
 
 	\begin{eqnarray*}
 		\exec : \Nodes t  &\to& Q \\
@@ -370,29 +377,25 @@ tree automata using the same techniques. We will define them and give basic defi
 		(\exec (n0), \exec (n1), \tlabel t n, \exec (n)) \in \DeltaA &\text{ if }& n \in \Nodes t \setminus \Leaves t
 	\end{eqnarray*}
 
-	We say that $\exec$ is "acceptant" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
+	We say that $\exec$ is an "accepting run" if $\exec (\varepsilon) \in F$ and $A$ "accepts" $t$ if
 	$F \cap \setdef {\rho(\varepsilon)} {\text{$\rho$ "run" of~$A$ over~$t$}} \neq \emptyset$
 \end{definition}
 
 
-\begin{definition}[Language of an automaton]
-	\AP Let $A$ be a "NBUA". Its ""associated language"" is defined as:
+\begin{definition}
+	\AP Let $A$ be an "NBUA". Its ""associated language"" is defined as:
 	\[\intro* \lang A = \setdef {t \in \tree_{\Sigma}} {\text{exists $\rho$ a "accepting" "run" of $A$ over $t$}} \]
 \end{definition}
 
-
-We can easily see that "DBUA" are a particular case of "NBUA", just like in the classic theory.
-
 \begin{remark}
-	Every "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$ can be seen as a special case of a "NBUA"
-	$A' = (\Sigma, Q, \Init, \DeltaA, F)$ where:
+    Just like in classical automata theory, we can see a "DBUA" $A = (\Sigma, Q, \init, \deltaA, F)$ as a special 
+    case of a "NBUA" $A' = (\Sigma, Q, \Init, \DeltaA, F)$ where:
 	\begin{itemize}
 		\item $\Init = \setdef{(a, \init_a)}{a \in \Sigma}$,
 		\item $\DeltaA = \setdef{(q_1, q_2, a, \deltaA_a(q_1, q_2))}{q_1, q_2 \in Q, a \in \Sigma}$.
 	\end{itemize}
 
 	In this case, $A'$ has exactly one possible "run" on each "tree" :
-
 	\begin{eqnarray*}
 		\exec : \Nodes t  &\to & Q \\
 		n  &\mapsto& \init_{\tlabel t n} \text{ if } n \in \Leaves t \\
@@ -430,7 +433,7 @@ We aim now to show that, like in the classical theory, both "non-deterministic a
 Since "DBUA" is a particular case of "NBUA" it suffices to show that each "language" accepted by an "NBUA" can also be accepted by a "DBUA".
 
 \begin{definition}
-	\AP Let $A = \NBUA$ be a "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
+	\AP Let $A = \NBUA$ be an "NBUA", we define the ""power set automaton"" of $A$, noted $\intro* \Det A$, as
 	$\Det A = (\Sigma, \parts Q, \init, \deltaA, F')$ where:
 
 	\begin{itemize}
@@ -495,9 +498,9 @@ Since "DBUA" is a particular case of "NBUA" it suffices to show that each "langu
 
 \subsection{Order-insensitivity}\label{sec:OrderAutomata}
 
-We will interest ourselves in a particular kind of tree automata: the ones that do not distinguish between left and right children.
-That means that the state reached from the two children is the same if we swap them. These automata are
-interesting because they respect the symmetries of "trees".
+We will interest ourselves in a particular kind of tree automata: the ones that do not distinguish between left and right "children".
+That means that the state reached from the two "children" is the same if we swap them. These automata are
+interesting because they respect the symmetries of "trees", which will pay an important role in \Cref{sec:uniformisation}.
 
 \begin{definition}
 	\AP An "NBUA" of "transition relation"~$\DeltaA$ is ""order-insensitive"" if for all "transitions@@relation" $(p,q,a,r) \in \DeltaA$,
@@ -545,7 +548,7 @@ interesting because they respect the symmetries of "trees".
 
 
 \begin{lemma}
-	If $N = \NBUA$ a "NBUA" is "order-insensitive", then $\Det N$ is also "order-insensitive".
+	If $N = \NBUA$ an "NBUA" is "order-insensitive", then $\Det N$ is also "order-insensitive".
 \end{lemma}
 
 \begin{proof}
@@ -592,9 +595,7 @@ In particular, it represents the set of all "states" that can be reached when th
 		      \begin{itemize}
 			      \item If $t = a$, then $\interpret A a = \init(a) \in \Reach A$.
 			      \item If $t = a(t', t'')$, then by the induction hypothesis $\interpret A {t'}, \interpret A {t''} \in \Reach A$, so
-			            \[
-				            \interpret A t = \deltaA(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A.
-			            \]
+				            $\interpret A t = \deltaA(\interpret A {t'}, \interpret A {t''}, a) \in \Reach A$.
 		      \end{itemize}
 	\end{itemize}
 \end{proofI}
@@ -693,7 +694,7 @@ We will discuss some examples of "MSO formulas".
 \end{example}
 
 \begin{example}
-	\AP The following formula expresses that $x$ and $y$ are the immediate children of a node $z$:
+	\AP The following formula expresses that $x$ and $y$ are the immediate "children" of a node $z$:
 	\[
 		\intro* \children(x,y,z) =
 		x \neq y \land
@@ -707,7 +708,6 @@ We will discuss some examples of "MSO formulas".
 		\right)
 	\]
 \end{example}
-
 
 \todo{make this make sense please}
 The proof follows the classical schema.
@@ -749,19 +749,16 @@ the "automaton@NBUA" using second-order variables that assign "states" to "nodes
 	\begin{itemize}
 		\item[\ref{lem:AMSO1}] Every "node" is assigned some "state".
 		\item[\ref{lem:AMSO2}] No "node" is in more than one "state".
-		\item[\ref{lem:AMSO3}] "Leaf" nodes are assigned an initial "state".
-		\item[\ref{lem:AMSO4}] For each triple $(x,y,z)$ forming a parent and its two children,
-		      there exists a transition in $\DeltaA$ from the children to the parent.
-		\item[\ref{lem:AMSO5}] The "root" is labeled with a final "state".
+		\item[\ref{lem:AMSO3}] "Leaf" nodes are assigned an initial state.
+		\item[\ref{lem:AMSO4}] For each triple $(x,y,z)$ forming a parent and its two "children",
+		      there exists a "transition@NBUA" in $\DeltaA$ from the "children" to the parent.
+		\item[\ref{lem:AMSO5}] The "root" is labeled with a "final state".
 	\end{itemize}
 
-	Therefore, the formula defines the same "language" as the automaton:
-	\[
-		t \models \phi \iff t \in \lang A.
-	\]
+	Therefore, the formula defines the same "language" as the automaton : $t \models \phi$ if and only if  $t \in \lang A$.
 \end{proof}
 
-We now turn to the other direction. Our goal is to show that for every "MSO" formula over finite binary "trees",
+We now turn to the other direction. Our goal is to show that for every "MSO formula" over "finite binary trees",
 there exists an equivalent "order-insensitive" "non-deterministic bottom-up automaton".
 
 The construction proceeds by induction on the structure of "formulas", using standard constructions for closure and the "atomic formulas".
@@ -799,9 +796,6 @@ We begin with basic closure properties of such automata.
 
 We now turn to "atomic formulas". These are handled by explicitly designed automata over expanded alphabets that encode variable assignments.
 We will only treat the ones that are relevant for our purposes, namely the atomic predicates $a(x)$ and $x \ancestor y$.
-
-\todo{explain expanded alphabets and annotated trees}
-\todo{define $X(\treeroot)$.}
 
 In order to model variables we use "annotated trees", where each "node" is annotated with a bit vector representing the assignment of variables.
 In this case, we will use the alphabet $\Sigma \times \{0,1\}^n$, where $n$ is the number of free variables in the formula.
@@ -1031,7 +1025,7 @@ This proves the implication from \Cref{lem:main-result-1} to \Cref{lem:main-resu
 Another concept used in this section is the one of "automorphisms" of "trees".
 \begin{definition}["automorphism"]\label{def:automorphism}
 	\AP An ""automorphism"" of a "tree" $t$ is a bijection $\sigma : \Nodes t \to \Nodes t$ preserving the tree structure:
-	if $u$ is a child of $v$, then $\sigma(u)$ is a child of $\sigma(v)$, and $\sigma$ preserves the labels of nodes.
+	if $u$ is a "child" of $v$, then $\sigma(u)$ is a "child" of $\sigma(v)$, and $\sigma$ preserves the labels of nodes.
 	The group of all automorphisms of $t$ is denoted $\intro* \Aut(t)$.
 \end{definition}
 
@@ -1074,13 +1068,13 @@ Let us illustrate this concept with an example.
 		\end{tabular}
 	\end{center}
 
-	\textbf{Tree A} is a complete "binary tree" of height 2. In this case, there are 8 "automorphisms", corresponding to all possible ways of swapping left and right children at each level.
+	\textbf{Tree A} is a complete "binary tree" of height 2. In this case, there are 8 "automorphisms", corresponding to all possible ways of swapping left and right "children" at each level.
 
-	\textbf{Tree B}, on the other hand, is asymmetric. The left child of the root is a "leaf", while the right child is an "internal node" with two children.
+	\textbf{Tree B}, on the other hand, is asymmetric. The left "child" of the root is a "leaf", while the right "child" is an "internal node" with two "children".
 	Since these "subtrees" are not structurally the same, the only "automorphisms" are:
 	\begin{itemize}
 		\item the identity (doing nothing), and
-		\item swapping the two children of the right "subtree".
+		\item swapping the two "children" of the right "subtree".
 	\end{itemize}
 \end{example}
 
@@ -1183,7 +1177,7 @@ This is what states the next lemma.
 	\AP We define the set $X_U$ and the "run" $\intro*\rhou$  by induction on the depth of the node as follows:
 	\begin{itemize}
 		\item For the root, we define $\rhou(\varepsilon) = \choiceF(\deltauu(t))$.
-		\item For all inner nodes $x$ with children $y$ and $z$. Let $(p,q,v)$ be $\choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), \rhou(x), \tlabel t x)$, we define
+		\item For all inner nodes $x$ with "children" $y$ and $z$. Let $(p,q,v)$ be $\choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), \rhou(x), \tlabel t x)$, we define
 		      $\rhou(y)=p$, $\rhou(z)=q$, and $x \in X_U$ if and only if $b = 1$.
 		\item For all "leaves" $x$, let $b$ be ~$b = \choiceL(p, \tlabel t x)$ we define $\rhou (x) = p$, where $x \in X_U$ if and only if $b = 1$.
 	\end{itemize}
@@ -1191,7 +1185,7 @@ This is what states the next lemma.
 	We claim now that the $\rhou$ is well defined, unique, and a "run" of $A$ over $(t,X_U)$. The proof procedes by top-down induction.
 	\begin{itemize}
 		\item For $\varepsilon$, the "root" of $t$, we have that $\rhou(\varepsilon) = \choiceF(\deltauu(t))$, since $\choiceF$ is deterministic, $\rhou(\varepsilon)$ is unique.
-		\item For the inner nodes $x$ with children $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then,
+		\item For the inner nodes $x$ with "children" $y$ and $z$, there exists $r \in Q$, such that $\rhou (x) = r$ by the induction hypothesis. Then,
 		      since $\choiceN$ is deterministic, there exists a unique tuple $(p,q,b)$ such that
 		      $(p,q,b) = \choiceN(\deltauu(\subtree t y), \deltauu(\subtree t z), r, \tlabel t x)$.
 		      We have that $\rhou(y) = p$ and $\rhou(z) = q$, which verify that $\deltaA(p,q,(\tlabel t x,b)) = r$. We also have that $x \in X_U$ if and only if $b = 1$.
@@ -1348,9 +1342,13 @@ This chain of implications states that if $\phi(X)$ is "uniformisable", then the
 	We can use the "uniformisability checking algorithm" to construct $\Ua$ and check whether it is "universal". This algorithm decides whether $\phi(X)$ is "uniformisable".
 \end{proof}
 
-\section{Conclusion}
-
+\section{Conclusion}\Cref{sec:conclusion}
 \todo{write}
+
+
+
+
+
 
 \bibliographystyle{plainurl}
 \bibliography{tre-uniformisation}
