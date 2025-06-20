@@ -4,6 +4,7 @@
     | finite binary tree
     | finite binary trees
     | unordered binary trees
+    | unordered finite binary trees
     | finite tree
     | finite trees
     | trees
@@ -103,6 +104,8 @@
 
 \knowledge{notion}
     | order-insensitive
+    | order-insensitive automata
+    | order-insensitive bottom-up automata
     | order-insensitivity
 
 \knowledge{notion}
@@ -119,6 +122,7 @@
 
 \knowledge{notion}
     | uniformiser
+    | uniformises
 
 \knowledge{notion}
     | uniformisable
@@ -126,6 +130,7 @@
 \knowledge{notion}
     | uniformisation
     | MSO uniformisation
+    | uniformisation problem
 
 \knowledge{notion}
     | internal node
@@ -175,6 +180,7 @@
     | Monadic second‐order
     | Monadic second‐order logic
     | MSO-formula
+    | formula
     | MSO-formulas
     | MSO formula
     | MSO formulas
@@ -195,3 +201,7 @@
     | annotated
     | annotation
     | annotations
+
+\knowledge{notion}
+    | child
+    | children

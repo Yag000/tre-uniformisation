@@ -92,10 +92,10 @@ A classical challenge in this context is the "uniformisation problem": given an 
 is it possible to define another "MSO formula" $\psi(Y)$ that selects \emph{at most one} such set for each "tree", in a way that agrees with $\phi(X)$ whenever it is satisfiable? We
 formalize this notion in \Cref{sec:uniformisation}.
 
-This problem has been studied in various settings. A comprehensive survey is provided in~\cite{Cara15}. Positive results are known for infinite words, where every MSO-definable
-relation admits an MSO-definable uniformising function~\cite{Siefkes1975, Choffrut1999, Rabin07}. In contrast, uniformisation is not possible in general for infinite binary
-trees~\cite{GS83}.
-In this work, we study MSO uniformisation over a different class of structures: \emph{finite, unordered, labeled binary trees}.
+This problem has been studied in various settings. A comprehensive survey is provided in~\cite{Cara15}. Positive results are known for finite words, \cite{Choffrut1999}, 
+and infinite words, where every MSO-definable relation admits an MSO-definable uniformising function~\cite{Siefkes1975, Choffrut1999, Rabin07}. In contrast, uniformisation 
+is not possible in general for infinite binary trees~\cite{GS83}.
+In this work, we study "MSO uniformisation" over a different class of structures: \emph{finite, unordered, labeled binary trees}.
 All of the technical work is performed using only automata that preserve structural symmetry,
 \ie they are unable to distinguish between left and right "subtrees".
 
@@ -122,7 +122,7 @@ This paper makes three main contributions:
 variant of tree automata.
 \todo{unofrmisation problem is not really defined}
 In \Cref{sec:uniformisation}, we define the "uniformisation problem" and present our main result, showing that it is decidable for "unordered finite binary trees".
-We conclude in \Cref{sec:conclusion} with a discussion of the implications of our results and potential future work.
+\todo{talk about knowledge, see Thomas' paper}
 
 \section{Definitions} \label{sec:definitions}
 
@@ -1342,9 +1342,15 @@ This chain of implications states that if $\phi(X)$ is "uniformisable", then the
 	We can use the "uniformisability checking algorithm" to construct $\Ua$ and check whether it is "universal". This algorithm decides whether $\phi(X)$ is "uniformisable".
 \end{proof}
 
-\section{Conclusion}\Cref{sec:conclusion}
-\todo{write}
+\section{Conclusion}\label{sec:conclusion}
 
+We proved that the uniformisation problem for MSO formulas over unordered finite binary trees is decidable, using automata theory based
+on "order-insensitive bottom-up automata". The construction also gives a way to extract a "uniformiser" when one exists. Along the way,
+we showed that "uniformisability" coincides with "definability" and "automorphism" invariance in this setting.
+
+There are several interesting directions for future work. While the general case for infinite trees is known to be undecidable,
+it could be worth investigating whether this approach could help identify subclasses of infinite trees for which "uniformisability" is decidable. 
+Similarly, it would be natural to consider extending these results to other kinds of trees, such as ranked trees-that is, "trees" where each node has a fixed number of "children". 
 
 
 
