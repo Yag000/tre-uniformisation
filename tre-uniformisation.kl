@@ -5,6 +5,7 @@
     | finite binary trees
     | unordered binary trees
     | unordered finite binary trees
+    | finite unordered binary trees
     | finite tree
     | finite trees
     | trees
@@ -46,6 +47,7 @@
 
 \knowledge{notion}
     | language
+    | languages
     | language@tree
     | tree language
 
@@ -98,11 +100,14 @@
 \knowledge{notion}
     | ancestor
     | ancestor relation
+    | Ancestor relation
     | Ancestor
 
 \knowledge{notion}
     | run
     | runs
+    | execution
+    | Execution
 
 \knowledge{notion}
     | order-insensitive
@@ -112,6 +117,7 @@
     | order-insensitivity
 
 \knowledge{notion}
+    | recognizes 
     | acceptant
     | accepting
     | accepts
