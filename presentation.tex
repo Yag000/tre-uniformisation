@@ -1,0 +1,439 @@
+\documentclass[10pt,xcolor=dvipsnames]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsthm, dsfont, mathrsfs, mathtools}
+\usepackage{tikz-cd}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{ulem}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+\usepackage[export]{adjustbox}
+
+\usepackage{pdfpages}
+\setbeamercolor{section title}{fg=Maroon,bg=Maroon}
+\setbeamercolor*{structure}{bg=Maroon!20,fg=Maroon}
+\setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor{progress bar}{fg=gray, bg=gray}
+
+
+\usepackage{minted}
+\usepackage{ebproof}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning, fit}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric, arrows.meta}
+
+\newcommand{\init}{\iota}
+\newcommand{\Init}{\mathcal {I}}
+\newcommand{\ancestor}{\mathrel{\sqsubseteq}}
+
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{violet}{rgb}{0.4,0,0.8}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\darkgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\violet}[1]{\textcolor{violet}{#1}}
+
+
+\newcommand{\parts}[1]{\mathcal{P}\left(#1\right)}
+
+\theoremstyle{plain}
+\newtheorem{theoreme}{Théorème}[section]
+\newtheorem{definitionn}[theoreme]{Définition}
+
+\begin{document}
+
+\begin{frame}[plain]
+	\centering
+	\vspace{1cm}
+
+	{\huge \textbf{Décidabilité de l’uniformisation MSO sur des arbres finis}}
+
+	\vspace{0.5cm}
+	{\Large Thomas Colcombet \& \underline{Yago Iglesias Vázquez}}
+
+
+	\vspace{1cm}
+	\begin{minipage}{0.4\textwidth}
+		\centering
+		\includegraphics[height=1cm]{images/logo.jpg}
+
+		Université Paris Cité
+	\end{minipage}
+
+	\vfill
+	{\small \today}
+\end{frame}
+
+
+
+\begin{frame}{Arbres binaires finis non ordonnés}
+
+	\begin{itemize}
+		\item On travaille avec des \textbf{arbres binaires finis non ordonnés} :
+		      \begin{itemize}
+			      \item Chaque nœud a deux fils.
+			      \item On \textbf{ne distingue pas} entre fils gauche et droit.
+		      \end{itemize}
+
+		      \vspace{0.8em}
+
+		\item Question centrale : \\
+		      \textit{Si les deux sous-arbres sont identiques, comment choisir en choisir un?}
+	\end{itemize}
+
+	\vspace{1em}
+
+	\centering
+	\begin{tikzpicture}[
+			level distance=1.2cm,
+			sibling distance=1.4cm,
+			every node/.style={circle,draw,minimum size=6mm,inner sep=1pt},
+			text height=1.5ex, text depth=.25ex
+		]
+		\node {a}
+		child {node {b}}
+		child {node {b}};
+	\end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}{Logique MSO — Aperçu rapide}
+	\begin{itemize}
+		\item Permet de décrire des propriétés sur les arbres, \textbf{sans distinguer gauche/droite}.
+		\item Variables :
+		      \begin{itemize}
+			      \item \textbf{1er ordre} : nœuds ($x, y, \dots$)
+			      \item \textbf{2nd ordre} : ensembles de nœuds ($X, Y, \dots$)
+		      \end{itemize}
+		\item Quantification possible sur les deux types : $\forall x$, $\exists X$, etc.
+		\item Exemple : $\varphi(x) = \text{``$x$ est une feuille''}$
+		      \[
+			      \scalebox{0.7}{
+				      \begin{tikzpicture}[sibling distance=1.2cm, level distance=1.1cm,
+						      every node/.style = {circle, draw, minimum size=0.6cm}, baseline={(current bounding box.center)}]
+
+					      \node {$a$}
+					      child {node {$c$}}
+					      child {node[draw=blue, thick] {$b$}};
+				      \end{tikzpicture}
+			      } \models\ \varphi\left(\tikz[baseline=-0.5ex]\node[draw=blue, circle, inner sep=1pt]{\strut b};\right)
+		      \]
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Définissabilité}
+	\begin{definitionn}
+		Un ensemble de nœuds $X$ d’un arbre $t$ est \textbf{définissable} s'il existe une formule $\psi(x)$ telle que :
+		\[
+			X = \{ x \mid t \models \psi(x) \}.
+		\]
+	\end{definitionn}
+\end{frame}
+
+
+\begin{frame}{Exemples de définissabilité}
+	\centering
+	\textbf{$\varphi_1(X) = \text{``$X$ singleton avec une feuille''}$}
+	\vspace{0.5em}
+
+	\begin{tabular}{cc}
+		\begin{tikzpicture}[level distance=1.2cm, sibling distance=1.2cm,
+				every node/.style = {circle, draw, minimum size=0.7cm}]
+			\node[fill=blue!20] {$a$};
+		\end{tikzpicture}
+		                         &
+		\begin{tikzpicture}[level distance=1.2cm, sibling distance=1.3cm,
+				every node/.style = {circle, draw, minimum size=0.7cm}]
+			\node {$a$}
+			child {node {$b$}}
+			child {node {$b$}};
+		\end{tikzpicture}
+		\\[1ex]
+		\darkgreen{Définissable} & \red{Pas définissable}
+	\end{tabular}
+
+	\vspace{2em}
+	\pause
+
+	\textbf{$\varphi_2(X) = \text{``$X$ contient au moins une feuille''}$}
+
+	\vspace{0.5em}
+
+	\begin{tikzpicture}[level distance=1.2cm, sibling distance=1.3cm,
+			every node/.style = {circle, draw, minimum size=0.7cm}]
+		\node {$a$}
+		child {node[fill=blue!20] {$b$}}
+		child {node[fill=blue!20] {$b$}};
+	\end{tikzpicture}\\
+	\vspace{0.3em}
+	\darkgreen{Définissable}
+\end{frame}
+
+
+\begin{frame}{Uniformisation — Définition}
+
+	\begin{itemize}
+		\item $\varphi(X)$ est \textbf{uniformisable} s’il existe une formule $\psi(x)$ telle que pour tout arbre $t$ :\\
+		      Si $t \models \varphi(X)$, alors $X_\psi := \{x \mid t \models \psi(x)\}$ vérifie $t \models \varphi(X_\psi)$.
+		      \vspace{1em}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Uniformisation — Exemples}
+	\begin{itemize}
+		\item $\varphi_1(X) = \text{``$X$ singleton avec une feuille''}$
+
+		      \begin{itemize}
+			      \item Existence d’un arbre sans solution définissable :\\
+			            \vspace{1em}
+			            \begin{center}
+				            \scalebox{0.7}{
+					            \begin{tikzpicture}[level distance=1.2cm, sibling distance=1.2cm,
+							            every node/.style = {circle, draw, minimum size=0.7cm}]
+						            \node {$a$}
+						            child {node {$b$}}
+						            child {node {$b$}};
+					            \end{tikzpicture}
+				            }
+			            \end{center}
+			      \item \red{Pas uniformisable}
+		      \end{itemize}
+
+		      \vspace{1em}
+
+		      \pause
+
+		\item $\varphi_2(X) = \text{``$X$ contient au moins une feuille''}$
+
+		      \begin{itemize}
+			      \item $\psi(x) = \text{``$x$ est une feuille''}$.
+			      \item \darkgreen{Uniformisable}
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Uniformisation — Problème}
+	\begin{itemize}
+		\item \textbf{Problème :} Étant donné une formule $\varphi(X)$, décider si elle est uniformisable.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Algorithme d’uniformisation — Idée générale}
+
+	\begin{enumerate}
+		\item Entrée : une formule $\varphi(X)$.
+		\item Construire l’automate uniformiseur $U$ associé à $\varphi(X)$.
+		\item Tester si $U$ est universel.
+		\item Retourner \texttt{Oui} si $U$ est universel, \texttt{Non} sinon.
+	\end{enumerate}
+
+	\begin{itemize}
+		\item Résultat clé : \\
+		      \vspace{0.3em}
+		      \hspace{1em} $U$ universel \quad $\Longleftrightarrow$ \quad $\varphi(X)$ est uniformisable.
+	\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Automates finis bottom-up déterministes (DBUA)}
+
+	\begin{itemize}
+		\item Un DBUA est un 5-uplet $ A = (\Sigma, Q, \init, \delta, F) $
+		\item On impose $ \delta_a(\blue p, \red q) = \delta_a(\red q,\blue p)$
+	\end{itemize}
+
+	\vspace{1em}
+
+	\centering
+	\scalebox{0.85}{
+		\begin{tikzpicture}[
+				level distance=1.2cm,
+				sibling distance=1.4cm,
+				every node/.style={circle,draw,minimum size=6mm,inner sep=1pt},
+				state/.style={blue},
+				text height=1.5ex, text depth=.25ex,
+				arrowstyle/.style={draw=none, font=\normalsize}
+			]
+
+			% Étape 0 : Arbre original
+			\node at (-4.5,0) {a}
+			child {node {b}}
+			child {node {d}
+					child {node {c}}
+					child {node {b}}};
+
+			\pause
+			\node[arrowstyle] at (-2.5, 0) {$\displaystyle\Rightarrow_{\init}$};
+
+			% Étape 1 : feuilles étiquetées
+			\node at (-0.5,0) {a}
+			child {node[state] {1}}
+			child {node {d}
+					child {node[state] {0}}
+					child {node[state] {1}}};
+
+			\pause
+			\node[arrowstyle] at (1.7, 0) {$\displaystyle\Rightarrow_{\delta_d(0,1)}$};
+
+			% Étape 2
+			\node at (4,0) {a}
+			child {node[state] {1}}
+			child {node[state] {1}};
+
+			\pause
+			\node[arrowstyle] at (5.8, 0) {$\displaystyle\Rightarrow_{\delta_a(1,1)}$};
+
+			% État final
+			\node[state] at (7,0) {2};
+
+		\end{tikzpicture}
+	}
+
+\end{frame}
+
+\begin{frame}{MSO et automates : équivalence}\
+	\begin{theoreme}
+		Pour tout langage $L$ d'arbres, il existe un DBUA ordre-insensible $A$ qui reconnaît $L$ ssi il existe $\varphi(X)$ une formule MSO telle que,
+		$L = \{ t \mid t \models \varphi(X) \}$.
+	\end{theoreme}
+\end{frame}
+
+
+\begin{frame}{Arbres annotés}
+	\begin{itemize}
+		\item Pour $\varphi(X)$, il existe un DBUA $A$ sur $\Sigma \times \{0,1\}$ tel que :
+		      \[
+			      t \models \varphi(X) \text{ ssi } (t,X) \text{ est accepté par } A.
+		      \]
+		\item Arbre annoté $(t,X)$ : chaque nœud de $t$ est étiqueté par $(\sigma,b)$ avec $b=1$ si le nœud appartient à $X$, sinon $b=0$.\\
+		      \vspace{1em}
+		      \begin{center}
+			      \scalebox{1}{
+				      \begin{tikzpicture}[level distance=1.2cm, sibling distance=1.2cm,
+						      every node/.style={circle, draw, minimum size=0.7cm, inner sep=1pt}]
+					      \node (root) {a, \textcolor{blue}{1}}
+					      child {node {b, \textcolor{blue}{0}}}
+					      child {node {c, \textcolor{blue}{1}}};
+				      \end{tikzpicture}
+			      }
+		      \end{center}
+		      \vspace{1em}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Powerset — Construction de l'automate}
+
+	\centering
+	\begin{tabular}{ll}
+		\toprule
+		\textbf{Automate} & \textbf{Définition}                                                          \\
+		\midrule
+		$A$               & $A : \text{Tree}_{\Sigma \times \{0,1\}} \to Q$                              \\
+		                  & $A(t,X) \in F$ \text{ ssi } $t \models \varphi(X)$                           \\
+		\\
+		$PA$ (powerset)   & $PA : \text{Tree}_{\Sigma} \to \parts Q$                                     \\
+		                  & $PA(t) = \{ A(t,X) \mid X \subseteq \mathrm{Nodes}(t) \}$                    \\
+		\\
+		                  & $PA(t) \cap F \neq \emptyset$ \text{ ssi } $t \models \exists X. \varphi(X)$ \\
+		\bottomrule
+	\end{tabular}
+
+	\vspace{1.5em}
+	\begin{itemize}
+		\item $PA$ simule $A$ sur toutes les assignations possibles de $X$.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Automate uniformiseur — Idée générale}
+
+	\begin{itemize}
+		\item Cherche à construire une solution de $\varphi(X)$ \textbf{et} une solution \textbf{définissable}.
+		\item L'automate accepte les arbres vérifiant :
+		      \[
+			      ''\exists X.\, \varphi(X) \implies \exists X.\, \varphi(X) \text{ avec } X \text{ définissable}''
+		      \]
+		\item $U$ universel ssi pour tout arbre $t$, si $t \models \exists X.\, \varphi(X)$, alors il existe une solution \textbf{définissable}.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Automate uniformiseur — Construction}
+
+	\begin{tabular}{ll}
+		\toprule
+		$A : \text{Tree}_{\Sigma \times \{0,1\}} \to Q$                     & $A(t,X) \in F$ ssi $t \models \varphi(X)$.                                                             \\
+		\\
+		$PA : \text{Tree}_{\Sigma} \to \mathcal{P}(Q)$                      & $PA(t) = \{ A(t,X) \mid X \subseteq \text{Nodes}(t) \}$                                                \\
+		                                                                    & $PA(t) \cap F \neq \emptyset \text{ ssi } t \models \exists X. \varphi(X)$                             \\
+		\midrule
+		\\
+		$U : \text{Tree}_{\Sigma} \to \mathcal{P}(Q) \times \mathcal{P}(Q)$ & $U(t) = (P,P')$                                                                                        \\
+		                                                                    & $P \cap F \neq \emptyset \implies P' \cap F \neq \emptyset$    ssi   $t \models \exists X. \varphi(X)$ \\
+		                                                                    & implique qu'il existe une solution définissable                                                        \\
+		\bottomrule
+	\end{tabular}
+
+	\vspace{1em}
+
+	\begin{itemize}
+		\item $P$ correspond à l'exécution de $PA$.
+		\item $P'$ correspond à une exécution contrainte de $PA$ qui garantit l'existence d'une solution définissable.
+	\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Conclusion et Perspectives}
+	\begin{itemize}
+		\item Introduction pédagogique aux automates sur arbres et à la logique MSO.
+		      \vspace{0.7em}
+		\item \textbf{Le résultat principal :} l’uniformisation de la logique MSO sur les arbres binaires finis non ordonnés est décidable.
+		      \vspace{0.7em}
+		\item Perspectives futures :
+		      \begin{itemize}
+			      \item Étendre ces techniques aux arbres \textit{unranked}.
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[shrink=15]{Références}
+	\nocite{*}
+	\bibliographystyle{plain}
+	\bibliography{tre-uniformisation}
+\end{frame}
+
+
+
+\end{document}
+
