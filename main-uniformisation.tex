@@ -606,7 +606,7 @@ In particular, it represents the set of all "states" that can be reached when th
 	\AP Let $A$ be a "NBUA". We say that $A$ is ""universal"" if it "accepts" every "tree".
 \end{definition}
 
-We can use the "reachability set" it to decide whether an automaton is "universal". Intuitively, a "DBUA" is "universal" if
+We can use the "reachability set" to decide whether an automaton is "universal". Intuitively, a "DBUA" is "universal" if
 the only "states" it can reach are "final states". This is formalized in the following theorem.
 
 \begin{theorem}\label{thm:universal-Reach}
@@ -1011,13 +1011,13 @@ We now have all of the ingredients to construct an "order-insensitive" "NBUA" fo
 	If $\phi = \lnot \psi$, then by the induction hypothesis we obtain an automaton for $\psi$. We apply
 	\Cref{lem:complement} to obtain an automaton for $\phi$.
 
-	Assume $\phi = \exists x.\psi(x)$, where $\psi$ has $n$ free variables and $x$ is the $n$-th one.
+	Assume $\phi = \exists X.\psi(X)$, where $\psi$ has $n$ free variables and $X$ is the $n$-th one.
 
 	By the induction hypothesis, we have an "order-insensitive" "DBUA" (since avery "NBUA" can be converted to a "DBUA")
-	$A = (\Sigma \times \{0,1\}^n, Q, \init, \deltaA, F)$ that accepts the "language" of $\psi(x)$.
+	$A = (\Sigma \times \{0,1\}^n, Q, \init, \deltaA, F)$ that accepts the "language" of $\psi(X)$.
 
-	We now construct an automaton that operates over $\Sigma \times \{0,1\}^{n-1}$, where $x$ is no longer explicitly assigned.
-	Instead, we simulate all possible "annotations" for $x$, and "accept" if at least one such "annotation" makes $\psi(x)$ true.
+	We now construct an automaton that operates over $\Sigma \times \{0,1\}^{n-1}$, where $X$ is no longer explicitly assigned.
+	Instead, we simulate all possible "annotations" for $X$, and "accept" if at least one such "annotation" makes $\psi(X)$ true.
 
 	Define the new automaton $A' = (\Sigma \times \{0,1\}^{n-1}, \parts Q, \init', \deltaA', F')$ where:
 	\begin{itemize}
@@ -1025,25 +1025,23 @@ We now have all of the ingredients to construct an "order-insensitive" "NBUA" fo
 		      \[
 			      \init'(a, \vec{b}) = \setdef{ \init(a, \vec{b}, b')} {b' \in \{0,1\} }
 		      \]
-		      That is, we simulate both possibilities for the missing $x$-bit.
+		      That is, we simulate both possibilities for the missing bit.
 		\item "Transition map":
 		      \[
 			      \deltaA'(P, Q, (a, \vec{b})) = \setdef{ \deltaA(p, q, (a, \vec{b}, b'))} {p \in P,\ q \in Q,\ b' \in \{0,1\} }
 		      \]
-		      Again, for every guess of $x$’s value at this "node", we compute the next "state" as if that guess were part of the input.
+		      Again, for every "node" guess if this it belongs to $X$, we compute the next "state" as if that guess were part of the input.
 		\item "Accepting states":
 		      \[
 			      F' = \setdef{ P \subseteq Q} {P \cap F \neq \emptyset }
 		      \]
-		      The automaton accepts if one of the runs under some assignment for $x$ ends in an "accepting state".
+		      The automaton accepts if one of the runs under some assignment for $X$ ends in an "accepting state".
 	\end{itemize}
 
-	This automaton simulates all possible choices of a "node" for $x$, \ie all possible  bit "annotations" for the $x$-variable.
+	This automaton simulates all possible choices of a "node" for $X$, \ie all possible  bit "annotations" for the $X$-variable.
 	Since $A$ is "order-insensitive", and the construction treats all "nodes" symmetrically, $A'$ is also "order-insensitive".
 
-	For $\phi = \exists X.\psi(X)$, the construction is similar. The automaton $A$ reads $n$-bit "annotations", with the last bit corresponding
-	to the second-order variable $X$. We define $A'$ by again simulating all two options for each node (being in $X$ or not) and applying the same
-	"power set construction".
+	For $\phi = \exists x.\psi(x)$, we have that it's a particular case of the previous construction.
 
 	Each inductive case preserves "order-insensitivity", and constructs an "NBUA" for the given formula. Thus, by induction on the structure of $\phi$,
 	we obtain the desired automaton.
@@ -1210,7 +1208,7 @@ then $\phi(X)$ is "uniformisable", and in \Cref{lemma:not-universal-implies-non-
 		      \itemAP $\intro*\deltau((X,X'),(Y,Y'),a) = (\deltaA(X,Y,(a,*)), \deltauu(X',Y',a))$ with:
 		      \[
 			      \intro*\deltauu(X',Y',a) = \begin{cases}
-				      \setdef{\deltaA(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X' = Y' \\
+                      \setdef{\deltaA(p,p,(a,b))}{p \in X', b \in \set{0,1}} & \text{if } X = Y \text{ and } X' = Y'  \\
 				      \deltaA(X',Y',(a,"*"))                                 & \text{otherwise}
 			      \end{cases}
 		      \]
@@ -1224,8 +1222,8 @@ then $\phi(X)$ is "uniformisable", and in \Cref{lemma:not-universal-implies-non-
 
 Intuitively, $\Ua$ checks whether $\phi(X)$ has a witness, and attempts to reconstruct a witness invariant under "automorphisms" using symmetry constraints.
 
-Each "state" of the "uniformiser automaton" is a pair of "states" of the original automaton for $\phi(X)$.
-The first component represents a standard "run" of the original automaton (checking if the formula $\phi(X)$
+Each "state" of the "uniformiser automaton" is a pair of "states" of the original automaton for $\exists X.\phi(X)$.
+The first component represents a standard "run" of said automaton (checking if the formula $\phi(X)$
 can be modeled), while the second component simulates a restricted "run" that captures a solution that is invariant under "automorphisms".
 When both sides behave identically on a given "subtree", that is, when the shape and labels of the "tree" do not allow
 us to distinguish between them, the automaton enforces that they must transition identically, ensuring symmetry. This restriction
